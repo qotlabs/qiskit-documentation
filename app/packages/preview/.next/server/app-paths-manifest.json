@@ -1,0 +1,7 @@
+{
+  "/_not-found": "app/_not-found.js",
+  "/api/toc/[[...tocPath]]/route": "app/api/toc/[[...tocPath]]/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/icon.svg/route": "app/icon.svg/route.js",
+  "/(docs)/[[...slug]]/page": "app/(docs)/[[...slug]]/page.js"
+}
