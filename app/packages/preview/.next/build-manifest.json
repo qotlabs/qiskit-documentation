@@ -12,7 +12,8 @@
     "static/chunks/webpack-9ff730d4bdc802fa.js",
     "static/chunks/1dd3208c-fde5fc6f467bbc52.js",
     "static/chunks/53-118aa0417be43607.js",
-    "static/chunks/main-app-b7615201a48369f4.js"
+    "static/chunks/main-app-b7615201a48369f4.js",
+    "static/chunks/custom.js"
   ],
   "pages": {
     "/_app": [
