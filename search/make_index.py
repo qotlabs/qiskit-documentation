@@ -1,22 +1,58 @@
 #!/usr/bin/env python3
 
-import os
 import logging
 from pathlib import Path
 from argparse import ArgumentParser
 from dataclasses import dataclass
 from markdown import Markdown
 from typing import TextIO
+from enum import Enum
+from hashlib import sha256
 import json
 import xapian
 
-class ParseException(Exception):
+
+class ParseError(Exception):
     pass
 
-@dataclass
-class ParsedMarkdown:
-    title: str
-    text: str
+class UrlError(Exception):
+    pass
+
+
+class DocModule(Enum):
+    DOCUMENTATION = 1
+    API = 2
+
+class DocSection(Enum):
+    MIGRATION_GUIDES = 1
+    QISKIT = 2
+    QISKIT_IBM_PROVIDER = 3
+    QISKIT_IBM_RUNTIME = 4
+    BUILD = 5
+    RUN = 6
+    START = 7
+    TRANSPILE = 8
+    VERIFY = 9
+
+
+class DocumentData:
+    def __init__(self, data: bytes | None = None):
+        if data is not None:
+            self.from_bytes(data)
+
+    def from_bytes(self, data: bytes):
+        json_data = json.loads(data.decode())
+        self.mtime = json_data["mtime"]
+        self.url = json_data["url"]
+        self.text = json_data["text"]
+
+    def to_bytes(self) -> bytes:
+        return json.dumps({
+            "mtime": self.mtime,
+            "url": self.url,
+            "text": self.text
+        }).encode()
+
 
 def skip_md_header(file: TextIO) -> bool:
     ok  = file.readline() == "---\n"
@@ -27,74 +63,118 @@ def skip_md_header(file: TextIO) -> bool:
         file.seek(0)
     return ok
 
-def append_md_suffix(path: Path) -> Path | None:
-    for ext in ".md", ".mdx", ".ipynb":
-        new_path = path.with_suffix(ext)
-        if new_path.exists():
-            return new_path
-    return None
 
-def url_to_path(source: Path, url: str) -> Path:
-    base_path = source / url.removeprefix("/")
-    path = append_md_suffix(base_path)
-    if path is None:
-        path = append_md_suffix(base_path / "index")
-    if path is None:
-        logging.error(f"Cannot find path with source matching URL: {base_path}")
-        #raise RuntimeError(f"Cannot find path with source matching URL: {url}")
-    return path
+def url_to_path(sourceDir: Path, url: str) -> Path:
+    """Convert URL to the existing file path relative to source directory."""
+    # Base path without extension
+    base_path = sourceDir / url.removeprefix("/")
+    # First try different extensions
+    for ext in "md", "mdx", "ipynb":
+        path = Path(f"{base_path}.{ext}")
+        if path.exists():
+            return path
+    # Then try to find index file
+    for index in "index.md", "index.mdx":
+        path = base_path / index
+        if path.exists():
+            return path
+    raise UrlError(f"Cannot find path for URL {url}")
+
+
+class Visitor:
+    def __init__(self, source: Path, destination: Path):
+        self.sourceDir = source
+        self.database = xapian.WritableDatabase(str(destination), xapian.DB_CREATE_OR_OPEN)
+        term_generator = xapian.TermGenerator()
+        term_generator.set_stemmer(xapian.Stem("en"))
+
+
+    @staticmethod
+    def ignore_url(url: str) -> bool:
+        return url.startswith("https://")
+
+
+    def index(self):
+        for toc_path in self.sourceDir.rglob("_toc.json"):
+            logging.debug("Process table of contents %s", toc_path)
+            with open(toc_path, "r") as toc:
+                self.visit_toc(json.load(toc))
+
+
+    def visit_toc(self, toc: dict):
+        url = toc.get("url")
+        ok = True
+        if url is None:
+            ok = False
+            logging.debug("TOC node '%s' does not contain 'url' field", toc.get("title"))
+        if ok and Visitor.ignore_url(url):
+            ok = False
+            logging.debug("Ignore URL %s", url)
+        if ok:
+            self.visit_url(url)
+        for child in toc.get("children", ()):
+            self.visit_toc(child)
+
+
+    def visit_url(self, url: str):
+        try:
+            path = url_to_path(self.sourceDir, url)
+            path_hash = sha256(str(path.relative_to(self.sourceDir)).encode()).hexdigest()
+            self.database.reopen()
+            enquire = xapian.Enquire(self.database)
+            enquire.set_weighting_scheme(xapian.BoolWeight())
+            enquire.set_query(xapian.Query('P' + path_hash))
+            match = enquire.get_mset(0, 1)
+            if match.empty():
+                logging.debug("No documents for URL %s", url)
+            else:
+                doc = DocumentData(match.document.get_data())
+                file_mtime = path.stat().st_mtime
+                if file_mtime <= doc.mtime:
+                    logging.debug("Skip up-to-date URL %s", url)
+                    return
+            #self.database.postlist()
+
+        except Exception as e:
+            logging.warn(e)
+
+        return
+        module = DocModule.DOCUMENTATION
+        version = 0.45
+        match url.split("/")[1:]:
+            case ["api", section, _]:
+                module = DocModule.API
+            case ["api", section, version, _]:
+                module = DocModule.API
+            case [section, *_]:
+                pass
+            case _:
+                logging.error("Invalid URL %s", url)
+
+        section = DocSection[section.replace("-", "_").upper()]
+        version = float(version)
+        self.documents.append({"url": url, "path": path, "module": module, "section": section, "version": version})
 
 
 def parse_md(path: Path):
     with open(path, "r") as file:
         pass
 
-def visit_toc(source, toc: dict):
-    #print("title:", toc["title"])
-    if "url" in toc:
-        pass
-        #print("url:", toc["url"])
-        url_to_path(source, toc["url"])
-    if "children" not in toc:
-        return
-    for child in toc["children"]:
-        visit_toc(source, child)
 
-
-def index(source: Path, destination: Path):
-    db = xapian.WritableDatabase(str(destination), xapian.DB_CREATE_OR_OPEN)
-    term_generator = xapian.TermGenerator()
-    term_generator.set_stemmer(xapian.Stem("en"))
-
-    for toc_path in source.rglob("_toc.json"):
-        logging.debug("Processing table of contents %s", toc_path)
-        with open(toc_path, "r") as toc:
-            toc = json.load(toc)
-            visit_toc(source, toc)
-
-    return
-
-    for toc_path in source.rglob("*.md*"):
-        try:
-            relpath = toc_path.relative_to(source)
-            logging.info("Indexing %s", relpath)
-            parse_md(toc_path)
-        except ParseException as e:
-            logging.warning("Skipping %s due to parsing error: %s", relpath, e)
+def path_relative_to_script(path: str) -> str:
+    return str((Path(__file__).parent / path).relative_to(Path.cwd()))
 
 
 if __name__ == "__main__":
-    os.chdir(Path(__file__).parent)
-
     parser = ArgumentParser(description="Make Xapian search index of Qiskit documentation.")
     parser.add_argument("-s, --source", dest="source",
-                        metavar="dir",
-                        default="../docs/docs",
+                        metavar="DIR",
+                        default=path_relative_to_script("../docs/docs"),
                         help="set source directory with documentation for indexing")
     parser.add_argument("-d, --destination", dest="destination",
-                        metavar="dir",
-                        default="index",
-                        help="set destination Xapian database directory")
+                        metavar="DIR",
+                        default=path_relative_to_script("index"),
+                        help="set Xapian database directory")
     parser.add_argument("-l, --log-level", dest="log_level",
                         default="INFO",
                         choices=["debug", "info", "warn", "error"],
@@ -102,9 +182,12 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.getLevelName(args.log_level.upper()),
-                        format="%(message)s")
-    logging.debug("Working directory: %s", Path.cwd().absolute())
-    logging.info("Started indexing. Source location is '%s', database path is '%s'",
-                 args.source, args.destination)
+                        format="%(relativeCreated)-6d %(message)s")
 
-    index(Path(args.source), Path(args.destination))
+    logging.info("Start indexing '%s' to '%s'", args.source, args.destination)
+    try:
+        visitor = Visitor(Path(args.source), Path(args.destination))
+        visitor.index()
+        logging.info("Finish indexing")
+    except Exception as e:
+        logging.error("Indexing fail due to exception: %s", e)
