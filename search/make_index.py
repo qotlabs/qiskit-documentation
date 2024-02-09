@@ -81,12 +81,30 @@ def url_to_path(sourceDir: Path, url: str) -> Path:
     raise UrlError(f"Cannot find path for URL {url}")
 
 
+class Database:
+    def __init__(self, path: Path, *,
+                 read_only: bool = True):
+        if read_only:
+            self._database = xapian.Database(str(path))
+        else:
+            self._database = xapian.WritableDatabase(str(path), xapian.DB_CREATE_OR_OPEN)
+
+        self._term_generator = xapian.TermGenerator()
+        self._term_generator.set_stemmer(xapian.Stem("en"))
+
+        self._enquire = xapian.Enquire(self._database)
+        self._enquire.set_weighting_scheme(xapian.BoolWeight())
+
+    def select_path(self, path_hash) -> xapian.MSet:
+        self._database.reopen()
+        self._enquire.set_query(xapian.Query('P' + path_hash.hexdigest()))
+        return self._enquire.get_mset(0, self._database.get_doccount())
+
+
 class Visitor:
     def __init__(self, source: Path, destination: Path):
         self.sourceDir = source
-        self.database = xapian.WritableDatabase(str(destination), xapian.DB_CREATE_OR_OPEN)
-        term_generator = xapian.TermGenerator()
-        term_generator.set_stemmer(xapian.Stem("en"))
+        self.database = Database(destination, read_only=False)
 
 
     @staticmethod
@@ -95,6 +113,7 @@ class Visitor:
 
 
     def index(self):
+        self.updated_dids = set()
         for toc_path in self.sourceDir.rglob("_toc.json"):
             logging.debug("Process table of contents %s", toc_path)
             with open(toc_path, "r") as toc:
@@ -119,25 +138,22 @@ class Visitor:
     def visit_url(self, url: str):
         try:
             path = url_to_path(self.sourceDir, url)
-            path_hash = sha256(str(path.relative_to(self.sourceDir)).encode()).hexdigest()
-            self.database.reopen()
-            enquire = xapian.Enquire(self.database)
-            enquire.set_weighting_scheme(xapian.BoolWeight())
-            enquire.set_query(xapian.Query('P' + path_hash))
-            match = enquire.get_mset(0, 1)
-            if match.empty():
-                logging.debug("No documents for URL %s", url)
-            else:
-                doc = DocumentData(match.document.get_data())
-                file_mtime = path.stat().st_mtime
-                if file_mtime <= doc.mtime:
+            path_hash = sha256(str(path.relative_to(self.sourceDir)).encode())
+            matches = self.database.select_path(path_hash)
+            if not matches.empty():
+                doc_data = DocumentData(matches[0].document.get_data())
+                if path.stat().st_mtime <= doc_data.mtime:
                     logging.debug("Skip up-to-date URL %s", url)
+                    for match in matches:
+                        logging.debug("Mark DID %d as up-to-date", match)
+                        self.updated_dids.add(match)
                     return
-            #self.database.postlist()
-
+            self.visit_path(path)
         except Exception as e:
-            logging.warn(e)
+            logging.warning(e)
 
+    def visit_path(self, path: Path):
+        logging.info("Visit %s", path)
         return
         module = DocModule.DOCUMENTATION
         version = 0.45
