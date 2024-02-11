@@ -3,16 +3,16 @@
 import logging
 import json
 import re
-from argparse import ArgumentParser
+import argparse
 from pathlib import Path
 from typing import TextIO
 from time import time
 from document import Document, calc_hash
 from database import Database
 
-HEADER_REGEX = re.compile(r" *#{1,3}[^#](.*)")
-CODE_BLOCK_REGEX = re.compile(r"[ \t]*```[a-zA-Z0-9]*")
-TAG_REGEX = re.compile(r"<[^>]+>|[#*_~`\\]+")
+HEADER_REGEX = re.compile(r"\s*#{1,3}[^#](.*)")
+CODE_BLOCK_REGEX = re.compile(r"\s*```[\w\d]*")
+TAG_REGEX = re.compile(r"<[^>]+>|[#*_~`\\]+|\-\-+")
 
 
 def url_to_path(root: Path, url: str) -> Path:
@@ -60,9 +60,10 @@ class Statistics:
 
 
 class Visitor:
-    def __init__(self, source: Path, destination: Path):
+    def __init__(self, source: Path, destination: Path, force_update: bool = False):
         self.source_dir = source
         self.database = Database(destination, read_only=False)
+        self.force_update = force_update
 
 
     @staticmethod
@@ -107,27 +108,28 @@ class Visitor:
             self.visit_toc(child)
 
 
+    def need_update(self, doc: Document) -> bool:
+        match self.database.search_path(doc.path_hash):
+            case db_mtime, docids:
+                if doc.mtime > db_mtime:
+                    return True
+                logging.debug("Skip up-to-date URL %s", doc.page_url)
+                self.stats.uptodate_docs += 1
+                for docid in docids:
+                    logging.debug("Mark #%d as up-to-date", docid)
+                    self.visited_docids.add(docid)
+                return False
+        return True
+
+
     def visit_page_url(self, doc: Document):
-        # Find document path and related fields
         doc.path = url_to_path(self.source_dir, doc.page_url)
         doc.rel_path = str(doc.path.relative_to(self.source_dir))
         doc.path_hash = calc_hash(doc.rel_path)
         doc.mtime = doc.path.stat().st_mtime
-
-        # Check whether database update is necessary
-        matches = self.database.search_path(doc.path_hash)
-        if not matches.empty():
-            db_mtime = Database.get_mtime(matches[0])
-            if doc.mtime <= db_mtime:
-                logging.debug("Skip up-to-date URL %s", doc.page_url)
-                self.stats.uptodate_docs += 1
-                for match in matches:
-                    logging.debug("Mark #%d as up-to-date", match.docid)
-                    self.visited_docids.add(match.docid)
-                return
-
-        doc.parse_page_url()
-        self.visit_path(doc)
+        if self.force_update or self.need_update(doc):
+            doc.parse_page_url()
+            self.visit_path(doc)
 
 
     def visit_path(self, doc: Document):
@@ -156,8 +158,8 @@ class Visitor:
                 if not header or code_block:
                     doc.text += line
                     continue
-                doc.title = remove_tags(header.group(1))
                 self.visit_text(doc)
+                doc.title = remove_tags(header.group(1))
                 doc.text = ""
             self.visit_text(doc)
 
@@ -175,8 +177,8 @@ class Visitor:
                             if not header:
                                 doc.text += line
                                 continue
-                            doc.title = remove_tags(header.group(1))
                             self.visit_text(doc)
+                            doc.title = remove_tags(header.group(1))
                             doc.text = ""
                     case "code":
                         doc.text += "".join(cell["source"])
@@ -197,7 +199,9 @@ def path_relative_to_script(path: str) -> str:
 
 
 if __name__ == "__main__":
-    parser = ArgumentParser(description="Make Xapian search index of Qiskit documentation.")
+    parser = argparse.ArgumentParser(
+        description="Make Xapian search index of Qiskit documentation."
+    )
     parser.add_argument("-s, --source", dest="source",
                         metavar="DIR",
                         default=path_relative_to_script("../docs/docs"),
@@ -210,6 +214,9 @@ if __name__ == "__main__":
                         default="info",
                         choices=["debug", "info", "warn", "error"],
                         help="set the logging level")
+    parser.add_argument("-f, --force", dest="force",
+                        action=argparse.BooleanOptionalAction,
+                        help="force full update of the database")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.getLevelName(args.log_level.upper()),
@@ -218,7 +225,7 @@ if __name__ == "__main__":
     print(f"Start indexing '{args.source}' to '{args.destination}'")
     duration = time()
     try:
-        visitor = Visitor(Path(args.source), Path(args.destination))
+        visitor = Visitor(Path(args.source), Path(args.destination), args.force)
         visitor.index()
         duration = time() - duration
         stats = visitor.stats
