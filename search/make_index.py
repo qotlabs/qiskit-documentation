@@ -2,15 +2,13 @@
 
 import logging
 import json
-import xapian
 import re
-from dataclasses import dataclass
-from enum import Enum
 from argparse import ArgumentParser
 from pathlib import Path
-from hashlib import sha256
-from io import StringIO
+from typing import TextIO
 from time import time
+from document import Document, calc_hash
+from database import Database
 
 HEADER_REGEX = re.compile(r" *#{1,3}[^#](.*)")
 CODE_BLOCK_REGEX = re.compile(r"[ \t]*```[a-zA-Z0-9]*")
@@ -34,15 +32,11 @@ def url_to_path(root: Path, url: str) -> Path:
     raise ValueError(f"Cannot find path for URL {url}")
 
 
-def calc_hash(s: str) -> str:
-    return sha256(s.encode()).hexdigest()
-
-
 def remove_tags(s: str) -> str:
     return TAG_REGEX.sub("", s)
 
 
-def skip_md_banner(file: StringIO) -> bool:
+def skip_md_banner(file: TextIO) -> bool:
     # Check the first line
     if file.readline() != "---\n":
         file.seek(0)
@@ -56,134 +50,18 @@ def skip_md_banner(file: StringIO) -> bool:
     return False
 
 
-class DocModule(Enum):
-    DOCUMENTATION = 1
-    API = 2
-
-
-class DocSection(Enum):
-    MIGRATION_GUIDES = 1
-    QISKIT = 2
-    QISKIT_IBM_PROVIDER = 3
-    QISKIT_IBM_RUNTIME = 4
-    BUILD = 5
-    RUN = 6
-    START = 7
-    TRANSPILE = 8
-    VERIFY = 9
-
-    @staticmethod
-    def from_str(s: str):
-        return DocSection[s.replace("-", "_").upper()]
-
-
-@dataclass
-class Document:
-    page_url: str | None = None
-    _url: str | None = None
-    _url_hash: str | None = None
-    path: Path | None = None
-    rel_path: str | None = None
-    path_hash: str | None = None
-    mtime: float | None = None
-    module: DocModule | None = None
-    section: DocSection | None = None
-    version: float = 0
-    page_title: str | None = None
-    _title: str | None = None
-    text: str | None = None
+class Statistics:
+    modified_docs: int = 0
+    uptodate_docs: int = 0
 
     @property
-    def url(self) -> str | None:
-        return self._url
-
-    @property
-    def url_hash(self) -> str | None:
-        return self._url_hash
-
-    @property
-    def title(self) -> str | None:
-        return self._title
-
-    @title.setter
-    def title(self, val: str):
-        self._title = val
-        self._url = f"{self.page_url}#{self._title}"
-        self._url_hash = calc_hash(self._url)
-
-    @staticmethod
-    def from_db(data: bytes):
-        json_data = json.loads(data.decode())
-        return Document(
-            _url=json_data["url"],
-            mtime=json_data["mtime"],
-            text=json_data["text"],
-        )
-
-    def to_db(self) -> bytes:
-        return json.dumps({
-            "mtime": self.mtime,
-            "url": self.url,
-            "text": self.text
-        }).encode()
-
-
-class Database:
-    def __init__(self,
-            path: Path,
-            read_only: bool = True
-        ):
-        if read_only:
-            self._database = xapian.Database(str(path))
-        else:
-            self._database = xapian.WritableDatabase(str(path), xapian.DB_CREATE_OR_OPEN)
-
-        self._term_generator = xapian.TermGenerator()
-        self._term_generator.set_stemmer(xapian.Stem("en"))
-
-        self._enquire = xapian.Enquire(self._database)
-        self._enquire.set_weighting_scheme(xapian.BoolWeight())
-
-
-    def __iter__(self):
-        return self._database.postlist("")
-
-
-    def select_path(self, path_hash: str) -> xapian.MSet:
-        self._enquire.set_query(xapian.Query(f"P{path_hash}"))
-        return self._enquire.get_mset(0, self._database.get_doccount())
-
-
-    def replace_document(self, doc: Document) -> int:
-        xdoc = xapian.Document()
-        self._term_generator.set_document(xdoc)
-
-        self._term_generator.index_text(doc.title, 1, "S")
-        self._term_generator.index_text(doc.page_title)
-        self._term_generator.index_text(doc.title)
-        self._term_generator.increase_termpos()
-        self._term_generator.index_text(doc.text)
-
-        id_term = f"Q{doc.url_hash}"
-        xdoc.add_boolean_term(id_term)
-        xdoc.add_boolean_term(f"P{doc.path_hash}")
-        xdoc.add_boolean_term(f"XM{doc.module.value}")
-        xdoc.add_boolean_term(f"XS{doc.section.value}")
-        if doc.version != 0:
-            xdoc.add_boolean_term(f"XV{doc.version}")
-
-        xdoc.set_data(doc.to_db())
-
-        return self._database.replace_document(id_term, xdoc)
-
-
-    def delete_document(self, doc_id: int):
-        self._database.delete_document(doc_id)
+    def total_docs(self) -> int:
+        return self.modified_docs + self.uptodate_docs
 
 
 class Visitor:
     def __init__(self, source: Path, destination: Path):
-        self.sourceDir = source
+        self.source_dir = source
         self.database = Database(destination, read_only=False)
 
 
@@ -193,21 +71,20 @@ class Visitor:
 
 
     def index(self):
-        self.updated_docids = set()
-        self.indexed = 0
-        self.uptodate = 0
-        for toc_path in self.sourceDir.rglob("_toc.json"):
+        self.visited_docids = set()
+        self.stats = Statistics()
+
+        # Index new and modified files
+        for toc_path in self.source_dir.rglob("_toc.json"):
             logging.debug("Process table of contents %s", toc_path)
             with open(toc_path, "r") as toc:
                 self.visit_toc(json.load(toc))
-        self.delete()
 
-
-    def delete(self):
-        for xdoc in self.database:
-            if xdoc.docid not in self.updated_docids:
-                logging.info("Delete #%d", xdoc.docid)
-                self.database.delete_document(xdoc.docid)
+        # Delete expired documents from the database
+        for post in self.database:
+            if post.docid not in self.visited_docids:
+                logging.info("Delete #%d", post.docid)
+                self.database.delete_document(post.docid)
 
 
     def visit_toc(self, toc: dict):
@@ -232,39 +109,24 @@ class Visitor:
 
     def visit_page_url(self, doc: Document):
         # Find document path and related fields
-        doc.path = url_to_path(self.sourceDir, doc.page_url)
-        doc.rel_path = str(doc.path.relative_to(self.sourceDir))
+        doc.path = url_to_path(self.source_dir, doc.page_url)
+        doc.rel_path = str(doc.path.relative_to(self.source_dir))
         doc.path_hash = calc_hash(doc.rel_path)
         doc.mtime = doc.path.stat().st_mtime
 
         # Check whether database update is necessary
-        matches = self.database.select_path(doc.path_hash)
+        matches = self.database.search_path(doc.path_hash)
         if not matches.empty():
-            db_doc = Document.from_db(matches[0].document.get_data())
-            if doc.mtime <= db_doc.mtime:
+            db_mtime = Database.get_mtime(matches[0])
+            if doc.mtime <= db_mtime:
                 logging.debug("Skip up-to-date URL %s", doc.page_url)
-                self.uptodate += 1
+                self.stats.uptodate_docs += 1
                 for match in matches:
                     logging.debug("Mark #%d as up-to-date", match.docid)
-                    self.updated_docids.add(match.docid)
+                    self.visited_docids.add(match.docid)
                 return
 
-        # Find document module, section, and version from URL
-        chunks = doc.page_url.split("/")
-        if chunks[1] == "api":
-            doc.module = DocModule.API
-            doc.section = DocSection.from_str(chunks[2])
-            try:
-                if chunks[3] == "release-notes":
-                    doc.version = float(chunks[4])
-                else:
-                    doc.version = float(chunks[3])
-            except:
-                pass # Leave `doc.version == 0`
-        else:
-            doc.module = DocModule.DOCUMENTATION
-            doc.section = DocSection.from_str(chunks[1])
-
+        doc.parse_page_url()
         self.visit_path(doc)
 
 
@@ -278,7 +140,7 @@ class Visitor:
             case _:
                 # Should never execute unless there is an error in the program
                 logging.error("No file handler for %s", doc.rel_path)
-        self.indexed += 1
+        self.stats.modified_docs += 1
 
 
     def visit_md(self, doc: Document):
@@ -325,9 +187,9 @@ class Visitor:
         doc.text = remove_tags(doc.text).strip()
         if len(doc.text) == 0:
             return
+        logging.debug("Index section %s", doc.title)
         docid = self.database.replace_document(doc)
-        logging.debug("Index section #%d %s", docid, doc.title)
-        self.updated_docids.add(docid)
+        self.visited_docids.add(docid)
 
 
 def path_relative_to_script(path: str) -> str:
@@ -359,8 +221,8 @@ if __name__ == "__main__":
         visitor = Visitor(Path(args.source), Path(args.destination))
         visitor.index()
         duration = time() - duration
-        total = visitor.indexed + visitor.uptodate
-        print(f"Finish indexing of {total} documents ({visitor.indexed} modified) "
-              f"in {duration:.3} seconds")
+        stats = visitor.stats
+        print(f"Finish indexing of {stats.total_docs} documents "
+              f"({stats.modified_docs} modified) in {duration:.3} seconds")
     except Exception as e:
         logging.error("Indexing fail due to exception: %s", e)
