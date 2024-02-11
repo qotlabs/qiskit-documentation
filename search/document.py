@@ -1,7 +1,12 @@
+import re
 from dataclasses import dataclass
 from enum import Enum
 from hashlib import sha256
 from pathlib import Path
+
+
+WHITESPACE_REGEX = re.compile(r"\s+")
+TITLE_REGEX = re.compile(r"[^\w\d_]+")
 
 
 class DocModule(Enum):
@@ -35,6 +40,12 @@ def calc_hash(s: str) -> str:
     return sha256(s.encode()).hexdigest()
 
 
+def normalize_title(s: str) -> str:
+    s = TITLE_REGEX.sub(" ", s.lower())
+    s = WHITESPACE_REGEX.sub("-", s.strip())
+    return s
+
+
 @dataclass
 class Document:
     page_url: str | None = None
@@ -50,6 +61,7 @@ class Document:
     page_title: str | None = None
     _title: str | None = None
     text: str | None = None
+    docid: int = 0
 
 
     @property
@@ -70,7 +82,7 @@ class Document:
     @title.setter
     def title(self, val: str):
         self._title = val
-        self._url = f"{self.page_url}#{self._title}"
+        self._url = f"{self.page_url}#{normalize_title(self._title)}"
         self._url_hash = calc_hash(self._url)
 
 
