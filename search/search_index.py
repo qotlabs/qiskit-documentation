@@ -16,13 +16,18 @@ if __name__ == "__main__":
                         metavar="DIR",
                         default=path_relative_to_script("index"),
                         help="set Xapian database directory")
+    parser.add_argument("-n, --number", dest="number",
+                        metavar="NUM",
+                        type=int,
+                        default=5,
+                        help="set the number of returned results")
     parser.add_argument("query",
                         help="search query string")
     args = parser.parse_args()
 
     db = Database(Path(args.destination))
     duration = time()
-    for doc in reversed(db.search(args.query)):
+    for doc in reversed(db.search(args.query, page_size=args.number)):
         print(f"\033[1;36m{doc.url}\033[0m:\n{doc.text}\n")
     duration = time() - duration
     print(f"Finish search in {duration:.3} seconds")
