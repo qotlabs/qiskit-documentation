@@ -1,1 +1,2 @@
 xapian==1.4.18
+fastapi==0.63

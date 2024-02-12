@@ -59,6 +59,7 @@ class Database:
                 text=mset.snippet(json_data["T"], snippet_len).decode(),
                 docid=match.docid,
                 _url=json_data["U"],
+                page_title=json_data["PT"],
                 _title=json_data["S"],
                 module=DocModule(json_data["XM"]),
                 section=DocSection(json_data["XS"]),
@@ -81,9 +82,9 @@ class Database:
         self._term_generator.set_document(xdoc)
 
         self._term_generator.index_text(doc.title, 1, "S")
-        self._term_generator.index_text(doc.page_title, 10)
+        self._term_generator.index_text(doc.page_title, 5)
         self._term_generator.increase_termpos()
-        self._term_generator.index_text(doc.title, 5)
+        self._term_generator.index_text(doc.title, 10)
         self._term_generator.increase_termpos()
         self._term_generator.index_text(doc.text)
 
@@ -97,6 +98,7 @@ class Database:
         xdoc.set_data(json.dumps({
             "U": doc.url,
             "T": doc.text,
+            "PT": doc.page_title,
             "S": doc.title,
             "XM": doc.module.value,
             "XS": doc.section.value,

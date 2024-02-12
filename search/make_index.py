@@ -12,7 +12,7 @@ from database import Database
 
 HEADER_REGEX = re.compile(r"\s*#{1,3}[^#](.*)")
 CODE_BLOCK_REGEX = re.compile(r"\s*```[\w\d]*")
-TAG_REGEX = re.compile(r"<[^>]+>|[#*_~`\\]+|\-\-+")
+TAG_REGEX = re.compile(r"<[^>]+>|[#*~`\\]+|\-\-+")
 
 
 def url_to_path(root: Path, url: str) -> Path:

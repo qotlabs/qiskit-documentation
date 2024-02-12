@@ -13,6 +13,10 @@ class DocModule(Enum):
     DOCUMENTATION = 1
     API = 2
 
+    @staticmethod
+    def from_str(s: str):
+        return DocModule[s.upper()]
+
     def __str__(self):
         return self.name.lower()
 
