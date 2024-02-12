@@ -1,3 +1,4 @@
+// Checking onclick event
 const customInterval = setInterval(() => {
     const header_name = document.querySelector('.cds--header__name');
     // hydrateRoot() adds onclick event so just wait until it appears
@@ -7,295 +8,408 @@ const customInterval = setInterval(() => {
     }
 }, 10);
 
+// Links list
 const regularLinks = [
-    {
-        href: '/start',
-        text: 'Start'
-    },
-    {
-        href: '/build',
-        text: 'Build'
-    },
-    {
-        href: '/verify',
-        text: 'Verify'
-    },
-    {
-        href: '/run',
-        text: 'Run'
-    }
+    '/start',
+    '/build',
+    '/verify',
+    '/run'
 ];
 
-const apiReferenceLinks = [
-    {
-        href: '/api/qiskit',
-        text: 'Qiskit'
-    },
-    {
-        href: '/api/qiskit-ibm-runtime',
-        text: 'Qiskit Runtime IBM Client'
-    },
-    {
-        href: '/api/qiskit-ibm-provider',
-        text: 'Qiskit IBM Provider'
-    },
-    {
-        href: '/api/migration-guides',
-        text: 'Migration guides'
+// HTML Data
+const navElement = `<nav class="cds--header__nav" aria-label="IBM Documentation">
+    <ul class="cds--header__menu-bar" role="menubar" aria-label="IBM Documentation">
+        <li role="none">
+            <a href="/start" role="menuitem" tabindex="0" class="cds--header__menu-item">
+                <span class="cds--text-truncate--end">Start</span>
+            </a>
+        </li>
+        <li role="none">
+            <a href="/build" role="menuitem" tabindex="0" class="cds--header__menu-item">
+                <span class="cds--text-truncate--end">Build</span>
+            </a>
+        </li>
+        <li role="none">
+            <a href="/verify" role="menuitem" tabindex="0" class="cds--header__menu-item">
+                <span class="cds--text-truncate--end">Verify</span>
+            </a>
+        </li>
+        <li role="none">
+            <a href="/run" role="menuitem" tabindex="0" class="cds--header__menu-item">
+                <span class="cds--text-truncate--end">Run</span>
+            </a>
+        </li>
+        <li class="cds--header__submenu" role="none">
+            <button role="menuitem" aria-haspopup="menu" aria-expanded="false" 
+                aria-controls="radix-:R1k6ta:" aria-label="API Reference" 
+                class="relative text-body-compact-01 flex items-center h-full whitespace-nowrap px-16 
+                border-2 transition-colors hover:bg-background-hover hover:text-text-primary
+                border-transparent focus-outline text-text-secondary bg-background">
+                API Reference
+                <svg 
+                    focusable="false"
+                    preserveAspectRatio="xMidYMid meet"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    width="16"
+                    height="16" 
+                    viewBox="0 0 16 16" 
+                    aria-hidden="true"
+                    class="cds--header__menu-arrow">
+                    <path d="M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z"></path>
+                </svg>
+            </button>
+        </li>
+    </ul>
+</nav>`;
+const apiReferencesListElement = `
+<ul id="radix-:R1s6ta:" role="menu" 
+        class="flex cds--header__menu m-0 p-0 flex-col bg-layer min-w-[200px]
+        shadow-[0_0_6px_-1px_var(--cds-shadow)]" tabindex="0" style="outline: none;">
+    <li class="" role="none">
+        <a role="menuitem" 
+            class="text-body-compact-01 flex items-center h-48 px-16 border-2 transition-colors
+            hover:bg-background-hover hover:text-text-primary border-transparent focus-outline
+            bg-layer text-text-secondary" tabindex="0" data-radix-collection-item=""
+            href="/api/qiskit">
+            <span class="truncate">Qiskit</span>
+        </a>
+    </li>
+    <li class="" role="none">
+        <a role="menuitem" 
+            class="text-body-compact-01 flex items-center h-48 px-16 border-2 transition-colors
+            hover:bg-background-hover hover:text-text-primary border-transparent focus-outline
+            bg-layer text-text-secondary" tabindex="0" data-radix-collection-item=""
+            href="/api/qiskit-ibm-runtime">
+            <span class="truncate">Qiskit Runtime IBM Client</span>
+        </a>
+    </li>
+    <li class="" role="none">
+        <a role="menuitem"
+            class="text-body-compact-01 flex items-center h-48 px-16 border-2 transition-colors
+            hover:bg-background-hover hover:text-text-primary border-transparent focus-outline
+            bg-layer text-text-secondary" tabindex="0" data-radix-collection-item=""
+            href="/api/qiskit-ibm-provider">
+            <span class="truncate">Qiskit IBM Provider</span>
+        </a>
+    </li>
+    <li class="" role="none">
+        <a role="menuitem"
+            class="text-body-compact-01 flex items-center h-48 px-16 border-2 transition-colors
+            hover:bg-background-hover hover:text-text-primary border-transparent focus-outline
+            bg-layer text-text-secondary" tabindex="0"
+            data-radix-collection-item="" href="/api/migration-guides">
+            <span class="truncate">Migration guides</span>
+        </a>
+    </li>
+</ul>`;
+const headerGlobalElement = `<div class="cds--header__global">
+    <span class="cds--popover-container cds--popover--caret
+    cds--popover--high-contrast cds--popover--bottom cds--tooltip cds--icon-tooltip">
+        <div class="cds--tooltip-trigger__wrapper">
+            <button aria-label="Search" aria-labelledby="tooltip-:Rae6ta:"
+            class="cds--btn--icon-only cds--header__action cds--btn cds--btn--primary
+            cds--btn--icon-only cds--btn cds--btn--primary" type="button">
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+                xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="16" height="16"
+                viewBox="0 0 16 16" aria-hidden="true">
+                    <path d="M15,14.3L10.7,10c1.9-2.3,1.6-5.8-0.7-7.7S4.2,0.7,2.3,3S0.7,8.8,3,10.7c2,1.7,
+                    5,1.7,7,0l4.3,4.3L15,14.3z M2,6.5 C2,4,4,2,6.5,2S11,4,11,6.5S9,11,6.5,11S2,9,2,6.5z">
+                    </path>
+                </svg>
+            </button>
+        </div>
+        <span aria-hidden="true" id="tooltip-:Rae6ta:" role="tooltip" class="cds--popover">
+            <span class="cds--popover-content cds--tooltip-content">Search</span>
+            <span class="cds--popover-caret"></span></span>
+        </span>
+    </span>
+</div>`;
+const modalElement = `
+    <div role="presentation" aria-hidden="false" class="cds--modal is-visible px-16 pt-[80px] 
+    md:pt-[112px] items-start">
+        <div class="cds--modal-container w-full max-w-[600px] max-md:static max-md:h-auto" role="dialog"
+        aria-modal="true">
+            <button type="button" class="cds--visually-hidden">Focus sentinel</button>
+            <div class="cds--modal-container-body">
+                <div class="cds--modal-content p-0 m-0 overflow-y-hidden">
+                    <div class="relative flex focus-within-outline h-48 bg-layer-02 
+                        border-0 border-b border-solid border-border-strong-01">
+                        <label id="downshift-:r0:-label" for="downshift-:r0:-input" class="sr-only">
+                        Search Documentation</label>
+                        <span class="absolute flex items-center
+                        justify-center w-48 h-48 pointer-events-none">
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" 
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="16" height="16"
+                            viewBox="0 0 16 16" aria-hidden="true">
+                                <path d="M15,14.3L10.7,10c1.9-2.3,1.6-5.8-0.7-7.7S4.2,0.7,2.3,3S0.7,8.8,
+                                3,10.7c2,1.7,5,1.7,7,0l4.3,4.3L15,14.3z M2,6.5 C2,4,4,2,6.5,2S11,4,11,6.5
+                                S9,11,6.5,11S2,9,2,6.5z"></path>
+                            </svg>
+                        </span>
+                        <input aria-activedescendant="" aria-autocomplete="list"
+                        aria-controls="downshift-:r0:-menu" aria-expanded="false"
+                        aria-labelledby="downshift-:r0:-label" autocomplete="off"
+                        id="downshift-:r0:-input" role="combobox" placeholder="Search documentation"
+                        data-modal-primary-focus="true" class="border-0 font-[inherit] text-[100%]
+                        pl-48 h-48 outline-none flex-1 bg-transparent placeholder-text-placeholder
+                        text-text-primary clear-search-decoration" type="search" value="">
+                    </div>
+                    <div class="flex p-16 min-h-[48px] 
+                    items-center justify-between border-0 border-b border-solid
+                    border-border-subtle-01 theme-variant">
+                        <div role="radiogroup" aria-required="false" dir="ltr" aria-label="Search filter" 
+                        tabindex="0" style="outline: none;">
+                            <button type="button" role="radio" aria-checked="true" data-state="checked" 
+                            value="documentation" id="search-radio-documentation" 
+                            class="appearance-none border-0 inline-flex items-center
+                            justify-center align-middle cursor-pointer text-label-01
+                            m-4 px-8 py-2 rounded
+                            data-[state=unchecked]:bg-background data-[state=unchecked]:text-text-secondary
+                            data-[state=unchecked]:shadow-[0_0_0_1px_var(--cds-layer-active)]
+                            data-[state=checked]:bg-background-inverse
+                            data-[state=checked]:text-icon-inverse" aria-label="Documentation"
+                            tabindex="0" data-radix-collection-item="">Documentation</button>
+                            <button type="button" role="radio" aria-checked="false" 
+                            data-state="unchecked" value="api" id="search-radio-api"
+                            class="appearance-none border-0 inline-flex items-center
+                            justify-center align-middle cursor-pointer
+                            text-label-01 m-4 px-8 py-2 rounded
+                            data-[state=unchecked]:bg-background
+                            data-[state=unchecked]:text-text-secondary
+                            data-[state=unchecked]:shadow-[0_0_0_1px_var(--cds-layer-active)]
+                            data-[state=checked]:bg-background-inverse
+                            data-[state=checked]:text-icon-inverse"
+                            aria-label="API Reference" tabindex="0"
+                            data-radix-collection-item="">API Reference</button>
+                        </div>
+                        <div class="max-md:hidden">
+                            <span class="cds--popover-container cds--popover--caret 
+                            cds--popover--high-contrast cds--popover--top-right cds--tooltip">
+                                <div class="cds--tooltip-trigger__wrapper">
+                                    <button type="button" class="inline-flex justify-center
+                                    items-center w-24 h-24 bg-background text-text-secondary
+                                    appearance-none
+                                    rounded border-0 border-solid"
+                                    style="box-shadow: 0px 0px 5px 0px var(--cds-layer-active);"
+                                    aria-labelledby="tooltip-:r4:">/</button>
+                                </div>
+                                <span aria-hidden="true" id="tooltip-:r4:"
+                                    role="tooltip" class="cds--popover">
+                                    <span class="cds--popover-content
+                                    cds--tooltip-content">Press "/" to open search</span>
+                                    <span class="cds--popover-caret"></span>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="bg-layer-01 text-text-primary
+                    px-8 text-body-compact-01 overflow-y-auto max-h-[455px]
+                    scrollbar scrollbar-variant hidden">
+                        <div class="px-8 py-16 text-body-compact-01">
+                            <p class="m-0">No results found</p>
+                            <p class="m-0 mt-4 text-label-01 text-text-secondary">
+                                Please try a different search query or browse all documentation.
+                            </p>
+                        </div>
+                        <ul id="downshift-:r0:-menu" role="listbox" 
+                        aria-labelledby="downshift-:r0:-label" class="list-none p-0 m-0 hidden"
+                        aria-hidden="true"></ul>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="cds--visually-hidden">Focus sentinel</button>
+        </div>
+    </div>`;
+
+// Checking current link
+const setActiveLink = () => {
+    
+    const currentNavLink = document.querySelector('.cds--header__menu-item--current');
+    if(currentNavLink) {
+        currentNavLink.className = 'cds--header__menu-item';
     }
-];
-
-const pathName = document.location.pathname;
-
-const createNavigationLinkElement = (href, text) => {
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', href);
-    linkElement.setAttribute('role', 'menuitem');
-    linkElement.setAttribute('tabindex', 0);
-    let spanClass = 'cds--text-truncate--end';
-    if (!href.match('api')){
-        linkElement.classList.add('cds--header__menu-item');
-        linkElement.addEventListener('click', (event) => {
-            if (href === pathName) {
-                event.preventDefault(); 
-            }
-            else {
-                const activeLink = document.querySelector('.cds--header__menu-item--current');
-                activeLink.classList.remove('cds--header__menu-item--current');
-                activeLink.classList.remove('!text-text-primary');
-            }
-        });
-        if (href === pathName) {
-            linkElement.setAttribute('tabindex', -1);
-            linkElement.classList.add('cds--header__menu-item--current'); 
-            linkElement.classList.add('!text-text-primary');
+    const headerSubmenuCurrent = document.querySelector('.cds--header__submenu');
+    if (headerSubmenuCurrent) {
+        headerSubmenuCurrent.className = 'cds--header__submenu';
+    }
+    if(!location.pathname.match('api') && location.pathname !== '/') {
+        const section = location.pathname.split('/');
+        const activeLink = document.querySelector(`.cds--header__menu-item[href="/${section[1]}"]`);
+        if (activeLink) {
+            activeLink.className +=' cds--header__menu-item--current !text-text-primary';
         }
     }
-    else {
-        const classNameList = `text-body-compact-01
-        flex
-        items-center
-        h-48
-        px-16
-        border-2
-        transition-colors
-        hover:bg-background-hover
-        hover:text-text-primary
-        border-transparent
-        focus-outline
-        bg-layer
-        text-text-secondary`;
-        linkElement.className = classNameList;
-        spanClass = 'truncate';
+    else if (location.pathname.match('api')) {
+        if (headerSubmenuCurrent) {
+            headerSubmenuCurrent.className = `cds--header__submenu after:absolute after:bottom-0
+            after:w-full after:bg-border-interactive after:h-[3px]`;
+            headerSubmenuCurrent.querySelector('button').classList.remove('text-text-secondary');
+            headerSubmenuCurrent.querySelector('button').classList.add('text-text-primary');
+        }
     }
-    const spanElement = document.createElement('span');
-    spanElement.classList.add(spanClass);
-    const textContent = document.createTextNode(text);
-    spanElement.appendChild(textContent);
-    linkElement.appendChild(spanElement);
-    return linkElement;
+    else if (location.pathname === '/') {
+        location.href = '/start';
+    }
 };
 
-const createNavigationListElement = () => {
-    const ulElement = document.createElement('ul');
-    ulElement.classList.add('cds--header__menu-bar');
-    ulElement.setAttribute('role', 'menubar');
-    ulElement.setAttribute('aria-label', 'IBM Documentation');
-    return ulElement;
-};
+let lastUrl = location.href;
+new MutationObserver(() => {
+    const url = location.href;
+    if (url !== lastUrl) {
+        lastUrl = url;
+        setActiveLink();
+    }
+}).observe(document, {subtree: true, childList: true});
 
-const createNavigationElement = () => {
-    const navElement = document.createElement('nav');
-    navElement.classList.add('cds--header__nav');
-    navElement.setAttribute('aria-label', 'IBM Documentation');
-    return navElement;
+// Action connected to API Reference button
+let apiReferencesListToggled = false;
+const apiReferenceMenuClose = () => {
+    const apiReferencesLinksMenu = document.querySelector('ul[id="radix-:R1s6ta:"]');
+    if (apiReferencesLinksMenu) {
+        apiReferencesLinksMenu.outerHTML = '';
+    }
 };
-
-const createIcon = (pathAttribute) => {
-    const icon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    icon.setAttribute('focusable', false);
-    icon.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-    icon.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-    icon.setAttribute('fill', 'currentColor');
-    icon.setAttribute('width', 16);
-    icon.setAttribute('height', 16);
-    icon.setAttribute('viewBox', '0 0 16 16');
-    icon.setAttribute('aria-hidden', true);
-    const path = document.createElementNS('http://www.w3.org/2000/svg','path');
-    path.setAttribute('d', pathAttribute);
-    icon.appendChild(path);
-    return icon;
-}
 
 const customClientRender = () => {
     const header = document.querySelector('.cds--header');
-    const linksList = createNavigationListElement();
-    const navigation = createNavigationElement();
-    regularLinks.forEach(
-        (link) => {
-            const listElement = document.createElement('li');
-            listElement.setAttribute('role', 'none')
-            listElement.appendChild(createNavigationLinkElement(
-                link.href,
-                link.text
-            ));
-            linksList.appendChild(listElement);
-        }
-    );
-
-    const apiReferenceListElement = document.createElement('li');
-    apiReferenceListElement.classList.add('cds--header__submenu');
-    apiReferenceListElement.setAttribute('role', 'none');
-    const checkCurrentLink = () => {
-        if (pathName.match('api')) {
-            apiReferenceListElement.classList.add('after:absolute');
-            apiReferenceListElement.classList.add('after:bottom-0');
-            apiReferenceListElement.classList.add('after:w-full');
-            apiReferenceListElement.classList.add('after:bg-border-interactive');
-            apiReferenceListElement.classList.add('after:h-[3px]');
-            apiReferenceButton.classList.remove('text-text-secondary');
-            apiReferenceButton.classList.add('text-text-primary');
-        }
-    };
-    
-
-    let apiReferenceListToggled = false;
-
-    const arrowDownIcon = createIcon('M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z');
-    arrowDownIcon.classList.add('cds--header__menu-arrow');
-    const apiReferenceButton = document.createElement('button');
-    apiReferenceButton.setAttribute('role', 'menuitem');
-    apiReferenceButton.setAttribute('aria-haspopup', 'menu');
-    apiReferenceButton.setAttribute('aria-expanded', apiReferenceListToggled);
-    apiReferenceButton.setAttribute('aria-controls', 'radix-:R1k6ta:');
-    apiReferenceButton.setAttribute('aria-label', 'API Reference');
-    apiReferenceButton.appendChild(document.createTextNode('API Reference'));
-    apiReferenceButton.className = `relative
-        text-body-compact-01
-        flex
-        items-center
-        h-full
-        whitespace-nowrap
-        px-16
-        border-2
-        transition-colors
-        hover:bg-background-hover
-        hover:text-text-primary
-        border-transparent
-        focus-outline
-        text-text-secondary`;
-    apiReferenceButton.appendChild(arrowDownIcon);
-    checkCurrentLink();
-
-    const apiReferenceLinksMenu = document.createElement('ul');
-    apiReferenceLinksMenu.setAttribute('role', 'menu');
-    apiReferenceLinksMenu.setAttribute('tabindex', 0);
-    apiReferenceLinksMenu.setAttribute('id', 'radix-:R1k6ta:');
-    apiReferenceLinksMenu.style.outline = 'none';
-    apiReferenceLinksMenu.className = `flex
-    cds--header__menu
-    m-0
-    p-0
-    flex-col
-    bg-layer
-    min-w-[200px]
-    shadow-[0_0_6px_-1px_var(--cds-shadow)]`;
-
-    const apiReferenceMenuClose = () => {
-        if(apiReferenceLinksMenu) {
-            apiReferenceLinksMenu.outerHTML = '';
-            apiReferenceButton.classList.remove('bg-layer');
-            apiReferenceButton.classList.add('bg-background');
-            checkCurrentLink();
-        }
-    };
-
-    const addElementsToLinksMenu = () => {
-        apiReferenceListElement.classList.remove('after:absolute');
-        apiReferenceListElement.classList.remove('after:bottom-0');
-        apiReferenceListElement.classList.remove('after:w-full');
-        apiReferenceListElement.classList.remove('after:bg-border-interactive');
-        apiReferenceListElement.classList.remove('after:h-[3px]');
-        apiReferenceButton.classList.add('text-text-secondary');
-        apiReferenceButton.classList.remove('text-text-primary');
-        apiReferenceListToggled = !apiReferenceListToggled;
-        apiReferenceButton.setAttribute('aria-expanded', apiReferenceListToggled);
-        if(apiReferenceListToggled) {
-            apiReferenceButton.insertAdjacentElement('afterend', apiReferenceLinksMenu);
-            apiReferenceLinksMenu.innerHTML = '';
-            apiReferenceLinks.forEach((link) => {
-                const apiReferenceLinkElement = createNavigationLinkElement(
-                    link.href,
-                    link.text
-                );
-                if (pathName === link.href) {
-                    apiReferenceLinkElement.setAttribute('tabindex', -1);
-                    apiReferenceLinkElement.addEventListener(
-                        'click', (event) => event.preventDefault()
-                    );
+    header.insertAdjacentHTML('beforeend', navElement);
+    header.insertAdjacentHTML('beforeend', headerGlobalElement);
+    setActiveLink();
+    // Clicking API Reference button
+    const apiReferenceButton = document.querySelector('button[aria-label="API Reference"]');
+    apiReferenceButton.addEventListener('click',
+        () => {
+            apiReferencesListToggled = !apiReferencesListToggled;
+            apiReferenceButton.setAttribute('aria-expanded', apiReferencesListToggled);
+            const checkApiLink = () => {
+                if (location.pathname.match('api')) {
+                    document.querySelector('.cds--header__submenu').className = `
+                    cds--header__submenu after:absolute after:bottom-0 after:w-full 
+                    after:bg-border-interactive after:h-[3px]`;
+                    apiReferenceButton.classList.remove('text-text-secondary');
+                    apiReferenceButton.classList.add('text-text-primary');
                 }
-                const apiReferenceMenuElement = document.createElement('li');
-                apiReferenceMenuElement.setAttribute('role', 'none');
-                apiReferenceMenuElement.appendChild(apiReferenceLinkElement);
-                apiReferenceLinksMenu.appendChild(apiReferenceMenuElement);
-            });
-            apiReferenceButton.classList.remove('bg-background');
-            apiReferenceButton.classList.add('bg-layer');
-        }
-        else {
-            apiReferenceMenuClose(); 
-        };
-    }
-
-    apiReferenceListElement.addEventListener('click', addElementsToLinksMenu);
-    apiReferenceListElement.appendChild(apiReferenceButton);
-    linksList.appendChild(apiReferenceListElement);
-    navigation.appendChild(linksList);
-    header.appendChild(navigation);
-    document.body.addEventListener('click', (event) =>
-        {
-            if (event.target !== apiReferenceButton) {
+            };
+            if (apiReferencesListToggled) {
+                apiReferenceButton.classList.add('bg-layer');
+                apiReferenceButton.classList.remove('bg-background');
+                apiReferenceButton.classList.add('text-text-secondary');
+                apiReferenceButton.classList.remove('text-text-primary');
+                apiReferenceButton.parentElement.insertAdjacentHTML(
+                    'beforeend',
+                    apiReferencesListElement
+                );
+                if (location.pathname.match('api')) {
+                    document.querySelector('.cds--header__submenu').className = 'cds--header__submenu';
+                }
+                document.body.addEventListener('click', (event) => {
+                    if (event.target !== apiReferenceButton) {
+                        apiReferenceButton.classList.remove('bg-layer');
+                        apiReferenceButton.classList.add('bg-background');
+                        apiReferencesListToggled = false;
+                        apiReferenceMenuClose();
+                        checkApiLink();
+                    }
+                });
+            }
+            else {
+                apiReferenceButton.classList.remove('bg-layer');
+                apiReferenceButton.classList.add('bg-background');
                 apiReferenceMenuClose();
-                apiReferenceListToggled = false;
+                checkApiLink();
             }
         }
     );
-
-    const rightToolbar = document.createElement('div');
-    rightToolbar.classList.add('cds--header__global');
-    const searchButtonSpanElement = document.createElement('span');
-    const searchButtonDivWrapper = document.createElement('div');
-    searchButtonDivWrapper.classList.add('cds--tooltip-trigger__wrapper');
-    const searchButton = document.createElement('button');
-    searchButton.dataset.bsToggle = 'modal';
-    searchButton.dataset.bsTarget = '#modalSearch';
-    searchButton.setAttribute('type', 'button');
-    searchButton.setAttribute('aria-label', 'Search');
-    searchButton.setAttribute('aria-labelledby','tooltip-:Rae6ta:');
-    searchButton.className = `cds--btn--icon-only cds--header__action cds--btn cds--btn--primary 
-    cds--btn--icon-only cds--btn cds--btn--primary`;
-    const searchButtonIcon = createIcon(`M15,14.3L10.7,10c1.9-2.3,1.6-5.8-0.7-7.7S4.2,0.7,2.3,
-    3S0.7,8.8,3,10.7c2,1.7,5,1.7,7,0l4.3,4.3L15,14.3z
-    M2,6.5 C2,4,4,2,6.5,2S11,4,11,6.5S9,11,6.5,11S2,9,2,6.5z`);
-    searchButton.appendChild(searchButtonIcon);
-    searchButtonDivWrapper.appendChild(searchButton);
-    const searchButtonSpanTooltip = document.createElement('span');
-    searchButtonSpanTooltip.setAttribute('aria-hidden', true);
-    searchButtonSpanTooltip.setAttribute('id', 'tooltip-:Rae6ta:');
-    searchButtonSpanTooltip.setAttribute('role', 'tooltip');
-    searchButtonSpanTooltip.classList.add('cds--popover');
-    const searchButtonToolipContent = document.createElement('span');
-    searchButtonToolipContent.classList.add('cds--popover-content');
-    searchButtonToolipContent.classList.add('cds--tooltip-content');
-    searchButtonToolipContent.setAttribute('wfd-invisible', true);
-    searchButtonToolipContent.appendChild(document.createTextNode('Search'));
-    const searchButtonPopoverCaret = document.createElement('span');
-    searchButtonPopoverCaret.classList.add('cds--popover-caret');
-    searchButtonPopoverCaret.setAttribute('wfd-invisible', true);
-    searchButtonSpanTooltip.appendChild(searchButtonToolipContent);
-    searchButtonSpanTooltip.appendChild(searchButtonPopoverCaret);
-    searchButtonSpanElement.appendChild(searchButtonDivWrapper);
-    searchButtonSpanElement.appendChild(searchButtonSpanTooltip);
-    rightToolbar.appendChild(searchButtonSpanElement);
-    header.appendChild(rightToolbar);
+    // Actions connecting to modal window
+    const blockFocusOnElements = (status) => {
+        const elements = [
+            document.querySelector('header'),
+            document.querySelector('footer'),
+            document.querySelector('nav[aria-label="Side navigation"]'),
+            document.querySelector('main'),
+            document.querySelector('aside')
+        ]
+        if (status) {
+            elements.forEach(element => element.setAttribute('inert',''));
+        }
+        else {
+            elements.forEach(element => element.removeAttribute('inert'));
+        }
+    };
+    const removeModule = () => {
+        document.querySelector('.cds--modal[aria-hidden="false"]').outerHTML = '';
+        blockFocusOnElements(false);
+        document.body.removeAttribute('class');
+        document.body.removeAttribute('wfd-invisible');
+        document.body.removeEventListener('click', modalWindowEventDetect);
+        document.body.removeEventListener('keydown', modalWindowEventDetect);
+    };
+    let searchData = {
+        query: '',
+        module: 'documentation'
+    };
+    const getSearchData = () => {
+        const url = `/api/search?query=${searchData.query}&module=${searchData.module}`;
+        console.log(url);
+    };
+    const modalWindowEventDetect = (event) => {
+        const modalWindow = document.querySelector('.cds--modal[aria-hidden="false"]');
+        switch (event.type) {
+            case 'click':
+                if (event.target === modalWindow) {
+                    removeModule();
+                }
+            case 'keydown':
+                if (event.key === 'Escape') {
+                    removeModule();
+                }
+                if (event.key === 'Enter') {
+                    searchData.query = modalWindow.querySelector('input[type="search"]').value.trim();
+                    getSearchData();
+                }
+        }
+    };
+    const searchButton = document.querySelector('button[aria-label="Search"]');
+    searchButton.addEventListener('click', () => {
+        document.body.className = 'cds--body--with-modal-open';
+        document.body.setAttribute('wfd-invisible', true);
+        blockFocusOnElements(true);
+        document.body.insertAdjacentHTML('beforeend', modalElement);
+        const modalWindow = document.querySelector('.cds--modal[aria-hidden="false"]');
+        if(modalWindow) {
+            searchData.query = '';
+            searchData.module = 'documentation';
+            document.body.addEventListener('click', modalWindowEventDetect);
+            document.body.addEventListener('keydown', modalWindowEventDetect);
+            const modalRadioButtons = Array.from(
+                modalWindow.querySelectorAll('button[role="radio"]')
+            );
+            const uncheckRadioButtons = (value) => {
+                const otherRadioButtons = modalRadioButtons.filter(
+                    (item) => item.value !== value
+                );
+                otherRadioButtons.forEach(
+                    (button) => {
+                        button.dataset.state = 'unchecked';
+                        button.setAttribute('aria-checked', false);
+                    }
+                )
+            };
+            modalRadioButtons.forEach(
+                (button) => button.addEventListener('click', function(event){
+                    event.target.setAttribute('aria-checked', true);
+                    event.target.dataset.state = 'checked';
+                    searchData.module = event.target.value;
+                    uncheckRadioButtons(event.target.value);
+                })
+            );
+            const searchInput = document.querySelector('input[type="search"]');
+            searchInput.addEventListener('change', 
+                (event) => searchData.query = event.target.value.trim()
+            );
+            const searchDataButton = document.querySelector('button[aria-labelledby="tooltip-:r4:"]');
+            searchDataButton.addEventListener('click', getSearchData);
+        }
+    });
 };
