@@ -1,4 +1,4 @@
-// Checking onclick event
+// Wait for hydration is finished
 const customInterval = setInterval(() => {
     const header_name = document.querySelector('.cds--header__name');
     // hydrateRoot() adds onclick event so just wait until it appears
@@ -7,14 +7,6 @@ const customInterval = setInterval(() => {
         customClientRender();
     }
 }, 10);
-
-// Links list
-const regularLinks = [
-    '/start',
-    '/build',
-    '/verify',
-    '/run'
-];
 
 // HTML Data
 const navElement = `<nav class="cds--header__nav" aria-label="IBM Documentation">
@@ -30,6 +22,11 @@ const navElement = `<nav class="cds--header__nav" aria-label="IBM Documentation"
             </a>
         </li>
         <li role="none">
+            <a href="/transpile" role="menuitem" tabindex="0" class="cds--header__menu-item">
+                <span class="cds--text-truncate--end">Transpile</span>
+            </a>
+        </li>
+        <li role="none">
             <a href="/verify" role="menuitem" tabindex="0" class="cds--header__menu-item">
                 <span class="cds--text-truncate--end">Verify</span>
             </a>
@@ -40,20 +37,20 @@ const navElement = `<nav class="cds--header__nav" aria-label="IBM Documentation"
             </a>
         </li>
         <li class="cds--header__submenu" role="none">
-            <button role="menuitem" aria-haspopup="menu" aria-expanded="false" 
-                aria-controls="radix-:R1k6ta:" aria-label="API Reference" 
-                class="relative text-body-compact-01 flex items-center h-full whitespace-nowrap px-16 
+            <button role="menuitem" aria-haspopup="menu" aria-expanded="false"
+                aria-controls="radix-:R1k6ta:" aria-label="API Reference"
+                class="relative text-body-compact-01 flex items-center h-full whitespace-nowrap px-16
                 border-2 transition-colors hover:bg-background-hover hover:text-text-primary
                 border-transparent focus-outline text-text-secondary bg-background">
                 API Reference
-                <svg 
+                <svg
                     focusable="false"
                     preserveAspectRatio="xMidYMid meet"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="currentColor"
                     width="16"
-                    height="16" 
-                    viewBox="0 0 16 16" 
+                    height="16"
+                    viewBox="0 0 16 16"
                     aria-hidden="true"
                     class="cds--header__menu-arrow">
                     <path d="M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z"></path>
@@ -62,12 +59,13 @@ const navElement = `<nav class="cds--header__nav" aria-label="IBM Documentation"
         </li>
     </ul>
 </nav>`;
+
 const apiReferencesListElement = `
-<ul id="radix-:R1s6ta:" role="menu" 
+<ul id="radix-:R1s6ta:" role="menu"
         class="flex cds--header__menu m-0 p-0 flex-col bg-layer min-w-[200px]
         shadow-[0_0_6px_-1px_var(--cds-shadow)]" tabindex="0" style="outline: none;">
     <li class="" role="none">
-        <a role="menuitem" 
+        <a role="menuitem"
             class="text-body-compact-01 flex items-center h-48 px-16 border-2 transition-colors
             hover:bg-background-hover hover:text-text-primary border-transparent focus-outline
             bg-layer text-text-secondary" tabindex="0" data-radix-collection-item=""
@@ -76,7 +74,7 @@ const apiReferencesListElement = `
         </a>
     </li>
     <li class="" role="none">
-        <a role="menuitem" 
+        <a role="menuitem"
             class="text-body-compact-01 flex items-center h-48 px-16 border-2 transition-colors
             hover:bg-background-hover hover:text-text-primary border-transparent focus-outline
             bg-layer text-text-secondary" tabindex="0" data-radix-collection-item=""
@@ -103,6 +101,7 @@ const apiReferencesListElement = `
         </a>
     </li>
 </ul>`;
+
 const headerGlobalElement = `<div class="cds--header__global">
     <span class="cds--popover-container cds--popover--caret
     cds--popover--high-contrast cds--popover--bottom cds--tooltip cds--icon-tooltip">
@@ -125,21 +124,22 @@ const headerGlobalElement = `<div class="cds--header__global">
         </span>
     </span>
 </div>`;
+
 const modalElement = `
-    <div role="presentation" aria-hidden="false" class="cds--modal is-visible px-16 pt-[80px] 
+    <div role="presentation" aria-hidden="false" class="cds--modal is-visible px-16 pt-[80px]
     md:pt-[112px] items-start">
         <div class="cds--modal-container w-full max-w-[600px] max-md:static max-md:h-auto" role="dialog"
         aria-modal="true">
             <button type="button" class="cds--visually-hidden">Focus sentinel</button>
             <div class="cds--modal-container-body">
                 <div class="cds--modal-content p-0 m-0 overflow-y-hidden">
-                    <div class="relative flex focus-within-outline h-48 bg-layer-02 
+                    <div class="relative flex focus-within-outline h-48 bg-layer-02
                         border-0 border-b border-solid border-border-strong-01">
                         <label id="downshift-:r0:-label" for="downshift-:r0:-input" class="sr-only">
                         Search Documentation</label>
                         <span class="absolute flex items-center
                         justify-center w-48 h-48 pointer-events-none">
-                            <svg focusable="false" preserveAspectRatio="xMidYMid meet" 
+                            <svg focusable="false" preserveAspectRatio="xMidYMid meet"
                             xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="16" height="16"
                             viewBox="0 0 16 16" aria-hidden="true">
                                 <path d="M15,14.3L10.7,10c1.9-2.3,1.6-5.8-0.7-7.7S4.2,0.7,2.3,3S0.7,8.8,
@@ -155,13 +155,13 @@ const modalElement = `
                         pl-48 h-48 outline-none flex-1 bg-transparent placeholder-text-placeholder
                         text-text-primary clear-search-decoration" type="search" value="">
                     </div>
-                    <div class="flex p-16 min-h-[48px] 
+                    <div class="flex p-16 min-h-[48px]
                     items-center justify-between border-0 border-b border-solid
                     border-border-subtle-01 theme-variant">
-                        <div role="radiogroup" aria-required="false" dir="ltr" aria-label="Search filter" 
+                        <div role="radiogroup" aria-required="false" dir="ltr" aria-label="Search filter"
                         tabindex="0" style="outline: none;">
-                            <button type="button" role="radio" aria-checked="true" data-state="checked" 
-                            value="documentation" id="search-radio-documentation" 
+                            <button type="button" role="radio" aria-checked="true" data-state="checked"
+                            value="documentation" id="search-radio-documentation"
                             class="appearance-none border-0 inline-flex items-center
                             justify-center align-middle cursor-pointer text-label-01
                             m-4 px-8 py-2 rounded
@@ -170,7 +170,7 @@ const modalElement = `
                             data-[state=checked]:bg-background-inverse
                             data-[state=checked]:text-icon-inverse" aria-label="Documentation"
                             tabindex="0" data-radix-collection-item="">Documentation</button>
-                            <button type="button" role="radio" aria-checked="false" 
+                            <button type="button" role="radio" aria-checked="false"
                             data-state="unchecked" value="api" id="search-radio-api"
                             class="appearance-none border-0 inline-flex items-center
                             justify-center align-middle cursor-pointer
@@ -184,7 +184,7 @@ const modalElement = `
                             data-radix-collection-item="">API Reference</button>
                         </div>
                         <div class="max-md:hidden">
-                            <span class="cds--popover-container cds--popover--caret 
+                            <span class="cds--popover-container cds--popover--caret
                             cds--popover--high-contrast cds--popover--top-right cds--tooltip">
                                 <div class="cds--tooltip-trigger__wrapper">
                                     <button type="button" class="inline-flex justify-center
@@ -212,7 +212,7 @@ const modalElement = `
                                 Please try a different search query or browse all documentation.
                             </p>
                         </div>
-                        <ul id="downshift-:r0:-menu" role="listbox" 
+                        <ul id="downshift-:r0:-menu" role="listbox"
                         aria-labelledby="downshift-:r0:-label" class="list-none p-0 m-0 hidden"
                         aria-hidden="true"></ul>
                     </div>
@@ -223,8 +223,7 @@ const modalElement = `
     </div>`;
 
 // Checking current link
-const setActiveLink = () => {
-    
+function setActiveLink() {
     const currentNavLink = document.querySelector('.cds--header__menu-item--current');
     if(currentNavLink) {
         currentNavLink.className = 'cds--header__menu-item';
@@ -264,14 +263,14 @@ new MutationObserver(() => {
 
 // Action connected to API Reference button
 let apiReferencesListToggled = false;
-const apiReferenceMenuClose = () => {
+function apiReferenceMenuClose() {
     const apiReferencesLinksMenu = document.querySelector('ul[id="radix-:R1s6ta:"]');
     if (apiReferencesLinksMenu) {
         apiReferencesLinksMenu.outerHTML = '';
     }
 };
 
-const customClientRender = () => {
+function customClientRender() {
     const header = document.querySelector('.cds--header');
     header.insertAdjacentHTML('beforeend', navElement);
     header.insertAdjacentHTML('beforeend', headerGlobalElement);
@@ -285,7 +284,7 @@ const customClientRender = () => {
             const checkApiLink = () => {
                 if (location.pathname.match('api')) {
                     document.querySelector('.cds--header__submenu').className = `
-                    cds--header__submenu after:absolute after:bottom-0 after:w-full 
+                    cds--header__submenu after:absolute after:bottom-0 after:w-full
                     after:bg-border-interactive after:h-[3px]`;
                     apiReferenceButton.classList.remove('text-text-secondary');
                     apiReferenceButton.classList.add('text-text-primary');
@@ -410,7 +409,7 @@ const customClientRender = () => {
                 )
             };
             modalRadioButtons.forEach(
-                (button) => button.addEventListener('click', function(event){
+                (button) => button.addEventListener('click', (event) => {
                     event.target.setAttribute('aria-checked', true);
                     event.target.dataset.state = 'checked';
                     searchData.module = event.target.value;
@@ -418,7 +417,7 @@ const customClientRender = () => {
                 })
             );
             const searchInput = document.querySelector('input[type="search"]');
-            searchInput.addEventListener('change', 
+            searchInput.addEventListener('change',
                 (event) => searchData.query = event.target.value.trim()
             );
             const searchDataButton = document.querySelector('button[aria-labelledby="tooltip-:r4:"]');

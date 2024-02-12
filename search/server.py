@@ -43,7 +43,7 @@ app.add_middleware(
 )
 
 
-@app.get("/search", )
+@app.get("/api/search")
 def search(
     query: str,
     module: Module,
