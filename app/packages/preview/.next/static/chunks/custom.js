@@ -349,9 +349,22 @@ const customClientRender = () => {
         query: '',
         module: 'documentation'
     };
+    // getSearchData in test mode
     const getSearchData = () => {
-        const url = `/api/search?query=${searchData.query}&module=${searchData.module}`;
+        const address = `http://${location.hostname}:8000/api/search`
+        const parameters =`?query=${encodeURIComponent(searchData.query)}&module=${searchData.module}`;
+        const url = address+parameters;
         console.log(url);
+        fetch(
+            url, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                mode: 'cors'
+            }
+        )/*.then(
+            (response) => console.log(response)
+        );*/
     };
     const modalWindowEventDetect = (event) => {
         const modalWindow = document.querySelector('.cds--modal[aria-hidden="false"]');
