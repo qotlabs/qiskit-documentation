@@ -33,26 +33,22 @@ class Database:
 
         self._enquire = xapian.Enquire(self._database)
 
-        self._query_parser = xapian.QueryParser()
-        self._query_parser.set_stemmer(self._stemmer)
-        self._query_parser.set_stemming_strategy(self._query_parser.STEM_ALL)
-        # self._query_parser.set_default_op(xapian.Query.OP_PHRASE)
-        self._query_parser.add_prefix("title", "S")
-        self._query_parser.add_boolean_prefix("module", "XM")
-        self._query_parser.add_boolean_prefix("section", "XS")
-        self._query_parser.add_boolean_prefix("version", "XV")
-
     def __iter__(self):
         return self._database.postlist("")
 
     def search(
         self,
         query: str,
+        module: DocModule,
+        version: float = 0,
         offset: int = 0,
         page_size: int = 10,
-        snippet_len=100
+        snippet_len = 100
     ) -> list[Document]:
-        query = self._query_parser.parse_query(query)
+        Q = xapian.Query
+        query = [self._stemmer(word) for word in query.split()]
+        query = Q(Q.OP_PHRASE, query)
+        query = Q(Q.OP_AND, [f"XM{module.value}", f"XV{version}", query])
         self._enquire.set_query(query)
         docs = []
         mset = self._enquire.get_mset(offset, page_size)

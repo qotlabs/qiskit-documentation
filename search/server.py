@@ -42,7 +42,6 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOW_ORIGINS,
-    allow_credentials=True,
     allow_methods=["get"],
     allow_headers=["Content-Type"],
 )
@@ -55,8 +54,7 @@ def search(
     version: float = 0
 ) -> list[Result]:
     reply = []
-    query = f"version:{version} AND module:{DocModule.from_str(module.value).value} AND \"{query}\""
-    for doc in db.search(query):
+    for doc in db.search(query, DocModule.from_str(module.value), version):
         reply.append(Result(
             text=doc.text,
             id=f"docs_{doc.docid}",
