@@ -1,4 +1,5 @@
 *.swp
+*.out
 node_modules/
 app/packages/preview/.next/cache/
 search/index/
