@@ -350,10 +350,10 @@ function customClientRender() {
     };
     // getSearchData in test mode
     const getSearchData = () => {
-        const address = `http://${location.hostname}:8000/api/search`
-        const parameters =`?query=${encodeURIComponent(searchData.query)}&module=${searchData.module}`;
-        const url = address+parameters;
-        console.log(url);
+        const address = `http://${location.hostname}:8000/api/search`;
+        const query = `?query=${encodeURIComponent(searchData.query)}`;
+        const module = `&module=${searchData.module}`;
+        const url = address+query+module;
         fetch(
             url, {
                 headers: {
@@ -361,9 +361,21 @@ function customClientRender() {
                 },
                 mode: 'cors'
             }
-        )/*.then(
-            (response) => console.log(response)
-        );*/
+        ).then(
+            (response) => response.json({encoding: 'utf-8'})
+        ).then(
+            (response) => {
+                if(response.length > 0)
+                {
+                    console.log(response);
+                }
+                else {
+                    console.log('no results');
+                }
+            }
+        ).catch((err) => {
+            throw err;
+        });
     };
     const modalWindowEventDetect = (event) => {
         const modalWindow = document.querySelector('.cds--modal[aria-hidden="false"]');
