@@ -42,8 +42,8 @@ class Database:
         module: DocModule,
         version: float = 0,
         offset: int = 0,
-        page_size: int = 10,
-        snippet_len = 100
+        page_size: int = 50,
+        snippet_len = 200
     ) -> list[Document]:
         Q = xapian.Query
         query = [self._stemmer(word) for word in query.split()]

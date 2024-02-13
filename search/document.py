@@ -9,8 +9,8 @@ from hashlib import sha256
 from pathlib import Path
 
 
-WHITESPACE_REGEX = re.compile(r"\s+")
 TITLE_REGEX = re.compile(r"[^\w\d_]+")
+SPACE_REGEX = re.compile(r"\s+")
 
 
 class DocModule(Enum):
@@ -50,7 +50,7 @@ def calc_hash(s: str) -> str:
 
 def normalize_title(s: str) -> str:
     s = TITLE_REGEX.sub(" ", s.lower())
-    s = WHITESPACE_REGEX.sub("-", s.strip())
+    s = SPACE_REGEX.sub("-", s.strip())
     return s
 
 

@@ -15,8 +15,12 @@ from document import Document, calc_hash
 from database import Database
 
 HEADER_REGEX = re.compile(r"\s*#{1,3}[^#](.*)")
-CODE_BLOCK_REGEX = re.compile(r"\s*```[\w\d]*")
-TAG_REGEX = re.compile(r"<[^>]+>|[#*~`\\]+|\-\-+")
+CODE_BLOCK_REGEX = re.compile(r"\s*```\s*[\w\d]*")
+
+REFERENCE_REGEX = re.compile(r"!?\[([^\]]+)\]\([^\)]+\)")
+REMOVE_REGEX = re.compile(r"<[^>]+>|```\s*\w+|[#*~`/:|]+|\-\-+")
+ESCAPE_REGEX = re.compile(r"\\([_\w])")
+SPACE_REGEX = re.compile(r"\s+")
 
 
 def url_to_path(root: Path, url: str) -> Path:
@@ -36,8 +40,12 @@ def url_to_path(root: Path, url: str) -> Path:
     raise ValueError(f"Cannot find path for URL {url}")
 
 
-def remove_tags(s: str) -> str:
-    return TAG_REGEX.sub("", s)
+def normalize_text(s: str) -> str:
+    s = REFERENCE_REGEX.sub(r"\1", s)
+    s = REMOVE_REGEX.sub(" ", s)
+    s = ESCAPE_REGEX.sub(r"\1", s)
+    s = SPACE_REGEX.sub(" ", s)
+    return s.strip()
 
 
 def skip_md_banner(file: TextIO) -> bool:
@@ -156,7 +164,7 @@ class Visitor:
                     doc.text += line
                     continue
                 self.visit_text(doc)
-                doc.title = remove_tags(header.group(1))
+                doc.title = normalize_text(header.group(1))
                 doc.text = ""
             self.visit_text(doc)
 
@@ -174,14 +182,14 @@ class Visitor:
                                 doc.text += line
                                 continue
                             self.visit_text(doc)
-                            doc.title = remove_tags(header.group(1))
+                            doc.title = normalize_text(header.group(1))
                             doc.text = ""
                     case "code":
                         doc.text += "".join(cell["source"])
             self.visit_text(doc)
 
     def visit_text(self, doc: Document):
-        doc.text = remove_tags(doc.text).strip()
+        doc.text = normalize_text(doc.text)
         if len(doc.text) == 0:
             return
         logging.debug("Index section %s", doc.title)
@@ -225,6 +233,6 @@ if __name__ == "__main__":
         duration = time() - duration
         stats = visitor.stats
         print(f"Finish indexing of {stats.total_docs} documents "
-              f"({stats.modified_docs} modified) in {duration:.3} seconds")
+              f"({stats.modified_docs} modified) in {duration:.1f} seconds")
     except Exception as e:
         logging.error("Indexing fail due to exception: %s", e)
