@@ -18,9 +18,9 @@ class Database:
         else:
             self._database = xapian.WritableDatabase(str(path), xapian.DB_CREATE_OR_OPEN)
 
-        self._stem = xapian.Stem("en")
+        self._stemmer = xapian.Stem("en")
         self._term_generator = xapian.TermGenerator()
-        self._term_generator.set_stemmer(self._stem)
+        self._term_generator.set_stemmer(self._stemmer)
         self._term_generator.set_stemming_strategy(xapian.TermGenerator.STEM_ALL)
 
         self._benquire = xapian.Enquire(self._database)
@@ -29,7 +29,7 @@ class Database:
         self._enquire = xapian.Enquire(self._database)
 
         self._query_parser = xapian.QueryParser()
-        self._query_parser.set_stemmer(self._stem)
+        self._query_parser.set_stemmer(self._stemmer)
         self._query_parser.set_stemming_strategy(self._query_parser.STEM_ALL)
         #self._query_parser.set_default_op(xapian.Query.OP_PHRASE)
         self._query_parser.add_prefix("title", "S")
@@ -56,7 +56,14 @@ class Database:
             xdoc = match.document
             json_data = json.loads(xdoc.get_data().decode())
             docs.append(Document(
-                text=mset.snippet(json_data["T"], snippet_len).decode(),
+                text=mset.snippet(
+                    json_data["T"],
+                    snippet_len,
+                    self._stemmer,
+                    xapian.MSet.SNIPPET_BACKGROUND_MODEL |
+                    xapian.MSet.SNIPPET_EXHAUSTIVE,
+                    "<em>", "</em>"
+                ).decode(),
                 docid=match.docid,
                 _url=json_data["U"],
                 page_title=json_data["PT"],
