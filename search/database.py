@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright (c) 2024 Quantum Optical Technologies Laboratories
+# SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
+
 import xapian
 import json
 from pathlib import Path
@@ -9,10 +13,11 @@ MTIME_STRUCT = Struct("<d")
 
 
 class Database:
-    def __init__(self,
-            path: Path,
-            read_only: bool = True
-        ):
+    def __init__(
+        self,
+        path: Path,
+        read_only: bool = True
+    ):
         if read_only:
             self._database = xapian.Database(str(path))
         else:
@@ -31,22 +36,21 @@ class Database:
         self._query_parser = xapian.QueryParser()
         self._query_parser.set_stemmer(self._stemmer)
         self._query_parser.set_stemming_strategy(self._query_parser.STEM_ALL)
-        #self._query_parser.set_default_op(xapian.Query.OP_PHRASE)
+        # self._query_parser.set_default_op(xapian.Query.OP_PHRASE)
         self._query_parser.add_prefix("title", "S")
         self._query_parser.add_boolean_prefix("module", "XM")
         self._query_parser.add_boolean_prefix("section", "XS")
         self._query_parser.add_boolean_prefix("version", "XV")
 
-
     def __iter__(self):
         return self._database.postlist("")
 
-
-    def search(self,
-               query: str,
-               offset: int = 0,
-               page_size: int = 10,
-               snippet_len = 100
+    def search(
+        self,
+        query: str,
+        offset: int = 0,
+        page_size: int = 10,
+        snippet_len=100
     ) -> list[Document]:
         query = self._query_parser.parse_query(query)
         self._enquire.set_query(query)
@@ -73,7 +77,6 @@ class Database:
             ))
         return docs
 
-
     def search_path(self, path_hash: str) -> tuple[float, list[int]] | None:
         self._benquire.set_query(xapian.Query(f"P{path_hash}"))
         matches = self._benquire.get_mset(0, self._database.get_doccount())
@@ -82,7 +85,6 @@ class Database:
         docids = [m.docid for m in matches]
         mtime = MTIME_STRUCT.unpack(matches[0].document.get_value(MTIME_SLOT))[0]
         return mtime, docids
-
 
     def replace_document(self, doc: Document) -> int:
         xdoc = xapian.Document()
@@ -114,7 +116,6 @@ class Database:
         xdoc.add_value(MTIME_SLOT, MTIME_STRUCT.pack(doc.mtime))
 
         return self._database.replace_document(id_term, xdoc)
-
 
     def delete_document(self, doc_id: int | str):
         self._database.delete_document(doc_id)

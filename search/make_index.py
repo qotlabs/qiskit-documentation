@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright (c) 2024 Quantum Optical Technologies Laboratories
+# SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
+
 import logging
 import json
 import re
@@ -65,11 +69,9 @@ class Visitor:
         self.database = Database(destination, read_only=False)
         self.force_update = force_update
 
-
     @staticmethod
     def ignore_url(url: str) -> bool:
         return url.startswith("https://")
-
 
     def index(self):
         self.visited_docids = set()
@@ -86,7 +88,6 @@ class Visitor:
             if post.docid not in self.visited_docids:
                 logging.info("Delete #%d", post.docid)
                 self.database.delete_document(post.docid)
-
 
     def visit_toc(self, toc: dict):
         page_url = toc.get("url")
@@ -107,7 +108,6 @@ class Visitor:
         for child in toc.get("children", ()):
             self.visit_toc(child)
 
-
     def need_update(self, doc: Document) -> bool:
         match self.database.search_path(doc.path_hash):
             case db_mtime, docids:
@@ -121,7 +121,6 @@ class Visitor:
                 return False
         return True
 
-
     def visit_page_url(self, doc: Document):
         doc.path = url_to_path(self.source_dir, doc.page_url)
         doc.rel_path = str(doc.path.relative_to(self.source_dir))
@@ -130,7 +129,6 @@ class Visitor:
         if self.force_update or self.need_update(doc):
             doc.parse_page_url()
             self.visit_path(doc)
-
 
     def visit_path(self, doc: Document):
         logging.info("Index %s", doc.rel_path)
@@ -143,7 +141,6 @@ class Visitor:
                 # Should never execute unless there is an error in the program
                 logging.error("No file handler for %s", doc.rel_path)
         self.stats.modified_docs += 1
-
 
     def visit_md(self, doc: Document):
         with open(doc.path) as file:
@@ -162,7 +159,6 @@ class Visitor:
                 doc.title = remove_tags(header.group(1))
                 doc.text = ""
             self.visit_text(doc)
-
 
     def visit_ipynb(self, doc: Document):
         with open(doc.path, "r") as file:
@@ -183,7 +179,6 @@ class Visitor:
                     case "code":
                         doc.text += "".join(cell["source"])
             self.visit_text(doc)
-
 
     def visit_text(self, doc: Document):
         doc.text = remove_tags(doc.text).strip()

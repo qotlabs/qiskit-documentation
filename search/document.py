@@ -1,3 +1,7 @@
+# SPDX-License-Identifier: Apache-2.0
+# SPDX-FileCopyrightText: Copyright (c) 2024 Quantum Optical Technologies Laboratories
+# SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
+
 import re
 from dataclasses import dataclass
 from enum import Enum
@@ -67,28 +71,23 @@ class Document:
     text: str | None = None
     docid: int = 0
 
-
     @property
     def url(self) -> str | None:
         return self._url
-
 
     @property
     def url_hash(self) -> str | None:
         return self._url_hash
 
-
     @property
     def title(self) -> str | None:
         return self._title
-
 
     @title.setter
     def title(self, val: str):
         self._title = val
         self._url = f"{self.page_url}#{normalize_title(self._title)}"
         self._url_hash = calc_hash(self._url)
-
 
     def parse_page_url(self):
         """Fill `module`, `section`, and `version` based on `page_url`.
@@ -106,7 +105,7 @@ class Document:
                 else:
                     self.version = float(chunks[3])
             except:
-                pass # Leave `version == 0`
+                pass  # Leave `version == 0`
         else:
             self.module = DocModule.DOCUMENTATION
             self.section = DocSection.from_str(chunks[1])

@@ -1,3 +1,8 @@
+// SPDX-License-Identifier: Apache-2.0
+// SPDX-FileCopyrightText: Copyright (c) 2024 Quantum Optical Technologies Laboratories
+// SPDX-FileContributor: Fedor Medvedev <fedor_medvedev42@rambler.ru>
+// SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
+
 // Wait for hydration is finished
 const customInterval = setInterval(() => {
     const header_name = document.querySelector('.cds--header__name');
