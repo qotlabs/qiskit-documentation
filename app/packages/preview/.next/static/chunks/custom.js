@@ -370,12 +370,44 @@ function customClientRender() {
             (response) => response.json({encoding: 'utf-8'})
         ).then(
             (response) => {
+                const scrollbarList = document.querySelector('.cds--modal div.scrollbar');
+                scrollbarList.classList.remove('hidden');
+                const resultsList = document.querySelector('.cds--modal ul[role="listbox"]');
+                const noResultsDiv = document.querySelector('.cds--modal .px-8.py-16.text-body-compact-01');
                 if(response.length > 0)
                 {
-                    console.log(response);
+                    noResultsDiv.classList.toggle('hidden');
+                    resultsList.setAttribute('aria-hidden', false);
+                    resultsList.classList.remove('hidden');
+                    response.forEach(
+                        (result) => {
+                            const liElement = `<li 
+                                aria-disabled="false"
+                                aria-selected="false"
+                                id="downshift-:r0:-item-2"
+                                role="option"
+                                class="border-0 border-solid border-b border-border-subtle-01 last:border-0"
+                            >
+                                <a 
+                                    class="block text-text-primary hover:text-text-primary cursor-pointer no-underline px-16 py-8 my-8" 
+                                    href="${result.url}">
+                                    <div class="text-label-01 text-text-helper mb-4">${result.pageTitle}</div>
+                                    <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-body-compact-01 truncate mb-4">
+                                        ${result.title}
+                                    </div>
+                                    <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-label-01 truncate break-all">
+                                        ${result.text}
+                                    </div>
+                                </a>
+                            </li>`;
+                            resultsList.insertAdjacentHTML('beforeend', liElement);
+                        }
+                    )
                 }
                 else {
-                    console.log('no results');
+                    noResultsDiv.classList.remove('hidden');
+                    resultsList.setAttribute('aria-hidden', true);
+                    resultsList.classList.toggle('hidden');
                 }
             }
         ).catch((err) => {
