@@ -373,6 +373,7 @@ function customClientRender() {
                 const scrollbarList = document.querySelector('.cds--modal div.scrollbar');
                 scrollbarList.classList.remove('hidden');
                 const resultsList = document.querySelector('.cds--modal ul[role="listbox"]');
+                resultsList.innerHTML = '';
                 const noResultsDiv = document.querySelector('.cds--modal .px-8.py-16.text-body-compact-01');
                 if(response.length > 0)
                 {
