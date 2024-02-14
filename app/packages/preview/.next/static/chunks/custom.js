@@ -92,6 +92,8 @@ const navElement = `<nav class="cds--header__nav" aria-label="IBM Documentation"
     </ul>
 </nav>`;
 
+const divLgHiddenElement = '<div id="lg-hidden" class="lg:hidden"></div>';
+
 const apiReferencesListElement = `
 <ul id="radix-:R1s6ta:" role="menu"
         class="flex cds--header__menu m-0 p-0 flex-col bg-layer min-w-[200px]
@@ -312,6 +314,7 @@ function customClientRender() {
         openTopLeftMenuElement
     );
     header.insertAdjacentHTML('beforeend', navElement);
+    header.insertAdjacentHTML('beforeend', divLgHiddenElement);
     header.insertAdjacentHTML('beforeend', headerGlobalElement);
     setActiveLink();
     // Clicking top-left menu button
@@ -320,7 +323,6 @@ function customClientRender() {
         () => {
             isTopLeftMenuOpened = !isTopLeftMenuOpened;
             const buttonLabel = `${isTopLeftMenuOpened ? 'Close' : 'Open'} menu`;
-            const buttonClass = `${isTopLeftMenuOpened ? 'cds--header__action--active' : '' }`;
             const buttonSvgPath = isTopLeftMenuOpened 
             ? 
             `<path d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8
@@ -337,7 +339,7 @@ function customClientRender() {
                 `0 0 ${isTopLeftMenuOpened ? '32 32' : '20 20'}`
             );
             topLeftMenuButton.querySelector('svg').innerHTML = buttonSvgPath;
-            topLeftMenuButton.classList.toggle(buttonClass);
+            topLeftMenuButton.classList.toggle('cds--header__action--active');
         }
     );
     // Clicking API Reference button
