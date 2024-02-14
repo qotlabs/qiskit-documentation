@@ -535,9 +535,43 @@ function customClientRender() {
                 })
             );
             const searchInput = document.querySelector('input[type="search"]');
+            const clearSearchButtonElement = `<button 
+            class="w-48 h-47 flex items-center justify-center text-icon-primary border-0
+            border-solid outline-none cursor-pointer bg-transparent
+            focus:shadow-[0_0_0_1px_var(--cds-background)_inset]
+            focus:border-focus focus:border-2 focus:border-b focus:pb-2
+            hover:bg-layer-hover active:bg-layer-active" type="reset" aria-label="Clear search">
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet" 
+                xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                width="16" height="16" viewBox="0 0 32 32" aria-hidden="true">
+                    <path d="M24 9.4L22.6 8 16 14.6 9.4 8 8 9.4 14.6 16
+                    8 22.6 9.4 24 16 17.4 22.6 24 24 22.6 17.4 16 24 9.4z"></path>
+                </svg>
+            </button>`;
             searchInput.addEventListener('change',
                 (event) => searchData.query = event.target.value.trim()
             );
+            searchInput.addEventListener('input', (event)=> {
+                const clearSearchButton = document.querySelector('button[aria-label="Clear search"]');
+                if (event.target.value.trim().length > 0) {
+                    if (!clearSearchButton) {
+                        searchInput.insertAdjacentHTML('afterend', clearSearchButtonElement);
+                        document.querySelector('button[aria-label="Clear search"]').addEventListener(
+                            'click', () => {
+                                searchInput.value = '';
+                                searchData.module = '';
+                                document.querySelector(`
+                                button[aria-label="Clear search"]`).outerHTML = '';
+                            }
+                        );
+                    }
+                }
+                else {
+                    if (clearSearchButton) {
+                        clearSearchButton.outerHTML = '';
+                    } 
+                }
+            })
             const searchDataButton = document.querySelector('button[aria-labelledby="tooltip-:r4:"]');
             searchDataButton.addEventListener('click', getSearchData);
         }
