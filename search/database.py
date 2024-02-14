@@ -18,6 +18,11 @@ class Database:
         path: Path,
         read_only: bool = True
     ):
+        """Construct new database object.
+
+        path - path to the database.
+        read_only - whether to open the database in read-only or writable mode.
+        """
         if read_only:
             self._database = xapian.Database(str(path))
         else:
@@ -34,6 +39,7 @@ class Database:
         self._enquire = xapian.Enquire(self._database)
 
     def __iter__(self):
+        """Iterate over all posts in the database."""
         return self._database.postlist("")
 
     def search(
@@ -42,16 +48,29 @@ class Database:
         module: DocModule,
         version: float = 0,
         offset: int = 0,
-        page_size: int = 50,
+        limit: int = 50,
         snippet_len = 200
     ) -> list[Document]:
+        """Search in the database.
+
+        query - string with a phrase for search.
+        module - specify documentation module for search.
+        version - specify API version for search. Zero means undefined version
+                  or the latest version.
+        offset - skip `offset` documents from the list with results. Useful for
+                 pagination.
+        limit - number of returned results. Useful for pagination.
+        snippet_len - number of characters in truncated document text (snippet).
+
+        Return a list of found documents.
+        """
         Q = xapian.Query
         query = [self._stemmer(word) for word in query.split()]
         query = Q(Q.OP_PHRASE, query)
         query = Q(Q.OP_AND, [f"XM{module.value}", f"XV{version}", query])
         self._enquire.set_query(query)
         docs = []
-        mset = self._enquire.get_mset(offset, page_size)
+        mset = self._enquire.get_mset(offset, limit)
         for match in mset:
             xdoc = match.document
             json_data = json.loads(xdoc.get_data().decode())
@@ -74,6 +93,13 @@ class Database:
         return docs
 
     def search_path(self, path_hash: str) -> tuple[float, list[int]] | None:
+        """Search for the documents with given path.
+
+        Path is specified by its hash (hex digest).
+
+        Return a tuple containing modification time `mtime` of the documents and
+        a list of document IDs.
+        """
         self._benquire.set_query(xapian.Query(f"P{path_hash}"))
         matches = self._benquire.get_mset(0, self._database.get_doccount())
         if matches.empty():
@@ -83,6 +109,13 @@ class Database:
         return mtime, docids
 
     def replace_document(self, doc: Document) -> int:
+        """Replace document in the database.
+
+        If there is no document for replacement in the database then the method
+        simply adds the document.
+
+        Return the modified document ID.
+        """
         xdoc = xapian.Document()
         self._term_generator.set_document(xdoc)
 
@@ -114,4 +147,5 @@ class Database:
         return self._database.replace_document(id_term, xdoc)
 
     def delete_document(self, doc_id: int | str):
+        """Delete document with the given ID."""
         self._database.delete_document(doc_id)
