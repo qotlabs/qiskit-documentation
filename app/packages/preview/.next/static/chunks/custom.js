@@ -13,7 +13,34 @@ const customInterval = setInterval(() => {
     }
 }, 10);
 
-// HTML Data
+// HTML Markup
+const openTopLeftMenuElement = `<button 
+    aria-expanded="false"
+    aria-label="Open menu"
+    class="cds--header__action cds--header__menu-trigger cds--header__menu-toggle
+    cds--header__menu-toggle__hidden"
+    title="Open menu" type="button"
+    >
+        <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="20"
+        height="20" viewBox="0 0 20 20" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2zM2
+            7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"></path>
+        </svg>
+</button>`;
+
+const closeTopLeftMenuElement = `<button 
+    aria-expanded="true"
+    aria-label="Close menu"
+    class="cds--header__action cds--header__menu-trigger
+    cds--header__action--active cds--header__menu-toggle cds--header__menu-toggle__hidden"
+    title="Close menu" type="button">
+        <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="20"
+        height="20" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8
+            22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"></path>
+        </svg>
+</button>`;
+
 const navElement = `<nav class="cds--header__nav" aria-label="IBM Documentation">
     <ul class="cds--header__menu-bar" role="menubar" aria-label="IBM Documentation">
         <li role="none">
@@ -227,6 +254,9 @@ const modalElement = `
         </div>
     </div>`;
 
+// Checking top-left menu is opened
+let isTopLeftMenuOpened = false;
+
 // Checking current link
 function setActiveLink() {
     const currentNavLink = document.querySelector('.cds--header__menu-item--current');
@@ -277,9 +307,39 @@ function apiReferenceMenuClose() {
 
 function customClientRender() {
     const header = document.querySelector('.cds--header');
+    document.querySelector('.cds--skip-to-content').insertAdjacentHTML(
+        'afterend',
+        openTopLeftMenuElement
+    );
     header.insertAdjacentHTML('beforeend', navElement);
     header.insertAdjacentHTML('beforeend', headerGlobalElement);
     setActiveLink();
+    // Clicking top-left menu button
+    const topLeftMenuButton = document.querySelector('button.cds--header__menu-toggle');
+    topLeftMenuButton.addEventListener('click', 
+        () => {
+            isTopLeftMenuOpened = !isTopLeftMenuOpened;
+            const buttonLabel = `${isTopLeftMenuOpened ? 'Close' : 'Open'} menu`;
+            const buttonClass = `${isTopLeftMenuOpened ? 'cds--header__action--active' : '' }`;
+            const buttonSvgPath = isTopLeftMenuOpened 
+            ? 
+            `<path d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8
+            22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"></path>`
+            :
+            `<path d="M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2zM2
+            7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"></path>`
+            ;
+            topLeftMenuButton.setAttribute('aria-expanded', isTopLeftMenuOpened);
+            topLeftMenuButton.setAttribute('title', buttonLabel);
+            topLeftMenuButton.setAttribute('aria-label', buttonLabel);
+            topLeftMenuButton.querySelector('svg').setAttribute(
+                'viewBox',
+                `0 0 ${isTopLeftMenuOpened ? '32 32' : '20 20'}`
+            );
+            topLeftMenuButton.querySelector('svg').innerHTML = buttonSvgPath;
+            topLeftMenuButton.classList.toggle(buttonClass);
+        }
+    );
     // Clicking API Reference button
     const apiReferenceButton = document.querySelector('button[aria-label="API Reference"]');
     apiReferenceButton.addEventListener('click',
