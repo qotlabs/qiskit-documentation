@@ -65,7 +65,7 @@ class Database:
         Return a list of found documents.
         """
         Q = xapian.Query
-        query = [self._stemmer(word) for word in query.split()]
+        query = [self._stemmer(word) for word in query.lower().split()]
         query = Q(Q.OP_PHRASE, query)
         query = Q(Q.OP_AND, [f"XM{module.value}", f"XV{version}", query])
         self._enquire.set_query(query)
