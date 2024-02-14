@@ -410,6 +410,7 @@ function customClientRender() {
         document.body.removeAttribute('wfd-invisible');
         document.body.removeEventListener('click', modalWindowEventDetect);
         document.body.removeEventListener('keydown', modalWindowEventDetect);
+        document.body.addEventListener('keydown', slashKeyPressFunction);
     };
     let searchData = {
         query: '',
@@ -494,8 +495,12 @@ function customClientRender() {
                 }
         }
     };
-    const searchButton = document.querySelector('button[aria-label="Search"]');
-    searchButton.addEventListener('click', () => {
+    const slashKeyPressFunction = (event) => {
+        if(event.key==='/') {
+            searchWindowOpen();
+        }
+    };
+    const searchWindowOpen = () => {
         document.body.className = 'cds--body--with-modal-open';
         document.body.setAttribute('wfd-invisible', true);
         blockFocusOnElements(true);
@@ -506,6 +511,7 @@ function customClientRender() {
             searchData.module = 'documentation';
             document.body.addEventListener('click', modalWindowEventDetect);
             document.body.addEventListener('keydown', modalWindowEventDetect);
+            document.body.removeEventListener('keydown', slashKeyPressFunction);
             const modalRadioButtons = Array.from(
                 modalWindow.querySelectorAll('button[role="radio"]')
             );
@@ -535,5 +541,9 @@ function customClientRender() {
             const searchDataButton = document.querySelector('button[aria-labelledby="tooltip-:r4:"]');
             searchDataButton.addEventListener('click', getSearchData);
         }
-    });
+    };
+    const searchButton = document.querySelector('button[aria-label="Search"]');
+    searchButton.addEventListener('click', searchWindowOpen);
+    
+    document.body.addEventListener('keydown', slashKeyPressFunction);
 };
