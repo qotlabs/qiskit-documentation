@@ -92,10 +92,11 @@ class Visitor:
                 self.visit_toc(json.load(toc))
 
         # Delete expired documents from the database
-        for post in self.database:
-            if post.docid not in self.visited_docids:
-                logging.info("Delete #%d", post.docid)
-                self.database.delete_document(post.docid)
+        expired_docids = {post.docid for post in self.database
+                          if post.docid not in self.visited_docids}
+        for docid in expired_docids:
+            logging.info("Delete #%d", docid)
+            self.database.delete_document(docid)
 
     def visit_toc(self, toc: dict):
         page_url = toc.get("url")
