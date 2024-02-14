@@ -51,10 +51,17 @@ app.add_middleware(
 def search(
     query: str,
     module: Module,
-    version: float = 0
+    version: float = 0,
+    offset: int = 0,
 ) -> list[Result]:
+    docs = db.search(
+        query,
+        module=DocModule.from_str(module.value),
+        version=version,
+        offset=offset,
+    )
     reply = []
-    for doc in db.search(query, DocModule.from_str(module.value), version):
+    for doc in docs:
         reply.append(Result(
             text=doc.text,
             id=f"docs_{doc.docid}",
