@@ -3,7 +3,9 @@
 # SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
 # SPDX-FileContributor: Fedor Medvedev <fedor_medvedev42@rambler.ru>
 
-from fastapi import FastAPI
+import logging
+import xapian
+from fastapi import FastAPI, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from enum import Enum
@@ -38,6 +40,7 @@ db = Database(Path(DATABASE_PATH))
 app = FastAPI(
     title="Search Server"
 )
+logger = logging.getLogger("uvicorn.error")
 
 app.add_middleware(
     CORSMiddleware,
@@ -49,17 +52,25 @@ app.add_middleware(
 
 @app.get("/api/search")
 def search(
+    response: Response,
     query: str,
     module: Module,
     version: float = 0,
     offset: int = 0,
 ) -> list[Result]:
-    docs = db.search(
-        query,
-        module=DocModule.from_str(module.value),
-        version=version,
-        offset=offset,
-    )
+    docs = []
+    try:
+        docs = db.search(
+            query,
+            module=DocModule.from_str(module.value),
+            version=version,
+            offset=offset,
+        )
+    except xapian.InvalidArgumentError as e:
+        logger.error(e)
+        response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY
+        return []
+
     reply = []
     for doc in docs:
         reply.append(Result(
