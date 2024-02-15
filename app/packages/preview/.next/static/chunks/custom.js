@@ -187,7 +187,8 @@ const modalElement = `
                         id="downshift-:r0:-input" role="combobox" placeholder="Search documentation"
                         data-modal-primary-focus="true" class="border-0 font-[inherit] text-[100%]
                         pl-48 h-48 outline-none flex-1 bg-transparent placeholder-text-placeholder
-                        text-text-primary clear-search-decoration" type="search" value="">
+                        text-text-primary clear-search-decoration" type="search" value=""
+                        autofocus />
                     </div>
                     <div class="flex p-16 min-h-[48px]
                     items-center justify-between border-0 border-b border-solid
@@ -388,11 +389,17 @@ function customClientRender() {
     const blockFocusOnElements = (status) => {
         const elements = [
             document.querySelector('header'),
-            document.querySelector('footer'),
-            document.querySelector('nav[aria-label="Side navigation"]'),
-            document.querySelector('main'),
-            document.querySelector('aside')
-        ]
+            document.querySelector('footer')
+        ];
+        if (document.querySelector('nav[aria-label="Side navigation"]')) {
+            elements.push(document.querySelector('nav[aria-label="Side navigation"]'));
+        }
+        if (document.querySelector('main')) {
+            elements.push(document.querySelector('main'));
+        }
+        if (document.querySelector('aside')) {
+            elements.push(document.querySelector('aside'));
+        }
         if (status) {
             elements.forEach(element => element.setAttribute('inert',''));
         }
@@ -495,7 +502,8 @@ function customClientRender() {
         }
     };
     const slashKeyPressFunction = (event) => {
-        if(event.key==='/') {
+        if(event.key === '/') {
+            event.preventDefault();
             searchWindowOpen();
         }
     };
@@ -543,6 +551,7 @@ function customClientRender() {
             }
             const searchInput = document.querySelector('input[type="search"]');
             searchInput.focus();
+            searchInput.value = '';
             const clearSearchButtonElement = `<button 
             class="w-48 h-47 flex items-center justify-center text-icon-primary border-0
             border-solid outline-none cursor-pointer bg-transparent
