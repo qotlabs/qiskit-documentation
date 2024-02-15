@@ -284,9 +284,6 @@ function setActiveLink() {
             headerSubmenuCurrent.querySelector('button').classList.add('text-text-primary');
         }
     }
-    else if (location.pathname === '/') {
-        location.href = '/start';
-    }
 };
 
 let lastUrl = location.href;
@@ -295,6 +292,7 @@ new MutationObserver(() => {
     if (url !== lastUrl) {
         lastUrl = url;
         setActiveLink();
+        localStorage.clear();
     }
 }).observe(document, {subtree: true, childList: true});
 
@@ -589,9 +587,9 @@ function customClientRender() {
             modalRadioButtons.forEach(
                 (button) => button.addEventListener('click', (event) => {
                     checkRadioButton(event.target, event.target.value);
-                    /*if(searchInput.value.trim().length > 0) {
+                    if(searchInput.value.trim().length > 0) {
                         getSearchData();
-                    }*/
+                    }
                 })
             );
         }
