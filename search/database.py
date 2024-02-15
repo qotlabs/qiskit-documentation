@@ -4,6 +4,7 @@
 
 import xapian
 import json
+import threading
 from pathlib import Path
 from struct import Struct
 from document import Document, DocModule, DocSection
@@ -23,6 +24,8 @@ class Database:
         path - path to the database.
         read_only - whether to open the database in read-only or writable mode.
         """
+        self._lock = threading.Lock()
+
         if read_only:
             self._database = xapian.Database(str(path))
         else:
@@ -63,34 +66,37 @@ class Database:
         snippet_len - number of characters in truncated document text (snippet).
 
         Return a list of found documents.
+
+        This is the only thread-safe method.
         """
-        Q = xapian.Query
-        query = [self._stemmer(word) for word in query.lower().split()]
-        query = Q(Q.OP_PHRASE, query)
-        query = Q(Q.OP_AND, [f"XM{module.value}", f"XV{version}", query])
-        self._enquire.set_query(query)
-        docs = []
-        mset = self._enquire.get_mset(offset, limit)
-        for match in mset:
-            xdoc = match.document
-            json_data = json.loads(xdoc.get_data().decode())
-            docs.append(Document(
-                text=mset.snippet(
-                    json_data["T"],
-                    snippet_len,
-                    self._stemmer,
-                    xapian.MSet.SNIPPET_BACKGROUND_MODEL |
-                    xapian.MSet.SNIPPET_EXHAUSTIVE,
-                    "<em>", "</em>"
-                ).decode(),
-                docid=match.docid,
-                _url=json_data["U"],
-                page_title=json_data["PT"],
-                _title=json_data["S"],
-                module=DocModule(json_data["XM"]),
-                section=DocSection(json_data["XS"]),
-            ))
-        return docs
+        with self._lock:
+            Q = xapian.Query
+            query = [self._stemmer(word) for word in query.lower().split()]
+            query = Q(Q.OP_PHRASE, query)
+            query = Q(Q.OP_AND, [f"XM{module.value}", f"XV{version}", query])
+            self._enquire.set_query(query)
+            docs = []
+            mset = self._enquire.get_mset(offset, limit)
+            for match in mset:
+                xdoc = match.document
+                json_data = json.loads(xdoc.get_data().decode())
+                docs.append(Document(
+                    text=mset.snippet(
+                        json_data["T"],
+                        snippet_len,
+                        self._stemmer,
+                        xapian.MSet.SNIPPET_BACKGROUND_MODEL |
+                        xapian.MSet.SNIPPET_EXHAUSTIVE,
+                        "<em>", "</em>"
+                    ).decode(),
+                    docid=match.docid,
+                    _url=json_data["U"],
+                    page_title=json_data["PT"],
+                    _title=json_data["S"],
+                    module=DocModule(json_data["XM"]),
+                    section=DocSection(json_data["XS"]),
+                ))
+            return docs
 
     def search_path(self, path_hash: str) -> tuple[float, list[int]] | None:
         """Search for the documents with given path.
