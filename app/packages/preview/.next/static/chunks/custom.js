@@ -292,7 +292,6 @@ new MutationObserver(() => {
     if (url !== lastUrl) {
         lastUrl = url;
         setActiveLink();
-        localStorage.clear();
     }
 }).observe(document, {subtree: true, childList: true});
 
@@ -306,7 +305,6 @@ function apiReferenceMenuClose() {
 };
 
 function customClientRender() {
-    localStorage.clear();
     const header = document.querySelector('.cds--header');
     document.querySelector('.cds--skip-to-content').insertAdjacentHTML(
         'afterend',
