@@ -472,7 +472,33 @@ function customClientRender() {
                             </li>`;
                             resultsList.insertAdjacentHTML('beforeend', liElement);
                         }
-                    )
+                    );
+                    scrollbarList.addEventListener('scroll', (event) => {
+                        const scrollTop = event.target.scrollTop;
+                        const offsetHeight = event.target.offsetHeight;
+                        const scrollHeight = event.target.scrollHeight;
+                        console.log(scrollTop);
+                        console.log(offsetHeight);
+                        console.log(scrollHeight);
+                        console.log(event.target);
+                        if (scrollTop + offsetHeight >= scrollHeight)  {
+                            console.log('end reached');
+                            // To do: load next N results from server
+                            /*const ul=`<ol>
+                                <li>1</li>
+                                <li>2</li>
+                                <li>3</li>
+                                <li>4</li>
+                                <li>5</li>
+                                <li>6</li>
+                                <li>7</li>
+                                <li>8</li>
+                                <li>9<li>
+                                <li>10</li>
+                            </ol>`;
+                            resultsList.insertAdjacentHTML('beforeend', ul);*/
+                          }
+                    });
                 }
                 else {
                     noResultsDiv.classList.remove('hidden');
@@ -545,7 +571,8 @@ function customClientRender() {
             }
             else {
                 const previouslySelectedRadioButton = (modalRadioButtons.find(
-                    (button)=>button.value===localStorage.getItem('module'))
+                    (button) => button.value === localStorage.getItem('module')
+                    )
                 );
                 checkRadioButton(previouslySelectedRadioButton, localStorage.getItem('module'));
             }
