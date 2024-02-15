@@ -439,9 +439,11 @@ function customClientRender() {
                 const resultsList = document.querySelector('.cds--modal ul[role="listbox"]');
                 resultsList.innerHTML = '';
                 const noResultsDiv = document.querySelector('.cds--modal .px-8.py-16.text-body-compact-01');
+                if (!noResultsDiv.classList.contains('hidden')) {
+                    noResultsDiv.classList.toggle('hidden');
+                }
                 if(response.length > 0)
                 {
-                    noResultsDiv.classList.toggle('hidden');
                     resultsList.setAttribute('aria-hidden', false);
                     resultsList.classList.remove('hidden');
                     response.forEach(
@@ -533,12 +535,6 @@ function customClientRender() {
                 uncheckRadioButtons(value);
                 localStorage.setItem('module', value);
             };
-
-            modalRadioButtons.forEach(
-                (button) => button.addEventListener('click', (event) => {
-                    checkRadioButton(event.target, event.target.value);
-                })
-            );
             if (!localStorage.getItem('module')) {
                 localStorage.setItem('module','documentation');
                 searchData.module = 'documentation';
@@ -590,6 +586,14 @@ function customClientRender() {
             })
             const searchDataButton = document.querySelector('button[aria-labelledby="tooltip-:r4:"]');
             searchDataButton.addEventListener('click', getSearchData);
+            modalRadioButtons.forEach(
+                (button) => button.addEventListener('click', (event) => {
+                    checkRadioButton(event.target, event.target.value);
+                    /*if(searchInput.value.trim().length > 0) {
+                        getSearchData();
+                    }*/
+                })
+            );
         }
     };
     const searchButton = document.querySelector('button[aria-label="Search"]');
