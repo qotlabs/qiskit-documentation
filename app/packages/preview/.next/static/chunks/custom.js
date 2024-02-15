@@ -308,6 +308,7 @@ function apiReferenceMenuClose() {
 };
 
 function customClientRender() {
+    localStorage.clear();
     const header = document.querySelector('.cds--header');
     document.querySelector('.cds--skip-to-content').insertAdjacentHTML(
         'afterend',
@@ -508,7 +509,6 @@ function customClientRender() {
         const modalWindow = document.querySelector('.cds--modal[aria-hidden="false"]');
         if(modalWindow) {
             searchData.query = '';
-            searchData.module = 'documentation';
             document.body.addEventListener('click', modalWindowEventDetect);
             document.body.addEventListener('keydown', modalWindowEventDetect);
             document.body.removeEventListener('keydown', slashKeyPressFunction);
@@ -526,15 +526,31 @@ function customClientRender() {
                     }
                 )
             };
+            const checkRadioButton = (button, value) => {
+                button.setAttribute('aria-checked', true);
+                button.dataset.state = 'checked';
+                searchData.module = value;
+                uncheckRadioButtons(value);
+                localStorage.setItem('module', value);
+            };
+
             modalRadioButtons.forEach(
                 (button) => button.addEventListener('click', (event) => {
-                    event.target.setAttribute('aria-checked', true);
-                    event.target.dataset.state = 'checked';
-                    searchData.module = event.target.value;
-                    uncheckRadioButtons(event.target.value);
+                    checkRadioButton(event.target, event.target.value);
                 })
             );
+            if (!localStorage.getItem('module')) {
+                localStorage.setItem('module','documentation');
+                searchData.module = 'documentation';
+            }
+            else {
+                const previouslySelectedRadioButton = (modalRadioButtons.find(
+                    (button)=>button.value===localStorage.getItem('module'))
+                );
+                checkRadioButton(previouslySelectedRadioButton, localStorage.getItem('module'));
+            }
             const searchInput = document.querySelector('input[type="search"]');
+            searchInput.focus();
             const clearSearchButtonElement = `<button 
             class="w-48 h-47 flex items-center justify-center text-icon-primary border-0
             border-solid outline-none cursor-pointer bg-transparent
