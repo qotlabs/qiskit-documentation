@@ -14,6 +14,7 @@ SPACE_REGEX = re.compile(r"\s+")
 
 
 class DocModule(Enum):
+    """Documentation module."""
     DOCUMENTATION = 1
     API = 2
 
@@ -26,6 +27,7 @@ class DocModule(Enum):
 
 
 class DocSection(Enum):
+    """Documentation section."""
     MIGRATION_GUIDES = 1
     QISKIT = 2
     QISKIT_IBM_PROVIDER = 3
@@ -45,10 +47,16 @@ class DocSection(Enum):
 
 
 def calc_hash(s: str) -> str:
+    """Calculate SHA-256 hash and return hex-encoded string."""
     return sha256(s.encode()).hexdigest()
 
 
 def normalize_title(s: str) -> str:
+    """Normalize the given title.
+
+    The function converts to lower case, leaves only alpha-numeric characters,
+    and replaces consecutive spaces by `-`.
+    """
     s = TITLE_REGEX.sub(" ", s.lower())
     s = SPACE_REGEX.sub("-", s.strip())
     return s
@@ -56,6 +64,8 @@ def normalize_title(s: str) -> str:
 
 @dataclass
 class Document:
+    """Indexed document stored in the database."""
+
     page_url: str | None = None
     _url: str | None = None
     _url_hash: str | None = None
@@ -73,18 +83,26 @@ class Document:
 
     @property
     def url(self) -> str | None:
+        """Get document URL."""
         return self._url
 
     @property
     def url_hash(self) -> str | None:
+        """Get URL hash."""
         return self._url_hash
 
     @property
     def title(self) -> str | None:
+        """Get document title."""
         return self._title
 
     @title.setter
     def title(self, val: str):
+        """Set new document title.
+
+        Pre-condition: `page_url` must be valid.
+        Post-condition: `title`, `url`, and `url_hash` are modified.
+        """
         self._title = val
         self._url = f"{self.page_url}#{normalize_title(self._title)}"
         self._url_hash = calc_hash(self._url)

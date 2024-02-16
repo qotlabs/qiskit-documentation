@@ -5,7 +5,7 @@
 
 import logging
 import xapian
-from fastapi import FastAPI, Response, status
+from fastapi import FastAPI, Response, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
 from enum import Enum
@@ -27,11 +27,13 @@ class Module(Enum):
 
 
 class Result(BaseModel):
+    """Result object that is returned by the server."""
+
     text: str
     id: str
     url: HttpUrl
     pageTitle: str
-    module: Module
+    module: DocModuleStr
     section: str
     title: str
 
@@ -53,19 +55,23 @@ app.add_middleware(
 @app.get("/api/search")
 def search(
     response: Response,
-    query: str,
-    module: Module,
-    version: float = 0,
-    offset: int = 0,
+    module: DocModuleStr,
+    query: str = Query(default=..., min_length=1, max_length=1000),
+    version: float = Query(default=0, strict=True, ge=0, multiple_of=0.01),
+    offset: int = Query(default=0, strict=True, ge=0),
 ) -> list[Result]:
-    docs = []
+    search = lambda: db.search(
+        query,
+        module=DocModule.from_str(module.value),
+        version=version,
+        offset=offset,
+    )
     try:
-        docs = db.search(
-            query,
-            module=DocModule.from_str(module.value),
-            version=version,
-            offset=offset,
-        )
+        docs = search()
+    except xapian.DatabaseModifiedError as e:
+        logger.warning(e)
+        db.reopen()
+        docs = search()
     except xapian.InvalidArgumentError as e:
         logger.error(e)
         response.status_code = status.HTTP_422_UNPROCESSABLE_ENTITY

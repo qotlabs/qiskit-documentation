@@ -62,6 +62,11 @@ class Database:
         """Iterate over all posts in the database."""
         return self._database.postlist("")
 
+    def reopen(self):
+        """Reopen the database in case of modifications."""
+        with self._lock:
+            self._database.reopen()
+
     def search(
         self,
         query: str,
@@ -69,7 +74,7 @@ class Database:
         version: float = 0,
         offset: int = 0,
         limit: int = 50,
-        snippet_len = 200
+        snippet_length: int = 200
     ) -> list[Document]:
         """Search in the database.
 
@@ -80,7 +85,8 @@ class Database:
         offset - skip `offset` documents from the list with results. Useful for
                  pagination.
         limit - number of returned results. Useful for pagination.
-        snippet_len - number of characters in truncated document text (snippet).
+        snippet_length - number of characters in truncated document text
+                         (snippet).
 
         Return a list of found documents.
         """
@@ -93,12 +99,11 @@ class Database:
             docs = []
             mset = self._enquire.get_mset(offset, limit)
             for match in mset:
-                xdoc = match.document
-                json_data = json.loads(xdoc.get_data().decode())
+                json_data = json.loads(match.document.get_data().decode())
                 docs.append(Document(
                     text=mset.snippet(
                         json_data["DT"],
-                        snippet_len,
+                        snippet_length,
                         self._stemmer,
                         xapian.MSet.SNIPPET_BACKGROUND_MODEL |
                         xapian.MSet.SNIPPET_EXHAUSTIVE,
@@ -169,7 +174,7 @@ class Database:
 
             return self._database.replace_document(id_term, xdoc)
 
-    def delete_document(self, doc_id: int | str):
+    def delete_document(self, docid: int | str):
         """Delete document with the given ID."""
         with self._lock:
-            self._database.delete_document(doc_id)
+            self._database.delete_document(docid)
