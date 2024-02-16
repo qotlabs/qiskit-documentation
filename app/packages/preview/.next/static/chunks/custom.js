@@ -261,7 +261,7 @@ const modalElement = `
 let isTopLeftMenuOpened = false;
 
 // Checking current link
-const setActiveLink = () => {
+function setActiveLink() {
     const currentNavLink = document.querySelector('.cds--header__menu-item--current');
     if(currentNavLink) {
         currentNavLink.className = 'cds--header__menu-item';
@@ -285,7 +285,7 @@ const setActiveLink = () => {
             headerSubmenuCurrent.querySelector('button').classList.add('text-text-primary');
         }
     }
-};
+}
 
 let lastUrl = location.href;
 new MutationObserver(() => {
@@ -298,14 +298,14 @@ new MutationObserver(() => {
 
 // Action connected to API Reference button
 let apiReferencesListToggled = false;
-const apiReferenceMenuClose = () => {
+function apiReferenceMenuClose() {
     const apiReferencesLinksMenu = document.querySelector('ul[id="radix-:R1s6ta:"]');
     if (apiReferencesLinksMenu) {
         apiReferencesLinksMenu.outerHTML = '';
     }
-};
+}
 
-const customClientRender = () => {
+function customClientRender() {
     const header = document.querySelector('.cds--header');
     document.querySelector('.cds--skip-to-content').insertAdjacentHTML(
         'afterend',
@@ -638,4 +638,4 @@ const customClientRender = () => {
     searchButton.addEventListener('click', searchWindowOpen);
     
     document.body.addEventListener('keydown', slashKeyPressFunction);
-};
+}
