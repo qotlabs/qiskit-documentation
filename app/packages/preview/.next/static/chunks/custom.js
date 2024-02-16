@@ -426,13 +426,45 @@ function customClientRender() {
         const query = `?query=${encodeURIComponent(searchData.query)}`;
         const module = `&module=${searchData.module}`;
         const url = address+query+module;
+        const options = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            mode: 'cors'
+        };
+        const insertSearchResults = (response, resultsList) => {
+            const createSearchResult = (result) => (
+                `<li 
+                    aria-disabled="false"
+                    aria-selected="false"
+                    id="downshift-:r0:-item-2"
+                    role="option"
+                    class="border-0 border-solid border-b border-border-subtle-01 last:border-0"
+                >
+                    <a 
+                        class="block text-text-primary hover:text-text-primary cursor-pointer no-underline
+                        px-16 py-8 my-8" 
+                        href="${result.url}">
+                        <div class="text-label-01 text-text-helper mb-4">${result.pageTitle}</div>
+                        <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-body-compact-01 truncate mb-4">
+                            ${result.title}
+                        </div>
+                        <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-label-01 truncate break-all">
+                            ${result.text}
+                        </div>
+                    </a>
+                </li>`
+            );
+            response.forEach(
+                (result) => {
+                    const liElement = createSearchResult(result);
+                    resultsList.insertAdjacentHTML('beforeend', liElement);
+                }
+            )
+        };
         fetch(
-            url, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                mode: 'cors'
-            }
+            url,
+            options
         ).then(
             (response) => response.json({encoding: 'utf-8'})
         ).then(
@@ -449,55 +481,27 @@ function customClientRender() {
                 {
                     resultsList.setAttribute('aria-hidden', false);
                     resultsList.classList.remove('hidden');
-                    response.forEach(
-                        (result) => {
-                            const liElement = `<li 
-                                aria-disabled="false"
-                                aria-selected="false"
-                                id="downshift-:r0:-item-2"
-                                role="option"
-                                class="border-0 border-solid border-b border-border-subtle-01 last:border-0"
-                            >
-                                <a 
-                                    class="block text-text-primary hover:text-text-primary cursor-pointer no-underline px-16 py-8 my-8" 
-                                    href="${result.url}">
-                                    <div class="text-label-01 text-text-helper mb-4">${result.pageTitle}</div>
-                                    <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-body-compact-01 truncate mb-4">
-                                        ${result.title}
-                                    </div>
-                                    <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-label-01 truncate break-all">
-                                        ${result.text}
-                                    </div>
-                                </a>
-                            </li>`;
-                            resultsList.insertAdjacentHTML('beforeend', liElement);
-                        }
-                    );
+                    insertSearchResults(response, resultsList);
                     scrollbarList.addEventListener('scroll', (event) => {
                         const scrollTop = event.target.scrollTop;
                         const offsetHeight = event.target.offsetHeight;
                         const scrollHeight = event.target.scrollHeight;
-                        console.log(scrollTop);
-                        console.log(offsetHeight);
-                        console.log(scrollHeight);
-                        console.log(event.target);
-                        if (scrollTop + offsetHeight >= scrollHeight)  {
-                            console.log('end reached');
-                            // To do: load next N results from server
-                            /*const ul=`<ol>
-                                <li>1</li>
-                                <li>2</li>
-                                <li>3</li>
-                                <li>4</li>
-                                <li>5</li>
-                                <li>6</li>
-                                <li>7</li>
-                                <li>8</li>
-                                <li>9<li>
-                                <li>10</li>
-                            </ol>`;
-                            resultsList.insertAdjacentHTML('beforeend', ul);*/
-                          }
+                        const offsetSearch = resultsList.children.length;
+                        if (scrollTop + offsetHeight >= scrollHeight) {
+                            const urlOffset = `${url}&offset=${offsetSearch}`;
+                            fetch(
+                                urlOffset,
+                                options
+                            ).then(
+                                (response) => response.json({encoding: 'utf-8'})
+                            ).then(
+                                (response) => { 
+                                    if (response.length > 0) {
+                                        insertSearchResults(response, resultsList);
+                                    }
+                                }
+                            )
+                        }
                     });
                 }
                 else {
@@ -603,7 +607,7 @@ function customClientRender() {
                         document.querySelector('button[aria-label="Clear search"]').addEventListener(
                             'click', () => {
                                 searchInput.value = '';
-                                searchData.module = '';
+                                searchData.query = '';
                                 document.querySelector(`
                                 button[aria-label="Clear search"]`).outerHTML = '';
                             }
