@@ -5,6 +5,7 @@
 
 import logging
 import xapian
+import config
 from fastapi import FastAPI, Response, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, HttpUrl
@@ -13,15 +14,9 @@ from pathlib import Path
 from database import Database
 from document import DocModule
 
-DOCUMENTATION_HOST = "http://127.0.0.1:3000"
-DATABASE_PATH = "./index"
-ALLOW_ORIGINS = [
-    DOCUMENTATION_HOST,
-    "http://localhost:3000",
-]
+class DocModuleStr(Enum):
+    """Documentation module with string values."""
 
-
-class Module(Enum):
     DOCUMENTATION = "documentation"
     API = "api"
 
@@ -38,7 +33,7 @@ class Result(BaseModel):
     title: str
 
 
-db = Database(Path(DATABASE_PATH))
+db = Database(Path(config.DATABASE_PATH))
 app = FastAPI(
     title="Search Server"
 )
@@ -46,7 +41,7 @@ logger = logging.getLogger("uvicorn.error")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOW_ORIGINS,
+    allow_origins=config.ALLOW_ORIGINS,
     allow_methods=["get"],
     allow_headers=["Content-Type"],
 )
@@ -82,7 +77,7 @@ def search(
         reply.append(Result(
             text=doc.text,
             id=f"docs_{doc.docid}",
-            url=DOCUMENTATION_HOST + doc.url,
+            url=config.DOCUMENTATION_HOST + doc.url,
             pageTitle=doc.page_title,
             module=module,
             section=str(doc.section),
