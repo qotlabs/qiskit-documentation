@@ -261,7 +261,7 @@ const modalElement = `
 let isTopLeftMenuOpened = false;
 
 // Checking current link
-function setActiveLink() {
+const setActiveLink = () => {
     const currentNavLink = document.querySelector('.cds--header__menu-item--current');
     if(currentNavLink) {
         currentNavLink.className = 'cds--header__menu-item';
@@ -298,14 +298,14 @@ new MutationObserver(() => {
 
 // Action connected to API Reference button
 let apiReferencesListToggled = false;
-function apiReferenceMenuClose() {
+const apiReferenceMenuClose = () => {
     const apiReferencesLinksMenu = document.querySelector('ul[id="radix-:R1s6ta:"]');
     if (apiReferencesLinksMenu) {
         apiReferencesLinksMenu.outerHTML = '';
     }
 };
 
-function customClientRender() {
+const customClientRender = () => {
     const header = document.querySelector('.cds--header');
     document.querySelector('.cds--skip-to-content').insertAdjacentHTML(
         'afterend',
