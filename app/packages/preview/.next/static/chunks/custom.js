@@ -608,6 +608,7 @@ const customClientRender = () => {
                             'click', () => {
                                 searchInput.value = '';
                                 searchData.query = '';
+                                document.querySelector('.cds--modal ul[role="listbox"]').innerHTML = '';
                                 document.querySelector(`
                                 button[aria-label="Clear search"]`).outerHTML = '';
                             }
