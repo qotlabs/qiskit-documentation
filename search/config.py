@@ -1,4 +1,4 @@
-# URL for accesing documentation (main application):
+# URL for accessing documentation (main application) without trailing "/":
 DOCUMENTATION_HOST = "http://127.0.0.1:3000"
 
 # Path to the Xapian database in the filesystem:
