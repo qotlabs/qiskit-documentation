@@ -47,6 +47,7 @@ class Database:
             self._database = xapian.Database(str(path))
         else:
             self._database = xapian.WritableDatabase(str(path), xapian.DB_CREATE_OR_OPEN)
+        self._update_etag()
 
         self._stemmer = xapian.Stem("en")
         self._term_generator = xapian.TermGenerator()
@@ -58,6 +59,19 @@ class Database:
 
         self._enquire = xapian.Enquire(self._database)
 
+    def _update_etag(self):
+        self._etag = f"{self._database.get_uuid().decode()}-{self._database.get_revision()}"
+
+    @property
+    def etag(self) -> str:
+        """ETag of the database.
+
+        ETag is equal to the database UUID concatenated with the revision
+        number. ETag is used in HTTP caching mechanism.
+        """
+        with self._lock:
+            return self._etag
+
     def __iter__(self):
         """Iterate over all posts in the database."""
         return self._database.postlist("")
@@ -66,6 +80,7 @@ class Database:
         """Reopen the database in case of modifications."""
         with self._lock:
             self._database.reopen()
+            self._update_etag()
 
     def search(
         self,

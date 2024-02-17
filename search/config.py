@@ -9,3 +9,6 @@ ALLOW_ORIGINS = [
     DOCUMENTATION_HOST,
     "http://localhost:3000",
 ]
+
+# Cache-Control HTTP header returned in the response:
+CACHE_CONTROL = "public, max-age=3600"
