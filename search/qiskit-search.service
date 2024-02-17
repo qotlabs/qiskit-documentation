@@ -1,0 +1,21 @@
+[Unit]
+Description=Qiskit documentation search server
+After=network.target
+
+[Service]
+Type=simple
+User=qiskit
+Group=qiskit
+WorkingDirectory=/srv/qiskit/documentation/search/
+ExecStart=/usr/bin/uvicorn \
+	--host 127.0.0.1 \
+	--port 8000 \
+	--workers 8 \
+	--limit-concurrency 20 \
+	--no-use-colors \
+	--access-log \
+	server:app
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

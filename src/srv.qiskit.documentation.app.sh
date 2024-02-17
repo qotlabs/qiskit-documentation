@@ -2,7 +2,7 @@ abi <abi/3.0>,
 
 include <tunables/global>
 
-@{QISKIT_REPO}=/home/user/progs/qiskit-documentation
+@{QISKIT_REPO}=/srv/qiskit/documentation
 @{NODE_EXECUTABLE}=/snap/node/7823/bin/node
 
 profile @{QISKIT_REPO}/app.sh {

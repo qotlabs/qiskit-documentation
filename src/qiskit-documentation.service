@@ -1,0 +1,15 @@
+[Unit]
+Description=Qiskit documentation main application
+After=network.target
+Wants=qiskit-search.service
+
+[Service]
+Type=simple
+User=qiskit
+Group=qiskit
+WorkingDirectory=/srv/qiskit/documentation/app
+ExecStart=/srv/qiskit/documentation/app.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
