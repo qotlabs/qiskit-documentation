@@ -24,7 +24,6 @@ profile @{QISKIT_REPO}/app.sh {
     /snap/core20/2105/usr/lib/x86_64-linux-gnu/* mr,
     @{NODE_EXECUTABLE} mr,
     owner @{QISKIT_REPO}/app/node_modules/** r,
-    owner @{QISKIT_REPO}/app/node_modules/@parcel/watcher-linux-x64-glibc/watcher.node mr,
     owner @{QISKIT_REPO}/app/package.json r,
     owner @{QISKIT_REPO}/app/packages/** r,
     owner @{QISKIT_REPO}/app/packages/preview/.next/cache/ w,
