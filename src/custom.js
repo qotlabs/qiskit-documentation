@@ -92,8 +92,6 @@ const navElement = `<nav class="cds--header__nav" aria-label="IBM Documentation"
     </ul>
 </nav>`;
 
-const divLgHiddenElement = '<div id="lg-hidden" class="lg:hidden"></div>';
-
 const apiReferencesListElement = `
 <ul id="radix-:R1s6ta:" role="menu"
         class="flex cds--header__menu m-0 p-0 flex-col bg-layer min-w-[200px]
@@ -258,6 +256,152 @@ scrollbar scrollbar-variant">
     aria-hidden="true"></ul>
 </div>`;
 
+const divLgHidden = '<div class="lg:hidden" id="lg-hidden"></div>'
+const topLeftNavElement = `
+    <div class="z-[600] bg-overlay fixed inset-0 top-[var(--shell-header-height)]"
+    style="opacity: 1;"></div>
+    <div class="fixed z-[800] top-[var(--shell-header-height)]
+    bottom-0 left-0 overflow-x-hidden overflow-y-auto w-[var(--shell-header-mobile-nav-width)]
+    bg-background scrollbar"
+    aria-label="Side Navigation"
+    style="transform: none;">
+        <div class="h-48 mx-16 flex items-center border-solid border-0 border-b border-border-subtle">
+            <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor" width="16" height="16" viewBox="0 0 32 32"
+            aria-hidden="true">
+                <path d="M31 16L24 23 22.59 21.59 28.17 16 22.59 10.41 24 9 31 16zM1
+                16L8 9 9.41 10.41 3.83 16 9.41 21.59 8 23 1 16z"></path>
+                <path d="M5.91 15H26.080000000000002V17H5.91z"
+                transform="rotate(-75 15.996 16)"></path>
+            </svg>
+        </div>
+        <h2 class="text-heading-03 text-text-primary px-16 my-16">Documentation</h2>
+        <ul class="cds--side-nav__header-navigation static p-0">
+            <li class="cds--side-nav__item">
+                <a class="cds--side-nav__submenu" href="/start">
+                    <span class="cds--side-nav__submenu-title" title="Start">Start</span>
+                    <div class="cds--side-nav__icon cds--side-nav__icon--small
+                    cds--side-nav__submenu-chevron">
+                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+                        viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
+                        </svg>
+                    </div>
+                </a>
+            </li>
+            <li class="cds--side-nav__item">
+                <a class="cds--side-nav__submenu" href="build">
+                    <span class="cds--side-nav__submenu-title" title="Build">Build</span>
+                    <div class="cds--side-nav__icon cds--side-nav__icon--small
+                    cds--side-nav__submenu-chevron">
+                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+                        viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
+                        </svg>
+                    </div>
+                </a>
+            </li>
+            <li class="cds--side-nav__item">
+                <a class="cds--side-nav__submenu" href="/transpile">
+                    <span class="cds--side-nav__submenu-title" title="Transpile">Transpile</span>
+                    <div class="cds--side-nav__icon cds--side-nav__icon--small
+                    cds--side-nav__submenu-chevron">
+                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+                        viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
+                        </svg>
+                    </div>
+                </a>
+            </li>
+            <li class="cds--side-nav__item">
+                <a class="cds--side-nav__submenu" href="/verify">
+                    <span class="cds--side-nav__submenu-title" title="Verify">Verify</span>
+                    <div class="cds--side-nav__icon cds--side-nav__icon--small
+                    cds--side-nav__submenu-chevron">
+                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+                        viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
+                        </svg>
+                    </div>
+                </a>
+            </li>
+            <li class="cds--side-nav__item">
+                <a class="cds--side-nav__submenu" href="/run">
+                    <span class="cds--side-nav__submenu-title" title="Run">Run</span>
+                    <div class="cds--side-nav__icon cds--side-nav__icon--small
+                    cds--side-nav__submenu-chevron">
+                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+                        viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
+                        </svg>
+                    </div>
+                </a>
+            </li>
+            <li class="cds--side-nav__divider"><hr></li>
+            <li class="cds--side-nav__item">
+                <a class="cds--side-nav__submenu" href="/api/qiskit">
+                    <span class="cds--side-nav__submenu-title" title="Qiskit">Qiskit</span>
+                    <div class="cds--side-nav__icon cds--side-nav__icon--small
+                    cds--side-nav__submenu-chevron">
+                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+                        viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
+                        </svg>
+                    </div>
+                </a>
+            </li>
+            <li class="cds--side-nav__item">
+                <a class="cds--side-nav__submenu" href="/api/qiskit-ibm-runtime">
+                    <span class="cds--side-nav__submenu-title" title="Qiskit Runtime IBM Client">
+                    Qiskit Runtime IBM Client</span>
+                    <div class="cds--side-nav__icon cds--side-nav__icon--small
+                    cds--side-nav__submenu-chevron">
+                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+                        viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
+                        </svg>
+                    </div>
+                </a>
+            </li>
+            <li class="cds--side-nav__item">
+                <a class="cds--side-nav__submenu" href="/api/qiskit-ibm-provider">
+                    <span class="cds--side-nav__submenu-title" title="Qiskit IBM Provider">
+                    Qiskit IBM Provider</span>
+                    <div class="cds--side-nav__icon cds--side-nav__icon--small
+                    cds--side-nav__submenu-chevron">
+                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+                        viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
+                        </svg>
+                    </div>
+                </a>
+            </li>
+            <li class="cds--side-nav__item">
+                <a class="cds--side-nav__submenu" href="/api/migration-guides">
+                    <span class="cds--side-nav__submenu-title" title="Migration guides">
+                    Migration guides</span>
+                    <div class="cds--side-nav__icon cds--side-nav__icon--small
+                    cds--side-nav__submenu-chevron">
+                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+                        viewBox="0 0 32 32" aria-hidden="true">
+                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
+                        </svg>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>`;
+
 // Checking top-left menu is opened
 let isTopLeftMenuOpened = false;
 
@@ -313,7 +457,7 @@ function customClientRender() {
         openTopLeftMenuElement
     );
     header.insertAdjacentHTML('beforeend', navElement);
-    header.insertAdjacentHTML('beforeend', divLgHiddenElement);
+    header.insertAdjacentHTML('beforeend', divLgHidden);
     header.insertAdjacentHTML('beforeend', headerGlobalElement);
     setActiveLink();
     // Clicking top-left menu button
@@ -339,6 +483,8 @@ function customClientRender() {
             );
             topLeftMenuButton.querySelector('svg').innerHTML = buttonSvgPath;
             topLeftMenuButton.classList.toggle('cds--header__action--active');
+            document.querySelector('#lg-hidden').innerHTML = `${isTopLeftMenuOpened 
+                ? topLeftNavElement : ''}`;
         }
     );
     // Clicking API Reference button
