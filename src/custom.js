@@ -11,7 +11,7 @@ const customInterval = setInterval(() => {
         clearInterval(customInterval);
         customClientRender();
     }
-}, 10);
+}, 100);
 
 // HTML Markup
 const openTopLeftMenuElement = `<button 
@@ -238,24 +238,25 @@ const modalElement = `
                             </span>
                         </div>
                     </div>
-                    <div class="bg-layer-01 text-text-primary
-                    px-8 text-body-compact-01 overflow-y-auto max-h-[455px]
-                    scrollbar scrollbar-variant hidden">
-                        <div class="px-8 py-16 text-body-compact-01">
-                            <p class="m-0">No results found</p>
-                            <p class="m-0 mt-4 text-label-01 text-text-secondary">
-                                Please try a different search query or browse all documentation.
-                            </p>
-                        </div>
-                        <ul id="downshift-:r0:-menu" role="listbox"
-                        aria-labelledby="downshift-:r0:-label" class="list-none p-0 m-0 hidden"
-                        aria-hidden="true"></ul>
-                    </div>
                 </div>
             </div>
             <button type="button" class="cds--visually-hidden">Focus sentinel</button>
         </div>
     </div>`;
+
+const modalSearchResultsElement = `<div class="bg-layer-01 text-text-primary
+px-8 text-body-compact-01 overflow-y-auto max-h-[455px]
+scrollbar scrollbar-variant">
+    <div class="px-8 py-16 text-body-compact-01 hidden">
+        <p class="m-0">No results found</p>
+        <p class="m-0 mt-4 text-label-01 text-text-secondary">
+            Please try a different search query or browse all documentation.
+        </p>
+    </div>
+    <ul id="downshift-:r0:-menu" role="listbox"
+    aria-labelledby="downshift-:r0:-label" class="list-none p-0 m-0 hidden"
+    aria-hidden="true"></ul>
+</div>`;
 
 // Checking top-left menu is opened
 let isTopLeftMenuOpened = false;
@@ -420,100 +421,108 @@ function customClientRender() {
         query: '',
         module: 'documentation'
     };
-    // getSearchData in test mode
+    const clearSearchResults = () => {
+        if(document.querySelector('.cds--modal div.scrollbar')) {
+            document.querySelector('.cds--modal div.scrollbar').outerHTML = '';
+        }
+    };
     const getSearchData = () => {
-        const address = `http://${location.hostname}:8000/api/search`;
-        const query = `?query=${encodeURIComponent(searchData.query)}`;
-        const module = `&module=${searchData.module}`;
-        const url = address+query+module;
-        const options = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            mode: 'cors'
+        clearSearchResults();
+        document.querySelector('.cds--modal.is-visible .cds--modal-content').insertAdjacentHTML(
+            'beforeend',
+            modalSearchResultsElement
+        );
+        const scrollbarList = document.querySelector('.cds--modal div.scrollbar');
+        const resultsList = document.querySelector('.cds--modal ul[role="listbox"]');
+        const noResultsDiv = document.querySelector('.cds--modal .px-8.py-16.text-body-compact-01');
+        const getSearchResults = async () => {
+            const index = resultsList.children.length;
+            const address = `http://${location.hostname}:8000/api/search`;
+            const query = `?query=${encodeURIComponent(searchData.query)}`;
+            const module = `&module=${searchData.module}`;
+            const offsetStart = index > 0 ? `&offset=${index}` : '';
+            const url = address+query+module+offsetStart;
+            const options = {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                mode: 'cors'
+            };
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                throw new Error(`An error occurred: ${response.status}`);
+            }
+            resultsList.setAttribute('aria-hidden', false);
+            resultsList.classList.remove('hidden');
+            return await response.json();
         };
-        const insertSearchResults = (response, resultsList) => {
-            const createSearchResult = (result) => (
-                `<li 
-                    aria-disabled="false"
-                    aria-selected="false"
-                    id="downshift-:r0:-item-2"
-                    role="option"
-                    class="border-0 border-solid border-b border-border-subtle-01 last:border-0"
+        const showSearchResults = (response) => (
+            response.forEach((result) => {
+                const listElement = `<li 
+                aria-disabled="false"
+                aria-selected="false"
+                id="downshift-:r0:-item-2"
+                role="option"
+                class="border-0 border-solid border-b border-border-subtle-01 last:border-0"
                 >
                     <a 
                         class="block text-text-primary hover:text-text-primary cursor-pointer no-underline
                         px-16 py-8 my-8" 
                         href="${result.url}">
                         <div class="text-label-01 text-text-helper mb-4">${result.pageTitle}</div>
-                        <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-body-compact-01 truncate mb-4">
+                        <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-body-compact-01
+                        truncate mb-4">
                             ${result.title}
                         </div>
-                        <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-label-01 truncate break-all">
+                        <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-label-01
+                        truncate break-all">
                             ${result.text}
                         </div>
                     </a>
                 </li>`
-            );
-            response.forEach(
-                (result) => {
-                    const liElement = createSearchResult(result);
-                    resultsList.insertAdjacentHTML('beforeend', liElement);
-                }
-            )
+                resultsList.insertAdjacentHTML('beforeend',listElement);
+            })
+        );
+        const hideLoader = () => {
+            resultsList.classList.remove('show');
         };
-        fetch(
-            url,
-            options
-        ).then(
-            (response) => response.json({encoding: 'utf-8'})
-        ).then(
-            (response) => {
-                const scrollbarList = document.querySelector('.cds--modal div.scrollbar');
-                scrollbarList.classList.remove('hidden');
-                scrollbarList.scrollTo(0, 0);
-                const resultsList = document.querySelector('.cds--modal ul[role="listbox"]');
-                resultsList.innerHTML = '';
-                const noResultsDiv = document.querySelector('.cds--modal .px-8.py-16.text-body-compact-01');
-                if (!noResultsDiv.classList.contains('hidden')) {
-                    noResultsDiv.classList.toggle('hidden');
-                }
-                if(response.length > 0)
-                {
-                    resultsList.setAttribute('aria-hidden', false);
-                    resultsList.classList.remove('hidden');
-                    insertSearchResults(response, resultsList);
-                    scrollbarList.addEventListener('scroll', (event) => {
-                        const scrollTop = event.target.scrollTop;
-                        const offsetHeight = event.target.offsetHeight;
-                        const scrollHeight = event.target.scrollHeight;
-                        const offsetSearch = resultsList.children.length;
-                        if (scrollTop + offsetHeight >= scrollHeight) {
-                            const urlOffset = `${url}&offset=${offsetSearch}`;
-                            fetch(
-                                urlOffset,
-                                options
-                            ).then(
-                                (response) => response.json({encoding: 'utf-8'})
-                            ).then(
-                                (response) => { 
-                                    if (response.length > 0) {
-                                        insertSearchResults(response, resultsList);
-                                    }
-                                }
-                            )
+        const showLoader = () => {
+            resultsList.classList.add('show');
+        };
+        const loadSearchResults = async () => {
+            showLoader();
+            setTimeout(async () => {
+                try {
+                    const response = await getSearchResults();
+                    if (response.length > 0) {
+                        showSearchResults(response);
+                        resultsList.setAttribute('aria-hidden', false);
+                        resultsList.classList.remove('hidden');
+                    }
+                    else {
+                        if (resultsList.children.length === 0) {
+                            noResultsDiv.classList.remove('hidden');
                         }
-                    });
+                        else {return;}
+                    }
+                } catch (error) {
+                    throw new Error(error.message);
+                } finally {
+                    hideLoader();
                 }
-                else {
-                    noResultsDiv.classList.remove('hidden');
-                    resultsList.setAttribute('aria-hidden', true);
-                    resultsList.classList.toggle('hidden');
-                }
+            }, 500);
+        };
+        scrollbarList.addEventListener('scroll', (event) => {
+            const {
+                scrollTop,
+                scrollHeight,
+                offsetHeight
+            } = event.target;
+            if (scrollTop + offsetHeight >= scrollHeight) {
+                loadSearchResults();
             }
-        ).catch((err) => {
-            throw err;
-        });
+        }, { passive: true });
+        loadSearchResults();
     };
     const modalWindowEventDetect = (event) => {
         const modalWindow = document.querySelector('.cds--modal[aria-hidden="false"]');
@@ -609,7 +618,7 @@ function customClientRender() {
                             'click', () => {
                                 searchInput.value = '';
                                 searchData.query = '';
-                                document.querySelector('.cds--modal ul[role="listbox"]').innerHTML = '';
+                                clearSearchResults();
                                 document.querySelector(`
                                 button[aria-label="Clear search"]`).outerHTML = '';
                             }
@@ -636,6 +645,5 @@ function customClientRender() {
     };
     const searchButton = document.querySelector('button[aria-label="Search"]');
     searchButton.addEventListener('click', searchWindowOpen);
-    
     document.body.addEventListener('keydown', slashKeyPressFunction);
 }
