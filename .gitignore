@@ -1,5 +1,6 @@
 *.swp
 *.out
+app/packages/preview/.next/static/chunks/custom.js
 node_modules/
 app/packages/preview/.next/cache/
 search/index/

@@ -13,15 +13,16 @@ git submodule update --init
 ```bash
 sudo snap install node --channel 18/stable --classic
 ```
-3. Install Node.js modules:
+3. Install Node.js modules in `app/` and `src/` directories:
 ```bash
 NODE_ENV=production yarn install
 ```
-4. Install dependencies for the search backend:
+4. Run the installation script `node install.js` in `src/` directory that minifies additional sources and copies files.
+5. Install dependencies for the search backend:
 ```bash
 sudo apt install python3-xapian python3-fastapi uvicorn
 ```
-5. Build search index by running `search/make_index.py`. The first indexing may take several minutes. Successive runs will proceed much faster because `make_index.py` does not reindex files that are already up-to-date (based on file modification time `mtime`).
+6. Build search index by running `search/make_index.py`. The first indexing may take several minutes. Successive runs will proceed much faster because `make_index.py` does not reindex files that are already up-to-date (based on file modification time `mtime`).
 
 # Launch
 Run the application and the search backend from the repository root directory:
