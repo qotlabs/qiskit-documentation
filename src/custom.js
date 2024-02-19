@@ -491,7 +491,7 @@ function customClientRender() {
         };
         const loadSearchResults = async () => {
             showLoader();
-            setTimeout(async () => {
+            async () => {
                 try {
                     const response = await getSearchResults();
                     if (response.length > 0) {
@@ -510,7 +510,7 @@ function customClientRender() {
                 } finally {
                     hideLoader();
                 }
-            }, 500);
+            }
         };
         scrollbarList.addEventListener('scroll', (event) => {
             const {
