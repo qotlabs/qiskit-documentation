@@ -279,124 +279,58 @@ const topLeftNavElement = `
         <h2 class="text-heading-03 text-text-primary px-16 my-16">Documentation</h2>
         <ul class="cds--side-nav__header-navigation static p-0">
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__submenu" href="/start">
-                    <span class="cds--side-nav__submenu-title" title="Start">Start</span>
-                    <div class="cds--side-nav__icon cds--side-nav__icon--small
-                    cds--side-nav__submenu-chevron">
-                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
-                        viewBox="0 0 32 32" aria-hidden="true">
-                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
-                        </svg>
-                    </div>
+                <a class="cds--side-nav__link${location.pathname==='/start'
+                ? ' cds--side-nav__link--current': ''}" href="/start">
+                    <span class="cds--side-nav__link-text">Start</span>
                 </a>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__submenu" href="build">
-                    <span class="cds--side-nav__submenu-title" title="Build">Build</span>
-                    <div class="cds--side-nav__icon cds--side-nav__icon--small
-                    cds--side-nav__submenu-chevron">
-                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
-                        viewBox="0 0 32 32" aria-hidden="true">
-                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
-                        </svg>
-                    </div>
+                <a class="cds--side-nav__link${location.pathname==='/build'
+                ? ' cds--side-nav__link--current': ''}" href="/build">
+                    <span class="cds--side-nav__link-text">Build</span>
                 </a>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__submenu" href="/transpile">
-                    <span class="cds--side-nav__submenu-title" title="Transpile">Transpile</span>
-                    <div class="cds--side-nav__icon cds--side-nav__icon--small
-                    cds--side-nav__submenu-chevron">
-                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
-                        viewBox="0 0 32 32" aria-hidden="true">
-                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
-                        </svg>
-                    </div>
+                <a class="cds--side-nav__link${location.pathname==='/transpile'
+                ? ' cds--side-nav__link--current': ''}" href="/transpile">
+                    <span class="cds--side-nav__link-text">Transpile</span>
                 </a>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__submenu" href="/verify">
-                    <span class="cds--side-nav__submenu-title" title="Verify">Verify</span>
-                    <div class="cds--side-nav__icon cds--side-nav__icon--small
-                    cds--side-nav__submenu-chevron">
-                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
-                        viewBox="0 0 32 32" aria-hidden="true">
-                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
-                        </svg>
-                    </div>
+                <a class="cds--side-nav__link${location.pathname==='/verify'
+                ? ' cds--side-nav__link--current': ''}" href="/verify">
+                    <span class="cds--side-nav__link-text">Verify</span>
                 </a>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__submenu" href="/run">
-                    <span class="cds--side-nav__submenu-title" title="Run">Run</span>
-                    <div class="cds--side-nav__icon cds--side-nav__icon--small
-                    cds--side-nav__submenu-chevron">
-                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
-                        viewBox="0 0 32 32" aria-hidden="true">
-                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
-                        </svg>
-                    </div>
+                <a class="cds--side-nav__link${location.pathname==='/run'
+                ? ' cds--side-nav__link--current': ''}" href="/run">
+                    <span class="cds--side-nav__link-text">Run</span>
                 </a>
             </li>
             <li class="cds--side-nav__divider"><hr></li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__submenu" href="/api/qiskit">
-                    <span class="cds--side-nav__submenu-title" title="Qiskit">Qiskit</span>
-                    <div class="cds--side-nav__icon cds--side-nav__icon--small
-                    cds--side-nav__submenu-chevron">
-                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
-                        viewBox="0 0 32 32" aria-hidden="true">
-                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
-                        </svg>
-                    </div>
+                <a class="cds--side-nav__link${location.pathname==='/api/qiskit'
+                ? ' cds--side-nav__link--current': ''}" href="/api/qiskit">
+                    <span class="cds--side-nav__link-text">Qiskit</span>
                 </a>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__submenu" href="/api/qiskit-ibm-runtime">
-                    <span class="cds--side-nav__submenu-title" title="Qiskit Runtime IBM Client">
-                    Qiskit Runtime IBM Client</span>
-                    <div class="cds--side-nav__icon cds--side-nav__icon--small
-                    cds--side-nav__submenu-chevron">
-                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
-                        viewBox="0 0 32 32" aria-hidden="true">
-                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
-                        </svg>
-                    </div>
+                <a class="cds--side-nav__link${location.pathname==='/api/qiskit-ibm-runtime'
+                ? ' cds--side-nav__link--current': ''}" href="/api/qiskit-ibm-runtime">
+                    <span class="cds--side-nav__link-text">Qiskit Runtime IBM Client</span>
                 </a>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__submenu" href="/api/qiskit-ibm-provider">
-                    <span class="cds--side-nav__submenu-title" title="Qiskit IBM Provider">
-                    Qiskit IBM Provider</span>
-                    <div class="cds--side-nav__icon cds--side-nav__icon--small
-                    cds--side-nav__submenu-chevron">
-                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
-                        viewBox="0 0 32 32" aria-hidden="true">
-                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
-                        </svg>
-                    </div>
+                <a class="cds--side-nav__link${location.pathname==='/api/qiskit-ibm-provider'
+                ? ' cds--side-nav__link--current': ''}" href="/api/qiskit-ibm-provider">
+                    <span class="cds--side-nav__link-text">Qiskit IBM Provider</span>
                 </a>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__submenu" href="/api/migration-guides">
-                    <span class="cds--side-nav__submenu-title" title="Migration guides">
-                    Migration guides</span>
-                    <div class="cds--side-nav__icon cds--side-nav__icon--small
-                    cds--side-nav__submenu-chevron">
-                        <svg focusable="false" preserveAspectRatio="xMidYMid meet"
-                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
-                        viewBox="0 0 32 32" aria-hidden="true">
-                            <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
-                        </svg>
-                    </div>
+                <a class="cds--side-nav__link${location.pathname==='/api/migration-guides'
+                ? ' cds--side-nav__link--current': ''}" href="/api/migration-guides">
+                    <span class="cds--side-nav__link-text">Migration guides</span>
                 </a>
             </li>
         </ul>
