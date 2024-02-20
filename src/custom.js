@@ -336,6 +336,22 @@ const topLeftNavElement = `
         </ul>
     </div>`;
 
+const loadingIndicatorElement = `<div 
+    class="w-48 h-47 flex items-center justify-center text-icon-primary border-0
+    border-solid outline-none cursor-pointer bg-transparent
+    focus:shadow-[0_0_0_1px_var(--cds-background)_inset]
+    focus:border-focus focus:border-2 focus:border-b focus:pb-2
+    hover:bg-layer-hover active:bg-layer-active"
+    id="loading-indicator">
+        <div aria-atomic="true" aria-live="assertive" class="Loading" data-size="small">
+            <svg class="LoadingIndicator" viewBox="0 0 100 100">
+                <title>Active loading indicator</title>
+                <circle class="LoadingIndicatorBackground" cx="50%" cy="50%" r="42"></circle>
+                <circle class="LoadingIndicatorCircle" cx="50%" cy="50%" r="42"></circle>
+            </svg>
+        </div>
+</div>`;
+
 // Checking top-left menu is opened
 let isTopLeftMenuOpened = false;
 
@@ -564,10 +580,14 @@ function customClientRender() {
             })
         );
         const hideLoader = () => {
-            resultsList.classList.remove('show');
+            document.querySelector('button[aria-label="Clear search"]').classList.remove('hidden');
+            document.querySelector('#loading-indicator').outerHTML='';
         };
         const showLoader = () => {
-            resultsList.classList.add('show');
+            document.querySelector('button[aria-label="Clear search"]').classList.add('hidden');
+            document.querySelector('button[aria-label="Clear search"]').insertAdjacentHTML(
+                'afterend', loadingIndicatorElement
+            );
         };
         const loadSearchResults = async () => {
             showLoader();
