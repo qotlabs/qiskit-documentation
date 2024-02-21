@@ -582,12 +582,28 @@ function customClientRender() {
         const hideLoader = () => {
             document.querySelector('button[aria-label="Clear search"]').classList.remove('hidden');
             document.querySelector('#loading-indicator').outerHTML='';
+            document.querySelector('input[type="search"]').disabled = false;
+            Array.from(document.querySelectorAll('.cds--modal button[role="radio"]')).forEach(
+                (button) => button.disabled = false
+            );
+            document.querySelector('button[aria-labelledby="tooltip-:r4:"]').disabled = false;
+            scrollbarList.addEventListener('scroll', getMoreData, { passive: true });
+            document.body.addEventListener('click', modalWindowEventDetect);
+            document.body.addEventListener('keydown', modalWindowEventDetect);
         };
         const showLoader = () => {
             document.querySelector('button[aria-label="Clear search"]').classList.add('hidden');
             document.querySelector('button[aria-label="Clear search"]').insertAdjacentHTML(
                 'afterend', loadingIndicatorElement
             );
+            document.querySelector('input[type="search"]').disabled = true;
+            Array.from(document.querySelectorAll('.cds--modal button[role="radio"]')).forEach(
+                (button) => button.disabled = true
+            );
+            document.querySelector('button[aria-labelledby="tooltip-:r4:"]').disabled = true;
+            scrollbarList.removeEventListener('scroll', getMoreData, { passive: true });
+            document.body.removeEventListener('click', modalWindowEventDetect);
+            document.body.removeEventListener('keydown', modalWindowEventDetect);
         };
         const loadSearchResults = async () => {
             showLoader();
@@ -613,7 +629,7 @@ function customClientRender() {
             };
             launchSearch();
         };
-        scrollbarList.addEventListener('scroll', (event) => {
+        const getMoreData = (event) => {
             const {
                 scrollTop,
                 scrollHeight,
@@ -622,7 +638,8 @@ function customClientRender() {
             if (scrollTop + offsetHeight >= scrollHeight) {
                 loadSearchResults();
             }
-        }, { passive: true });
+        };
+        scrollbarList.addEventListener('scroll', getMoreData, { passive: true });
         loadSearchResults();
     };
     const modalWindowEventDetect = (event) => {
