@@ -522,6 +522,8 @@ function customClientRender() {
             document.querySelector('.cds--modal div.scrollbar').outerHTML = '';
         }
     };
+    const controller = new AbortController();
+    const signal = controller.signal;
     const getSearchData = () => {
         clearSearchResults();
         document.querySelector('.cds--modal.is-visible .cds--modal-content').insertAdjacentHTML(
@@ -542,7 +544,8 @@ function customClientRender() {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                mode: 'cors'
+                mode: 'cors',
+                signal
             };
             const response = await fetch(url, options);
             if (!response.ok) {
@@ -579,6 +582,15 @@ function customClientRender() {
                 resultsList.insertAdjacentHTML('beforeend',listElement);
             })
         );
+        const closeModalWindowWhileLoading = (event) => {
+            const isEscKeyPressed = event.type === 'keydown' && event.key === 'Escape';
+            const isClickedOutsideModalWindow = event.type === 'click' && 
+            event.target.classList.contains('cds--modal');
+            if(isEscKeyPressed || isClickedOutsideModalWindow) {
+                controller.abort();
+                removeModule();
+            }
+        };
         const hideLoader = () => {
             document.querySelector('button[aria-label="Clear search"]').classList.remove('hidden');
             document.querySelector('#loading-indicator').outerHTML='';
@@ -588,8 +600,10 @@ function customClientRender() {
             );
             document.querySelector('button[aria-labelledby="tooltip-:r4:"]').disabled = false;
             scrollbarList.addEventListener('scroll', getMoreData, { passive: true });
-            document.body.addEventListener('click', modalWindowEventDetect);
             document.body.addEventListener('keydown', modalWindowEventDetect);
+            document.body.addEventListener('click', modalWindowEventDetect);
+            document.body.removeEventListener('keydown', closeModalWindowWhileLoading);
+            document.body.removeEventListener('click', modalWindowEventDetect);
         };
         const showLoader = () => {
             document.querySelector('button[aria-label="Clear search"]').classList.add('hidden');
@@ -602,8 +616,10 @@ function customClientRender() {
             );
             document.querySelector('button[aria-labelledby="tooltip-:r4:"]').disabled = true;
             scrollbarList.removeEventListener('scroll', getMoreData, { passive: true });
-            document.body.removeEventListener('click', modalWindowEventDetect);
             document.body.removeEventListener('keydown', modalWindowEventDetect);
+            document.body.removeEventListener('click', modalWindowEventDetect);
+            document.body.addEventListener('keydown', closeModalWindowWhileLoading);
+            document.body.addEventListener('click', closeModalWindowWhileLoading);
         };
         const loadSearchResults = async () => {
             showLoader();
