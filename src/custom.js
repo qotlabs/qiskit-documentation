@@ -14,7 +14,7 @@ const customInterval = setInterval(() => {
 }, 100);
 
 // HTML Markup
-const openTopLeftMenuElement = `<button 
+const openTopLeftMenuElement = `<button
     aria-expanded="false"
     aria-label="Open menu"
     class="cds--header__action cds--header__menu-trigger cds--header__menu-toggle
@@ -28,7 +28,7 @@ const openTopLeftMenuElement = `<button
         </svg>
 </button>`;
 
-const closeTopLeftMenuElement = `<button 
+const closeTopLeftMenuElement = `<button
     aria-expanded="true"
     aria-label="Close menu"
     class="cds--header__action cds--header__menu-trigger
@@ -336,7 +336,7 @@ const topLeftNavElement = `
         </ul>
     </div>`;
 
-const loadingIndicatorElement = `<div 
+const loadingIndicatorElement = `<div
     class="w-48 h-47 flex items-center justify-center text-icon-primary border-0
     border-solid outline-none cursor-pointer bg-transparent
     focus:shadow-[0_0_0_1px_var(--cds-background)_inset]
@@ -412,12 +412,12 @@ function customClientRender() {
     setActiveLink();
     // Clicking top-left menu button
     const topLeftMenuButton = document.querySelector('button.cds--header__menu-toggle');
-    topLeftMenuButton.addEventListener('click', 
+    topLeftMenuButton.addEventListener('click',
         () => {
             isTopLeftMenuOpened = !isTopLeftMenuOpened;
             const buttonLabel = `${isTopLeftMenuOpened ? 'Close' : 'Open'} menu`;
-            const buttonSvgPath = isTopLeftMenuOpened 
-            ? 
+            const buttonSvgPath = isTopLeftMenuOpened
+            ?
             `<path d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8
             22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"></path>`
             :
@@ -433,7 +433,7 @@ function customClientRender() {
             );
             topLeftMenuButton.querySelector('svg').innerHTML = buttonSvgPath;
             topLeftMenuButton.classList.toggle('cds--header__action--active');
-            document.querySelector('#lg-hidden').innerHTML = `${isTopLeftMenuOpened 
+            document.querySelector('#lg-hidden').innerHTML = `${isTopLeftMenuOpened
                 ? topLeftNavElement : ''}`;
         }
     );
@@ -535,7 +535,7 @@ function customClientRender() {
         const noResultsDiv = document.querySelector('.cds--modal .px-8.py-16.text-body-compact-01');
         const getSearchResults = async () => {
             const index = resultsList.children.length;
-            const address = `http://${location.hostname}:8000/api/search`;
+            const address = `https://${location.hostname}/api/search`;
             const query = `?query=${encodeURIComponent(searchData.query)}`;
             const module = `&module=${searchData.module}`;
             const offsetStart = index > 0 ? `&offset=${index}` : '';
@@ -557,16 +557,16 @@ function customClientRender() {
         };
         const showSearchResults = (response) => (
             response.forEach((result) => {
-                const listElement = `<li 
+                const listElement = `<li
                 aria-disabled="false"
                 aria-selected="false"
                 id="downshift-:r0:-item-2"
                 role="option"
                 class="border-0 border-solid border-b border-border-subtle-01 last:border-0"
                 >
-                    <a 
+                    <a
                         class="block text-text-primary hover:text-text-primary cursor-pointer no-underline
-                        px-16 py-8 my-8" 
+                        px-16 py-8 my-8"
                         href="${result.url}">
                         <div class="text-label-01 text-text-helper mb-4">${result.pageTitle}</div>
                         <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-body-compact-01
@@ -584,7 +584,7 @@ function customClientRender() {
         );
         const closeModalWindowWhileLoading = (event) => {
             const isEscKeyPressed = event.type === 'keydown' && event.key === 'Escape';
-            const isClickedOutsideModalWindow = event.type === 'click' && 
+            const isClickedOutsideModalWindow = event.type === 'click' &&
             event.target.classList.contains('cds--modal');
             if(isEscKeyPressed || isClickedOutsideModalWindow) {
                 controller.abort();
@@ -727,13 +727,13 @@ function customClientRender() {
             const searchInput = document.querySelector('input[type="search"]');
             searchInput.focus();
             searchInput.value = '';
-            const clearSearchButtonElement = `<button 
+            const clearSearchButtonElement = `<button
             class="w-48 h-47 flex items-center justify-center text-icon-primary border-0
             border-solid outline-none cursor-pointer bg-transparent
             focus:shadow-[0_0_0_1px_var(--cds-background)_inset]
             focus:border-focus focus:border-2 focus:border-b focus:pb-2
             hover:bg-layer-hover active:bg-layer-active" type="reset" aria-label="Clear search">
-                <svg focusable="false" preserveAspectRatio="xMidYMid meet" 
+                <svg focusable="false" preserveAspectRatio="xMidYMid meet"
                 xmlns="http://www.w3.org/2000/svg" fill="currentColor"
                 width="16" height="16" viewBox="0 0 32 32" aria-hidden="true">
                     <path d="M24 9.4L22.6 8 16 14.6 9.4 8 8 9.4 14.6 16
@@ -762,7 +762,7 @@ function customClientRender() {
                 else {
                     if (clearSearchButton) {
                         clearSearchButton.outerHTML = '';
-                    } 
+                    }
                 }
             })
             const searchDataButton = document.querySelector('button[aria-labelledby="tooltip-:r4:"]');

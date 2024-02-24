@@ -7,7 +7,9 @@ Wants=qiskit-search.service
 Type=simple
 User=qiskit
 Group=qiskit
-WorkingDirectory=/srv/qiskit/documentation/app
+Environment="HOSTNAME=127.0.0.1"
+Environment="PORT=9192"
+WorkingDirectory=/srv/qiskit/documentation
 ExecStart=/srv/qiskit/documentation/app.sh
 Restart=always
 
