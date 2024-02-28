@@ -7,7 +7,7 @@ import json
 import threading
 from pathlib import Path
 from struct import Struct
-from document import Document, DocModule, DocSection
+from document import Document, DocModule, DocSection, VERSION_LATEST
 
 MTIME_SLOT = 0
 MTIME_STRUCT = Struct("<d")
@@ -86,7 +86,7 @@ class Database:
         self,
         query: str,
         module: DocModule,
-        version: float = 0,
+        version: str = VERSION_LATEST,
         offset: int = 0,
         limit: int = 50,
         snippet_length: int = 200
@@ -95,8 +95,7 @@ class Database:
 
         query - string with a phrase for search.
         module - specify documentation module for search.
-        version - specify API version for search. Zero means undefined version
-                  or the latest version.
+        version - specify API version for search.
         offset - skip `offset` documents from the list with results. Useful for
                  pagination.
         limit - number of returned results. Useful for pagination.

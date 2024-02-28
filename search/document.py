@@ -9,8 +9,11 @@ from hashlib import sha256
 from pathlib import Path
 
 
+VERSION_LATEST = ""
+
 TITLE_REGEX = re.compile(r"[^\w\d_]+")
 SPACE_REGEX = re.compile(r"\s+")
+VERSION_REGEX = re.compile(r"^$|dev|[0-9]\.[0-9]+")
 
 
 class DocModule(Enum):
@@ -75,7 +78,7 @@ class Document:
     mtime: float | None = None
     module: DocModule | None = None
     section: DocSection | None = None
-    version: float = 0
+    version: str = VERSION_LATEST
     page_title: str | None = None
     _title: str | None = None
     text: str | None = None
@@ -119,11 +122,15 @@ class Document:
             self.section = DocSection.from_str(chunks[2])
             try:
                 if chunks[3] == "release-notes":
-                    self.version = float(chunks[4])
+                    version = chunks[4]
                 else:
-                    self.version = float(chunks[3])
+                    version = chunks[3]
             except:
-                pass  # Leave `version == 0`
+                version = VERSION_LATEST
+            if VERSION_REGEX.fullmatch(version):
+                self.version = version
+            #else:
+            #    assert(not any(VERSION_REGEX.fullmatch(c) for c in chunks[1:]))
         else:
             self.module = DocModule.DOCUMENTATION
             self.section = DocSection.from_str(chunks[1])

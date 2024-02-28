@@ -113,7 +113,7 @@ class Visitor:
                 doc.page_title = toc["title"]
                 self.visit_page_url(doc)
             except Exception as e:
-                logging.warning(e)
+                logging.warning("Exception during processing of %s: %s", page_url, e)
         for child in toc.get("children", ()):
             self.visit_toc(child)
 

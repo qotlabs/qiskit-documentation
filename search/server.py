@@ -12,7 +12,7 @@ from pydantic import BaseModel, HttpUrl
 from enum import Enum
 from pathlib import Path
 from database import Database
-from document import DocModule
+from document import DocModule, VERSION_LATEST, VERSION_REGEX
 
 class DocModuleStr(Enum):
     """Documentation module with string values."""
@@ -53,7 +53,7 @@ def search(
     if_none_match: str | None = Header(default=None),
     module: DocModuleStr = Query(default=...),
     query: str = Query(default=..., min_length=1, max_length=1000),
-    version: float = Query(default=0, strict=True, ge=0, multiple_of=0.01),
+    version: str = Query(default=VERSION_LATEST, regex=VERSION_REGEX.pattern),
     offset: int = Query(default=0, strict=True, ge=0),
 ) -> list[Result]:
     if if_none_match == db.etag:
