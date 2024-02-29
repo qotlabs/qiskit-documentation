@@ -13,6 +13,15 @@ const customInterval = setInterval(() => {
     }
 }, 100);
 
+// Check navigation panel is loaded
+setInterval(
+    () => {
+        if (!document.querySelector('.cds--header__nav')){
+            customClientRender(); 
+        }
+    },
+1000);
+
 // HTML Markup
 const openTopLeftMenuElement = `<button
     aria-expanded="false"
