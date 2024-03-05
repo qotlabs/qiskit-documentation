@@ -272,6 +272,15 @@ const navSubmenuChevron = `<div
     <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
   </svg>
 </div>`;
+const expandedNavSubMenuChevron = `<div
+class="cds--side-nav__icon cds--side-nav__icon--small cds--side-nav__submenu-chevron">
+  <svg focusable="false"
+  preserveAspectRatio="xMidYMid meet"
+  xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+  viewBox="0 0 32 32" aria-hidden="true">
+    <path d="M16 22L6 12 7.4 10.6 16 19.2 24.6 10.6 26 12z"></path>
+  </svg>
+</div>`;
 
 const divLgHidden = '<div class="lg:hidden" id="lg-hidden"></div>';
 const topLeftNavElement = `
@@ -372,40 +381,64 @@ const topLeftNavElement = `
             </li>
             <li class="cds--side-nav__divider"><hr></li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__link${
-                  location.pathname === '/api/qiskit'
-                    ? " cds--side-nav__link--current"
-                    : ''
-                }" href="/api/qiskit">
-                    <span class="cds--side-nav__link-text">Qiskit</span>
-                </a>
+              <button
+                  aria-expanded="false"
+                  class="cds--side-nav__submenu"
+                  type="button"
+                  data-href="/api/qiskit"
+                  data-menu-level="0"
+              >
+                <span
+                  class="cds--side-nav__submenu-title"
+                  title="Qiskit"
+                >Qiskit</span>
+                ${navSubmenuChevron}
+              </button>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__link${
-                  location.pathname === '/api/qiskit-ibm-runtime'
-                    ? ' cds--side-nav__link--current'
-                    : ''
-                }" href="/api/qiskit-ibm-runtime">
-                    <span class="cds--side-nav__link-text">Qiskit Runtime IBM Client</span>
-                </a>
+              <button
+                  aria-expanded="false"
+                  class="cds--side-nav__submenu"
+                  type="button"
+                  data-href="/api/qiskit-ibm-runtime"
+                  data-menu-level="0"
+              >
+                <span
+                  class="cds--side-nav__submenu-title"
+                  title="Qiskit Runtime IBM Client"
+                >Qiskit Runtime IBM Client</span>
+                ${navSubmenuChevron}
+              </button>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__link${
-                  location.pathname === '/api/qiskit-ibm-provider'
-                    ? ' cds--side-nav__link--current'
-                    : ''
-                }" href="/api/qiskit-ibm-provider">
-                    <span class="cds--side-nav__link-text">Qiskit IBM Provider</span>
-                </a>
+              <button
+                  aria-expanded="false"
+                  class="cds--side-nav__submenu"
+                  type="button"
+                  data-href="/api/qiskit-ibm-provider"
+                  data-menu-level="0"
+              >
+                <span
+                  class="cds--side-nav__submenu-title"
+                  title="Qiskit IBM Provider"
+                >Qiskit IBM Provider</span>
+                ${navSubmenuChevron}
+              </button>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__link${
-                  location.pathname === '/api/migration-guides'
-                    ? " cds--side-nav__link--current"
-                    : ''
-                }" href="/api/migration-guides">
-                    <span class="cds--side-nav__link-text">Migration guides</span>
-                </a>
+              <button
+                  aria-expanded="false"
+                  class="cds--side-nav__submenu"
+                  type="button"
+                  data-href="/api/migration-guides"
+                  data-menu-level="0"
+              >
+                <span
+                  class="cds--side-nav__submenu-title"
+                  title="Migration guides"
+                >Migration guides</span>
+                ${navSubmenuChevron}
+              </button>
             </li>
         </ul>
     </div>`;
@@ -465,6 +498,11 @@ const hamburgerPath = `<path d="M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2z
 7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"></path>`;
 const crossPath = `<path d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8
 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"></path>`;
+
+const expandingValues = {
+  'true': true,
+  'false': false
+};
 
 // Checking top-left menu is opened
 let isTopLeftMenuOpened = false;
@@ -578,9 +616,9 @@ function customClientRender() {
     }
     topLevelMenuButtons.forEach(
       (button) => button.addEventListener('click', () => {
-        const ariaExpanded = button.getAttribute('aria-expanded')==='false' ? false : true;
-        button.setAttribute('aria-expanded', !ariaExpanded);
-        const createSubmenuLiElement = (children, url, title) => {
+        button.setAttribute('aria-expanded', !expandingValues[button.getAttribute('aria-expanded')]);
+        const createSubmenuLiElement = (children, url, title, type) => {
+          const isExpanded = type === 'default';
           const submenuLiElement = '<li class="cds--side-nav__item">';
           if (children.length === 1) {
             const link = `<a
@@ -589,19 +627,12 @@ function customClientRender() {
             </a>`;
             return `${submenuLiElement}${link}</li>`;
           }
-          const buttonNavSubmenu = `<button aria-expanded="true"
-            class="cds--side-nav__submenu" type="button" style="padding-left: 16px;">
+          const buttonNavSubmenu = `<button aria-expanded="${isExpanded}"
+            class="cds--side-nav__submenu expanding-button" type="button" style="padding-left: 16px;">
               <span class="cds--side-nav__submenu-title" title="${title}">${title}</span>
-              <div class="cds--side-nav__icon cds--side-nav__icon--small cds--side-nav__submenu-chevron">
-                <svg focusable="false"
-                preserveAspectRatio="xMidYMid meet"
-                xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
-                viewBox="0 0 32 32" aria-hidden="true">
-                  <path d="M16 22L6 12 7.4 10.6 16 19.2 24.6 10.6 26 12z"></path>
-                </svg>
-              </div>
+              ${expandedNavSubMenuChevron}
             </button>`;
-          const ulSideMenu = '<ul class="cds--side-nav__menu">';
+          const ulSideMenu = `<ul class="cds--side-nav__menu${isExpanded ? '' : ' hidden'}">`;
           const sideMenuLiElements = children.map(
             (item) => `<li class="cds--side-nav__menu-item">
               <a class="cds--side-nav__link" style="padding-left: 32px; font-weight: 400"
@@ -611,7 +642,7 @@ function customClientRender() {
             </li>`
           );
           return `${submenuLiElement}${buttonNavSubmenu}
-          ${ulSideMenu}</ul>${sideMenuLiElements.join('')}</li>`;
+          ${ulSideMenu}${sideMenuLiElements.join('')}</ul></li>`;
         }
 
         if(!document.querySelector('.inset-bg-element')) {
@@ -635,12 +666,28 @@ function customClientRender() {
                     createSubmenuLiElement(
                       item.children === undefined ? [[]] : item.children,
                       item.url === undefined ? '' : item.url,
-                      item.title
+                      item.title,
+                      data.type
                     )
                   );
                 }
-              )
-
+              );
+              Array.from(document.querySelectorAll('.expanding-button')).forEach(
+                (btn) => {
+                  btn.addEventListener('click', () => {
+                    btn.setAttribute(
+                      'aria-expanded',
+                      !expandingValues[btn.getAttribute('aria-expanded')]
+                    );
+                    if (btn.getAttribute('aria-expanded')) {
+                      btn.nextElementSibling.classList.remove('hidden');
+                    }
+                    else {
+                      btn.nextElementSibling.classList.add('hidden');
+                    }
+                  });
+                }
+              );
             }
           );
         }
