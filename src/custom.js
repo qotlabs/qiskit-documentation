@@ -304,7 +304,7 @@ const topLeftNavElement = `
         </div>
         <h2 class="text-heading-03 text-text-primary px-16 my-16">Documentation</h2>
         <ul class="cds--side-nav__header-navigation static p-0">
-            <li class="cds--side-nav__item${location.pathname.indexOf('/start') !== -1 ?
+            <li class="cds--side-nav__item${location.pathname.split('/')[1] === 'start' ?
             ' cds--side-nav__item--active' : ''}">
               <button
                 aria-expanded="false"
@@ -320,7 +320,7 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item${location.pathname.indexOf('/build') !== -1 ?
+            <li class="cds--side-nav__item${location.pathname.split('/')[1] === 'build' ?
             ' cds--side-nav__item--active' : ''}">
               <button
                 aria-expanded="false"
@@ -336,7 +336,7 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item${location.pathname.indexOf('/transpile') !== -1 ?
+            <li class="cds--side-nav__item${location.pathname.split('/')[1] ==='transpile' ?
             ' cds--side-nav__item--active' : ''}">
               <button
                 aria-expanded="false"
@@ -352,7 +352,7 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item${location.pathname.indexOf('/verify') !== -1 ?
+            <li class="cds--side-nav__item${location.pathname.split('/')[1] ==='verify' ?
             ' cds--side-nav__item--active' : ''}">
                 <button
                   aria-expanded="false"
@@ -368,7 +368,7 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item${location.pathname.indexOf('/run') !== -1 ?
+            <li class="cds--side-nav__item${location.pathname.split('/')[1] ==='run' ?
             ' cds--side-nav__item--active' : ''}">
               <button
                   aria-expanded="false"
@@ -385,7 +385,9 @@ const topLeftNavElement = `
               </button>
             </li>
             <li class="cds--side-nav__divider"><hr></li>
-            <li class="cds--side-nav__item${location.pathname.match('/api/qiskit') ?
+            <li class="cds--side-nav__item${
+              location.pathname.split('/')[1]==='api' &&
+              location.pathname.split('/')[2]==='qiskit' ?
             ' cds--side-nav__item--active' : ''}">
               <button
                   aria-expanded="false"
@@ -401,7 +403,9 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item${location.pathname.match('/api/qiskit-ibm-runtime') ?
+            <li class="cds--side-nav__item${
+              location.pathname.split('/')[1]==='api' &&
+              location.pathname.split('/')[2]==='qiskit-ibm-runtime' ?
             ' cds--side-nav__item--active' : ''}">
               <button
                   aria-expanded="false"
@@ -417,7 +421,9 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item${location.pathname.match('/api/qiskit-ibm-provider') ?
+            <li class="cds--side-nav__item${
+              location.pathname.split('/')[1]==='api' &&
+              location.pathname.split('/')[2]==='qiskit-ibm-provider' ?
             ' cds--side-nav__item--active' : ''}">
               <button
                   aria-expanded="false"
@@ -433,7 +439,9 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item${location.pathname.match('/api/migration-guides') ?
+            <li class="cds--side-nav__item${
+              location.pathname.split('/')[1]==='api' &&
+              location.pathname.split('/')[2]==='migration-guides' ?
             ' cds--side-nav__item--active' : ''}">
               <button
                   aria-expanded="false"
@@ -594,7 +602,7 @@ let searchData = {
 };
 let controller = null;
 let signal = null;
-const address = `${location.protocol}//${location.hostname}/api/search`;
+const backendURL = `${location.protocol}//${location.hostname}/api/search`;
 
 function customClientRender() {
   const header = document.querySelector('.cds--header');
@@ -862,7 +870,7 @@ function customClientRender() {
       const query = `?query=${encodeURIComponent(searchData.query)}`;
       const module = `&module=${searchData.module}`;
       const offsetStart = index > 0 ? `&offset=${index}` : "";
-      const url = address + query + module + offsetStart;
+      const url = backendURL + query + module + offsetStart;
       const options = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
