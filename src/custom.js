@@ -304,7 +304,8 @@ const topLeftNavElement = `
         </div>
         <h2 class="text-heading-03 text-text-primary px-16 my-16">Documentation</h2>
         <ul class="cds--side-nav__header-navigation static p-0">
-            <li class="cds--side-nav__item">
+            <li class="cds--side-nav__item${location.pathname.indexOf('/start') !== -1 ?
+            ' cds--side-nav__item--active' : ''}">
               <button
                 aria-expanded="false"
                 class="cds--side-nav__submenu"
@@ -319,7 +320,8 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item">
+            <li class="cds--side-nav__item${location.pathname.indexOf('/build') !== -1 ?
+            ' cds--side-nav__item--active' : ''}">
               <button
                 aria-expanded="false"
                 class="cds--side-nav__submenu"
@@ -334,7 +336,8 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item">
+            <li class="cds--side-nav__item${location.pathname.indexOf('/transpile') !== -1 ?
+            ' cds--side-nav__item--active' : ''}">
               <button
                 aria-expanded="false"
                 class="cds--side-nav__submenu"
@@ -349,7 +352,8 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item">
+            <li class="cds--side-nav__item${location.pathname.indexOf('/verify') !== -1 ?
+            ' cds--side-nav__item--active' : ''}">
                 <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -364,7 +368,8 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item">
+            <li class="cds--side-nav__item${location.pathname.indexOf('/run') !== -1 ?
+            ' cds--side-nav__item--active' : ''}">
               <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -380,7 +385,8 @@ const topLeftNavElement = `
               </button>
             </li>
             <li class="cds--side-nav__divider"><hr></li>
-            <li class="cds--side-nav__item">
+            <li class="cds--side-nav__item${location.pathname.match('/api/qiskit') ?
+            ' cds--side-nav__item--active' : ''}">
               <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -395,7 +401,8 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item">
+            <li class="cds--side-nav__item${location.pathname.match('/api/qiskit-ibm-runtime') ?
+            ' cds--side-nav__item--active' : ''}">
               <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -410,7 +417,8 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item">
+            <li class="cds--side-nav__item${location.pathname.match('/api/qiskit-ibm-provider') ?
+            ' cds--side-nav__item--active' : ''}">
               <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -425,7 +433,8 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item">
+            <li class="cds--side-nav__item${location.pathname.match('/api/migration-guides') ?
+            ' cds--side-nav__item--active' : ''}">
               <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -617,12 +626,15 @@ function customClientRender() {
     topLevelMenuButtons.forEach(
       (button) => button.addEventListener('click', () => {
         button.setAttribute('aria-expanded', !expandingValues[button.getAttribute('aria-expanded')]);
+        button.parentElement.classList.remove('cds--side-nav__item--active');
         const createSubmenuLiElement = (children, url, title, type) => {
           const isExpanded = type === 'default';
           const submenuLiElement = '<li class="cds--side-nav__item">';
           if (children.length === 1) {
             const link = `<a
-            class="cds--side-nav__link" style="padding-left: 16px;" href="${url}">
+            class="cds--side-nav__link${location.pathname === url ?
+              ' cds--side-nav__link--current': '' }"
+            style="padding-left: 16px;" href="${url}">
               <span class="cds--side-nav__link-text">${title}</span>
             </a>`;
             return `${submenuLiElement}${link}</li>`;
@@ -635,8 +647,9 @@ function customClientRender() {
           const ulSideMenu = `<ul class="cds--side-nav__menu${isExpanded ? '' : ' hidden'}">`;
           const sideMenuLiElements = children.map(
             (item) => `<li class="cds--side-nav__menu-item">
-              <a class="cds--side-nav__link" style="padding-left: 32px; font-weight: 400"
-              href="${item.url}">
+              <a class="cds--side-nav__link${location.pathname.indexOf(item.url) !== -1 ?
+                ' cds--side-nav__link--current': '' }" style="padding-left: 32px; font-weight: 400"
+                href="${item.url}">
                 <span class="cds--side-nav__link-text">${item.title}</span>
               </a>
             </li>`
@@ -654,6 +667,13 @@ function customClientRender() {
               document.querySelector('.submenu-element').outerHTML = '';
               document.querySelector('.inset-bg-element').outerHTML = '';
               button.setAttribute('aria-expanded', false);
+              Array.from(document.querySelectorAll('button[data-menu-level="0"]')).forEach(
+                (element) => {
+                  if(location.pathname.indexOf(element.dataset.href) !== -1) {
+                    element.parentElement.classList.add('cds--side-nav__item--active');
+                  }
+                }
+              )
             }
           )
           getTreeFromQuery(button.dataset.href).then(
