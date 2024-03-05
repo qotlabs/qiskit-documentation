@@ -263,6 +263,16 @@ scrollbar scrollbar-variant">
     aria-hidden="true"></ul>
 </div>`;
 
+const navSubmenuChevron = `<div
+  class="cds--side-nav__icon cds--side-nav__icon--small cds--side-nav__submenu-chevron"
+>
+  <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+  xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+  viewBox="0 0 32 32" aria-hidden="true">
+    <path d="M22 16L12 26 10.6 24.6 19.2 16 10.6 7.4 12 6z"></path>
+  </svg>
+</div>`;
+
 const divLgHidden = '<div class="lg:hidden" id="lg-hidden"></div>';
 const topLeftNavElement = `
     <div class="z-[600] bg-overlay fixed inset-0 top-[var(--shell-header-height)]"
@@ -286,49 +296,79 @@ const topLeftNavElement = `
         <h2 class="text-heading-03 text-text-primary px-16 my-16">Documentation</h2>
         <ul class="cds--side-nav__header-navigation static p-0">
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__link${
-                  location.pathname === '/start'
-                    ? ' cds--side-nav__link--current'
-                    : ''
-                }" href="/start">
-                    <span class="cds--side-nav__link-text">Start</span>
-                </a>
+              <button
+                aria-expanded="false"
+                class="cds--side-nav__submenu"
+                type="button"
+                data-href="/start"
+                data-menu-level="0"
+              >
+                <span
+                  class="cds--side-nav__submenu-title"
+                  title="Start"
+                >Start</span>
+                ${navSubmenuChevron}
+              </button>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__link${
-                  location.pathname === '/build'
-                    ? " cds--side-nav__link--current"
-                    : ''
-                }" href="/build">
-                    <span class="cds--side-nav__link-text">Build</span>
-                </a>
+              <button
+                aria-expanded="false"
+                class="cds--side-nav__submenu"
+                type="button"
+                data-href="/build"
+                data-menu-level="0"
+              >
+                <span
+                  class="cds--side-nav__submenu-title"
+                  title="Build"
+                >Build</span>
+                ${navSubmenuChevron}
+              </button>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__link${
-                  location.pathname === '/transpile'
-                    ? " cds--side-nav__link--current"
-                    : ''
-                }" href="/transpile">
-                    <span class="cds--side-nav__link-text">Transpile</span>
-                </a>
+              <button
+                aria-expanded="false"
+                class="cds--side-nav__submenu"
+                type="button"
+                data-href="/transpile"
+                data-menu-level="0"
+              >
+                <span
+                  class="cds--side-nav__submenu-title"
+                  title="Transpile"
+                >Transpile</span>
+                ${navSubmenuChevron}
+              </button>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__link${
-                  location.pathname === '/verify'
-                    ? ' cds--side-nav__link--current'
-                    : ''
-                }" href="/verify">
-                    <span class="cds--side-nav__link-text">Verify</span>
-                </a>
+                <button
+                  aria-expanded="false"
+                  class="cds--side-nav__submenu"
+                  type="button"
+                  data-href="/verify"
+                  data-menu-level="0"
+                >
+                <span
+                  class="cds--side-nav__submenu-title"
+                  title="Verify"
+                >Verify</span>
+                ${navSubmenuChevron}
+              </button>
             </li>
             <li class="cds--side-nav__item">
-                <a class="cds--side-nav__link${
-                  location.pathname === "/run"
-                    ? ' cds--side-nav__link--current'
-                    : ''
-                }" href="/run">
-                    <span class="cds--side-nav__link-text">Run</span>
-                </a>
+              <button
+                  aria-expanded="false"
+                  class="cds--side-nav__submenu"
+                  type="button"
+                  data-href="/run"
+                  data-menu-level="0"
+              >
+                <span
+                  class="cds--side-nav__submenu-title"
+                  title="Run"
+                >Run</span>
+                ${navSubmenuChevron}
+              </button>
             </li>
             <li class="cds--side-nav__divider"><hr></li>
             <li class="cds--side-nav__item">
@@ -399,6 +439,32 @@ const clearSearchButtonElement = `<button
           8 22.6 9.4 24 16 17.4 22.6 24 24 22.6 17.4 16 24 9.4z"></path>
   </svg>
 </button>`;
+
+const insetBgElement = `<div class="bg-background absolute inset-0 inset-bg-element"
+style="opacity: 0.7;"></div>`;
+const submenuElement = `<div class="submenu-content absolute inset-0 bg-background z-10 submenu-element"
+style="transform: none;">
+  <div>
+    <button class="h-48 w-full px-16 flex items-center text-helper-text-02 gap-4
+    focus-outline border-0 cursor-pointer bg-transparent text-inherit all-documentation"
+    type="button">
+      <svg focusable="false" preserveAspectRatio="xMidYMid meet"
+      xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+      width="20" height="20" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M10 16L20 6 21.4 7.4 12.8 16 21.4 24.6 20 26z"></path>
+      </svg>
+      <span>All documentation</span>
+    </button>
+    <div class="mx-16 border-solid border-0 border-b border-border-subtle"></div>
+  </div>
+  <h2 class="text-heading-03 text-text-primary px-16 my-12 submenu-text-heading"></h2>
+  <ul class="cds--side-nav__items pt-0 pb-16 overflow-hidden submenu-list"></ul>
+</div>`;
+
+const hamburgerPath = `<path d="M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2zM2
+7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"></path>`;
+const crossPath = `<path d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8
+22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"></path>`;
 
 // Checking top-left menu is opened
 let isTopLeftMenuOpened = false;
@@ -482,11 +548,7 @@ function customClientRender() {
   topLeftMenuButton.addEventListener('click', () => {
     isTopLeftMenuOpened = !isTopLeftMenuOpened;
     const buttonLabel = `${isTopLeftMenuOpened ? 'Close' : 'Open'} menu`;
-    const buttonSvgPath = isTopLeftMenuOpened
-      ? `<path d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8
-            22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"></path>`
-      : `<path d="M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2zM2
-            7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"></path>`;
+    const buttonSvgPath = isTopLeftMenuOpened ? crossPath : hamburgerPath;
     topLeftMenuButton.setAttribute('aria-expanded', isTopLeftMenuOpened);
     topLeftMenuButton.setAttribute('title', buttonLabel);
     topLeftMenuButton.setAttribute('aria-label', buttonLabel);
@@ -501,6 +563,89 @@ function customClientRender() {
     document.querySelector('#lg-hidden').innerHTML = `${
       isTopLeftMenuOpened ? topLeftNavElement : ''
     }`;
+    const topLevelMenuButtons = Array.from(
+      document.querySelector('#lg-hidden').querySelectorAll('button[data-menu-level="0"]')
+    );
+    const getTreeFromQuery = async (href) => {
+      const url = `/api/toc${href}`;
+      const response = await fetch(url, {
+        headers: {'Content-Type': 'application/json'}
+      });
+      if (!response.ok) {
+        throw new Error(`An error occurred: ${response.status}`);
+      }
+      return await response.json();
+    }
+    topLevelMenuButtons.forEach(
+      (button) => button.addEventListener('click', () => {
+        const ariaExpanded = button.getAttribute('aria-expanded')==='false' ? false : true;
+        button.setAttribute('aria-expanded', !ariaExpanded);
+        const createSubmenuLiElement = (children, url, title) => {
+          const submenuLiElement = '<li class="cds--side-nav__item">';
+          if (children.length === 1) {
+            const link = `<a
+            class="cds--side-nav__link" style="padding-left: 16px;" href="${url}">
+              <span class="cds--side-nav__link-text">${title}</span>
+            </a>`;
+            return `${submenuLiElement}${link}</li>`;
+          }
+          const buttonNavSubmenu = `<button aria-expanded="true"
+            class="cds--side-nav__submenu" type="button" style="padding-left: 16px;">
+              <span class="cds--side-nav__submenu-title" title="${title}">${title}</span>
+              <div class="cds--side-nav__icon cds--side-nav__icon--small cds--side-nav__submenu-chevron">
+                <svg focusable="false"
+                preserveAspectRatio="xMidYMid meet"
+                xmlns="http://www.w3.org/2000/svg" fill="currentColor" width="20" height="20"
+                viewBox="0 0 32 32" aria-hidden="true">
+                  <path d="M16 22L6 12 7.4 10.6 16 19.2 24.6 10.6 26 12z"></path>
+                </svg>
+              </div>
+            </button>`;
+          const ulSideMenu = '<ul class="cds--side-nav__menu">';
+          const sideMenuLiElements = children.map(
+            (item) => `<li class="cds--side-nav__menu-item">
+              <a class="cds--side-nav__link" style="padding-left: 32px; font-weight: 400"
+              href="${item.url}">
+                <span class="cds--side-nav__link-text">${item.title}</span>
+              </a>
+            </li>`
+          );
+          return `${submenuLiElement}${buttonNavSubmenu}
+          ${ulSideMenu}</ul>${sideMenuLiElements.join('')}</li>`;
+        }
+
+        if(!document.querySelector('.inset-bg-element')) {
+          button.parentElement.insertAdjacentHTML('beforeend', insetBgElement);
+          button.parentElement.insertAdjacentHTML('beforeend', submenuElement);
+          document.querySelector('.all-documentation').addEventListener(
+            'click',
+            () => {
+              document.querySelector('.submenu-element').outerHTML = '';
+              document.querySelector('.inset-bg-element').outerHTML = '';
+              button.setAttribute('aria-expanded', false);
+            }
+          )
+          getTreeFromQuery(button.dataset.href).then(
+            (data) => {
+              document.querySelector('.submenu-text-heading').textContent = data.toc.title;
+              data.toc.children.forEach(
+                (item)=> {
+                  document.querySelector('.submenu-list').insertAdjacentHTML(
+                    'beforeend',
+                    createSubmenuLiElement(
+                      item.children === undefined ? [[]] : item.children,
+                      item.url === undefined ? '' : item.url,
+                      item.title
+                    )
+                  );
+                }
+              )
+
+            }
+          );
+        }
+      })
+    )
   });
   // Clicking API Reference button
   const apiReferenceButton = document.querySelector(
