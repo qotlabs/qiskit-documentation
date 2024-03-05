@@ -507,6 +507,23 @@ const hamburgerPath = `<path d="M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2z
 7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"></path>`;
 const crossPath = `<path d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8
 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"></path>`;
+const dropdownMenuElement =
+`<div class="cds--form-item px-16 mb-24">
+  <div class="cds--select">
+    <label for=":r26:" class="cds--label cds--visually-hidden" dir="auto">Select</label>
+    <div class="cds--select-input__wrapper">
+      <select id=":r26:" class="cds--select-input" title="">
+      </select>
+      <svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor"
+      width="16" height="16" viewBox="0 0 16 16"
+      aria-hidden="true" class="cds--select__arrow"
+      xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 11L3 6 3.7 5.3 8 9.6 12.3 5.3 13 6z"></path>
+      </svg>
+    </div>
+  </div>
+</div>`;
+
 
 const expandingValues = {
   'true': true,
@@ -627,7 +644,7 @@ function customClientRender() {
       (button) => button.addEventListener('click', () => {
         button.setAttribute('aria-expanded', !expandingValues[button.getAttribute('aria-expanded')]);
         button.parentElement.classList.remove('cds--side-nav__item--active');
-        const createSubmenuLiElement = (children, url, title, type) => {
+        const createSubmenuLiElement = (children, url, title, type, package) => {
           const isExpanded = type === 'default';
           const submenuLiElement = '<li class="cds--side-nav__item">';
           if (children.length === 1) {
@@ -654,6 +671,7 @@ function customClientRender() {
               </a>
             </li>`
           );
+
           return `${submenuLiElement}${buttonNavSubmenu}
           ${ulSideMenu}${sideMenuLiElements.join('')}</ul></li>`;
         }
@@ -679,8 +697,35 @@ function customClientRender() {
           getTreeFromQuery(button.dataset.href).then(
             (data) => {
               document.querySelector('.submenu-text-heading').textContent = data.toc.title;
+              if(data.package) {
+                document.querySelector('.submenu-list').insertAdjacentHTML(
+                  'beforebegin',
+                  dropdownMenuElement
+                );
+                data.package.versions.sort(
+                  (a, b) => parseFloat(b.version) - parseFloat(a.version)
+                );
+                data.package.versions.forEach((item) => {
+                  document.querySelector('.cds--select-input').insertAdjacentHTML(
+                    'beforeend',
+                    `<option class="cds--select-option" value="${item.version}">${item.version}</option>`
+                  )
+                });
+                Array.from(document.querySelectorAll('.cds--select-option')).forEach(
+                  (option) => {
+                    option.addEventListener('click', (event) => {
+                      const versionNumber = parseFloat(event.target.value);
+                      const apiSection = button.dataset.href;
+                      const protocol = location.protocol;
+                      const hostname = location.hostname;
+                      const port = location.port;
+                      location.href = `${protocol}//${hostname}:${port}/${apiSection}/${versionNumber}`;
+                    });
+                  }
+                )
+              }
               data.toc.children.forEach(
-                (item)=> {
+                (item) => {
                   document.querySelector('.submenu-list').insertAdjacentHTML(
                     'beforeend',
                     createSubmenuLiElement(
@@ -883,7 +928,7 @@ function customClientRender() {
       document.body.addEventListener('keydown', modalWindowEventDetect);
       document.body.addEventListener('click', modalWindowEventDetect);
       document.body.removeEventListener(
-        "keydown",
+        'keydown',
         closeModalWindowWhileLoading
       );
       document.body.removeEventListener('click', modalWindowEventDetect);
