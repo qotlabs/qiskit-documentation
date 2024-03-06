@@ -1,9 +1,11 @@
+# AppArmor profile for Qiskit documentation application
+
 abi <abi/3.0>,
 
 include <tunables/global>
 
 @{QISKIT_REPO}=/srv/qiskit/documentation
-@{NODE_EXECUTABLE}=/snap/node/7823/bin/node
+@{NODE_EXECUTABLE}=/usr/bin/node
 
 profile @{QISKIT_REPO}/app.sh {
   include <abstractions/base>
@@ -21,7 +23,6 @@ profile @{QISKIT_REPO}/app.sh {
     network inet tcp,
     network inet6 tcp,
 
-    /snap/core20/2105/usr/lib/x86_64-linux-gnu/* mr,
     @{NODE_EXECUTABLE} mr,
     owner @{QISKIT_REPO}/app/node_modules/** r,
     owner @{QISKIT_REPO}/app/package.json r,
