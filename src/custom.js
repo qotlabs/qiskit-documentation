@@ -603,6 +603,17 @@ let searchData = {
 let controller = null;
 let signal = null;
 const backendURL = `${location.protocol}//${location.hostname}/api/search`;
+const getTreeFromQuery = async (href) => {
+  const url = `/api/toc${href}`;
+  const response = await fetch(url, {
+    headers: {'Content-Type': 'application/json'}
+  });
+  if (!response.ok) {
+    throw new Error(`An error occurred: ${response.status}`);
+  }
+  return await response.json();
+}
+
 
 function customClientRender() {
   const header = document.querySelector('.cds--header');
@@ -638,21 +649,12 @@ function customClientRender() {
     const topLevelMenuButtons = Array.from(
       document.querySelector('#lg-hidden').querySelectorAll('button[data-menu-level="0"]')
     );
-    const getTreeFromQuery = async (href) => {
-      const url = `/api/toc${href}`;
-      const response = await fetch(url, {
-        headers: {'Content-Type': 'application/json'}
-      });
-      if (!response.ok) {
-        throw new Error(`An error occurred: ${response.status}`);
-      }
-      return await response.json();
-    }
+
     topLevelMenuButtons.forEach(
       (button) => button.addEventListener('click', () => {
         button.setAttribute('aria-expanded', !expandingValues[button.getAttribute('aria-expanded')]);
         button.parentElement.classList.remove('cds--side-nav__item--active');
-        const createSubmenuLiElement = (children, url, title, type, package) => {
+        const createSubmenuLiElement = (children, url, title, type) => {
           const isExpanded = type === 'default';
           const submenuLiElement = '<li class="cds--side-nav__item">';
           if (children.length === 1) {
@@ -719,6 +721,7 @@ function customClientRender() {
                     `<option class="cds--select-option" value="${item.version}">${item.version}</option>`
                   )
                 });
+                document.querySelector('.cds--select-input').value = data.package.version;
                 Array.from(document.querySelectorAll('.cds--select-option')).forEach(
                   (option) => {
                     option.addEventListener('click', (event) => {
