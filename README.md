@@ -47,4 +47,4 @@ cd search && uvicorn server:app
 Different parts of the project are subject to different copyrights and license agreements.
 - `app` – copyright IBM, non-exclusive license according to [Docker Terms of Service](https://www.docker.com/legal/docker-terms-service/), paragraph 6.4.
 - `docs` – copyright IBM, the Apache License Version 2.0.
-- `search` and `src` – copyright Quantum Optical Technologies Laboratories, the Apache License Version 2.0.
+- `search` and `src` – copyright Quantum Optical Technologies Laboratories, GNU General Public License v3.0 or later.
