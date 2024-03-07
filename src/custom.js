@@ -821,7 +821,7 @@ function customClientRender() {
                   const protocol = location.protocol;
                   const hostname = location.hostname;
                   const port = location.port;
-                  location.href = `${protocol}//${hostname}:${port}/${versionAPI}`;
+                  location.href = `${protocol}//${hostname}:${port}${versionAPI}`;
                 });
               });
             }
