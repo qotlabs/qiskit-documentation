@@ -415,8 +415,8 @@ const topLeftNavElement = `
               >
                 <span
                   class="cds--side-nav__submenu-title"
-                  title="Qiskit"
-                >Qiskit</span>
+                  title="Qiskit SDK"
+                >Qiskit SDK</span>
                 ${navSubmenuChevron}
               </button>
             </li>
@@ -559,44 +559,6 @@ const expandingValues = {
   false: false,
 };
 
-// Checking top-left menu is opened
-let isTopLeftMenuOpened = false;
-
-// Checking current link
-function setActiveLink() {
-  const currentNavLink = document.querySelector(
-    '.cds--header__menu-item--current'
-  );
-  if (currentNavLink) {
-    currentNavLink.className = 'cds--header__menu-item';
-  }
-  const headerSubmenuCurrent = document.querySelector('.cds--header__submenu');
-  if (headerSubmenuCurrent) {
-    headerSubmenuCurrent.className = 'cds--header__submenu';
-  }
-  if (!location.pathname.match('api') && location.pathname !== '/') {
-    const section = location.pathname.split('/');
-    const activeLink = document.querySelector(
-      `.cds--header__menu-item[href="/${section[1]}"]`
-    );
-    if (activeLink) {
-      activeLink.className +=
-        ' cds--header__menu-item--current !text-text-primary';
-    }
-  } else if (location.pathname.match('api')) {
-    if (headerSubmenuCurrent) {
-      headerSubmenuCurrent.className = `cds--header__submenu after:absolute after:bottom-0
-            after:w-full after:bg-border-interactive after:h-[3px]`;
-      headerSubmenuCurrent
-        .querySelector('button')
-        .classList.remove('text-text-secondary');
-      headerSubmenuCurrent
-        .querySelector('button')
-        .classList.add('text-text-primary');
-    }
-  }
-}
-
 let lastUrl = location.href;
 new MutationObserver(() => {
   const url = location.href;
@@ -605,15 +567,6 @@ new MutationObserver(() => {
     setActiveLink();
   }
 }).observe(document, {subtree: true, childList: true});
-
-// Action connected to API Reference button
-let apiReferencesListToggled = false;
-function apiReferenceMenuClose() {
-  const apiReferencesLinksMenu = document.querySelector('.api-references-list');
-  if (apiReferencesLinksMenu) {
-    apiReferencesLinksMenu.outerHTML = '';
-  }
-}
 
 let searchData = {
   query: '',
@@ -632,8 +585,87 @@ const getTreeFromQuery = async (href) => {
   }
   return await response.json();
 };
+const sortVersions = (versionA, versionB) => {
+  if (!versionA) {
+    return 1;
+  }
+  if (!versionB) {
+    return -1;
+  }
+
+  const arrA = versionA.version.split('.');
+  const arrB = versionB.version.split('.');
+
+  if (!arrA || !arrA.length) {
+    return 1;
+  }
+
+  if (!arrB || !arrB.length) {
+    return -1;
+  }
+
+  for (let i = 0; i < Math.min(arrA.length, arrB.length); i++) {
+    const numberA = +arrA[i].replace(/\D/g, '') + 100000;
+    const numberB = +arrB[i].replace(/\D/g, '') + 100000;
+
+    if (numberA === numberB) {
+      continue;
+    }
+
+    return numberB - numberA;
+  }
+  return arrB.length - arrA.length;
+};
 
 function customClientRender() {
+  // Checking top-left menu is opened
+  let isTopLeftMenuOpened = false;
+  // Checking current link
+  const setActiveLink = () => {
+    const currentNavLink = document.querySelector(
+      '.cds--header__menu-item--current'
+    );
+    if (currentNavLink) {
+      currentNavLink.className = 'cds--header__menu-item';
+    }
+    const headerSubmenuCurrent = document.querySelector(
+      '.cds--header__submenu'
+    );
+    if (headerSubmenuCurrent) {
+      headerSubmenuCurrent.className = 'cds--header__submenu';
+    }
+    if (!location.pathname.match('api') && location.pathname !== '/') {
+      const section = location.pathname.split('/');
+      const activeLink = document.querySelector(
+        `.cds--header__menu-item[href="/${section[1]}"]`
+      );
+      if (activeLink) {
+        activeLink.className +=
+          ' cds--header__menu-item--current !text-text-primary';
+      }
+    } else if (location.pathname.match('api')) {
+      if (headerSubmenuCurrent) {
+        headerSubmenuCurrent.className = `cds--header__submenu after:absolute after:bottom-0
+            after:w-full after:bg-border-interactive after:h-[3px]`;
+        headerSubmenuCurrent
+          .querySelector('button')
+          .classList.remove('text-text-secondary');
+        headerSubmenuCurrent
+          .querySelector('button')
+          .classList.add('text-text-primary');
+      }
+    }
+  };
+  // Action connected to API Reference button
+  let apiReferencesListToggled = false;
+  const apiReferenceMenuClose = () => {
+    const apiReferencesLinksMenu = document.querySelector(
+      '.api-references-list'
+    );
+    if (apiReferencesLinksMenu) {
+      apiReferencesLinksMenu.outerHTML = '';
+    }
+  };
   const header = document.querySelector('.cds--header');
   document
     .querySelector('.cds--skip-to-content')
@@ -648,22 +680,35 @@ function customClientRender() {
   );
   topLeftMenuButton.addEventListener('click', () => {
     isTopLeftMenuOpened = !isTopLeftMenuOpened;
-    const buttonLabel = `${isTopLeftMenuOpened ? 'Close' : 'Open'} menu`;
-    const buttonSvgPath = isTopLeftMenuOpened ? crossPath : hamburgerPath;
-    topLeftMenuButton.setAttribute('aria-expanded', isTopLeftMenuOpened);
-    topLeftMenuButton.setAttribute('title', buttonLabel);
-    topLeftMenuButton.setAttribute('aria-label', buttonLabel);
-    topLeftMenuButton
-      .querySelector('svg')
-      .setAttribute(
-        'viewBox',
-        `0 0 ${isTopLeftMenuOpened ? '32 32' : '20 20'}`
-      );
-    topLeftMenuButton.querySelector('svg').innerHTML = buttonSvgPath;
-    topLeftMenuButton.classList.toggle('cds--header__action--active');
-    document.querySelector('#lg-hidden').innerHTML = `${
-      isTopLeftMenuOpened ? topLeftNavElement : ''
-    }`;
+    const setTopLeftMenuButtonStatus = (status) => {
+      const buttonLabel = `${status ? 'Close' : 'Open'} menu`;
+      const buttonSvgPath = status ? crossPath : hamburgerPath;
+      topLeftMenuButton.setAttribute('aria-expanded', status);
+      topLeftMenuButton.setAttribute('title', buttonLabel);
+      topLeftMenuButton.setAttribute('aria-label', buttonLabel);
+      topLeftMenuButton
+        .querySelector('svg')
+        .setAttribute('viewBox', `0 0 ${status ? '32 32' : '20 20'}`);
+      topLeftMenuButton.querySelector('svg').innerHTML = buttonSvgPath;
+      if (status) {
+        topLeftMenuButton.classList.add('cds--header__action--active');
+      } else {
+        topLeftMenuButton.classList.remove('cds--header__action--active');
+      }
+      document.querySelector('#lg-hidden').innerHTML = `${
+        status ? topLeftNavElement : ''
+      }`;
+    };
+    setTopLeftMenuButtonStatus(isTopLeftMenuOpened);
+    const closeTopLeftMenu = (event) => {
+      if (event.target.classList.contains('bg-overlay')) {
+        setTopLeftMenuButtonStatus(false);
+        isTopLeftMenuOpened = false;
+        document.body.removeEventListener('click', closeTopLeftMenu);
+      }
+    };
+    document.body.addEventListener('click', closeTopLeftMenu);
+
     const topLevelMenuButtons = Array.from(
       document
         .querySelector('#lg-hidden')
@@ -676,7 +721,6 @@ function customClientRender() {
           'aria-expanded',
           !expandingValues[button.getAttribute('aria-expanded')]
         );
-        button.parentElement.classList.remove('cds--side-nav__item--active');
         const createSubmenuLiElement = (children, url, title, type) => {
           const isExpanded = type === 'default';
           const submenuLiElement = '<li class="cds--side-nav__item">';
@@ -727,10 +771,25 @@ function customClientRender() {
               Array.from(
                 document.querySelectorAll('button[data-menu-level="0"]')
               ).forEach((element) => {
-                if (location.pathname.indexOf(element.dataset.href) !== -1) {
-                  element.parentElement.classList.add(
-                    'cds--side-nav__item--active'
-                  );
+                if (location.pathname.split('/')[1] !== 'api') {
+                  if (
+                    element.dataset.href.indexOf(
+                      `/${location.pathname.split('/')[1]}`
+                    ) !== -1
+                  ) {
+                    element.parentElement.classList.add(
+                      'cds--side-nav__item--active'
+                    );
+                  }
+                } else {
+                  const pathName = `/${location.pathname.split('/')[1]}/${
+                    location.pathname.split('/')[2]
+                  }`;
+                  if (element.dataset.href === pathName) {
+                    element.parentElement.classList.add(
+                      'cds--side-nav__item--active'
+                    );
+                  }
                 }
               });
             });
@@ -741,29 +800,28 @@ function customClientRender() {
               document
                 .querySelector('.submenu-list')
                 .insertAdjacentHTML('beforebegin', dropdownMenuElement);
-              data.package.versions.sort(
-                (a, b) => parseFloat(b.version) - parseFloat(a.version)
-              );
-              data.package.versions.forEach((item) => {
-                document
-                  .querySelector('.cds--select-input')
-                  .insertAdjacentHTML(
-                    'beforeend',
-                    `<option class="cds--select-option" value="${item.version}">${item.version}</option>`
-                  );
+              const versions = data.package.versions.sort(sortVersions);
+              versions.forEach((item) => {
+                document.querySelector('.cds--select-input').insertAdjacentHTML(
+                  'beforeend',
+                  `<option class="cds--select-option" value="${item.version}"
+                    data-path="${item.path}">${item.version}</option>`
+                );
               });
               document.querySelector('.cds--select-input').value =
                 data.package.version;
+              document
+                .querySelector('.cds--side-nav__item--active')
+                .classList.remove('cds--side-nav__item--active');
               Array.from(
                 document.querySelectorAll('.cds--select-option')
               ).forEach((option) => {
                 option.addEventListener('click', (event) => {
-                  const versionNumber = parseFloat(event.target.value);
-                  const apiSection = button.dataset.href;
+                  const versionAPI = event.target.dataset.path;
                   const protocol = location.protocol;
                   const hostname = location.hostname;
                   const port = location.port;
-                  location.href = `${protocol}//${hostname}:${port}/${apiSection}/${versionNumber}`;
+                  location.href = `${protocol}//${hostname}:${port}/${versionAPI}`;
                 });
               });
             }
@@ -966,7 +1024,9 @@ function customClientRender() {
           document.querySelectorAll('.cds--modal button[role="radio"]')
         ).forEach((button) => (button.disabled = false));
         document.querySelector('.search-query-button').disabled = false;
-        scrollbarList.addEventListener('scroll', getMoreData, {passive: true});
+        scrollbarList.addEventListener('scroll', getMoreData, {
+          passive: true,
+        });
       }
       document.body.addEventListener('keydown', modalWindowEventDetect);
       document.body.addEventListener('click', modalWindowEventDetect);
