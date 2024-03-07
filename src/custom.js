@@ -565,7 +565,7 @@ let isTopLeftMenuOpened = false;
 // Checking current link
 function setActiveLink() {
   const currentNavLink = document.querySelector(
-    '.cds--header__menu-item--current',
+    '.cds--header__menu-item--current'
   );
   if (currentNavLink) {
     currentNavLink.className = 'cds--header__menu-item';
@@ -577,7 +577,7 @@ function setActiveLink() {
   if (!location.pathname.match('api') && location.pathname !== '/') {
     const section = location.pathname.split('/');
     const activeLink = document.querySelector(
-      `.cds--header__menu-item[href="/${section[1]}"]`,
+      `.cds--header__menu-item[href="/${section[1]}"]`
     );
     if (activeLink) {
       activeLink.className +=
@@ -644,7 +644,7 @@ function customClientRender() {
   setActiveLink();
   // Clicking top-left menu button
   const topLeftMenuButton = document.querySelector(
-    'button.cds--header__menu-toggle',
+    'button.cds--header__menu-toggle'
   );
   topLeftMenuButton.addEventListener('click', () => {
     isTopLeftMenuOpened = !isTopLeftMenuOpened;
@@ -657,7 +657,7 @@ function customClientRender() {
       .querySelector('svg')
       .setAttribute(
         'viewBox',
-        `0 0 ${isTopLeftMenuOpened ? '32 32' : '20 20'}`,
+        `0 0 ${isTopLeftMenuOpened ? '32 32' : '20 20'}`
       );
     topLeftMenuButton.querySelector('svg').innerHTML = buttonSvgPath;
     topLeftMenuButton.classList.toggle('cds--header__action--active');
@@ -667,14 +667,14 @@ function customClientRender() {
     const topLevelMenuButtons = Array.from(
       document
         .querySelector('#lg-hidden')
-        .querySelectorAll('button[data-menu-level="0"]'),
+        .querySelectorAll('button[data-menu-level="0"]')
     );
 
     topLevelMenuButtons.forEach((button) =>
       button.addEventListener('click', () => {
         button.setAttribute(
           'aria-expanded',
-          !expandingValues[button.getAttribute('aria-expanded')],
+          !expandingValues[button.getAttribute('aria-expanded')]
         );
         button.parentElement.classList.remove('cds--side-nav__item--active');
         const createSubmenuLiElement = (children, url, title, type) => {
@@ -708,7 +708,7 @@ function customClientRender() {
                 href="${item.url}">
                 <span class="cds--side-nav__link-text">${item.title}</span>
               </a>
-            </li>`,
+            </li>`
           );
 
           return `${submenuLiElement}${buttonNavSubmenu}
@@ -725,11 +725,11 @@ function customClientRender() {
               document.querySelector('.inset-bg-element').outerHTML = '';
               button.setAttribute('aria-expanded', false);
               Array.from(
-                document.querySelectorAll('button[data-menu-level="0"]'),
+                document.querySelectorAll('button[data-menu-level="0"]')
               ).forEach((element) => {
                 if (location.pathname.indexOf(element.dataset.href) !== -1) {
                   element.parentElement.classList.add(
-                    'cds--side-nav__item--active',
+                    'cds--side-nav__item--active'
                   );
                 }
               });
@@ -742,20 +742,20 @@ function customClientRender() {
                 .querySelector('.submenu-list')
                 .insertAdjacentHTML('beforebegin', dropdownMenuElement);
               data.package.versions.sort(
-                (a, b) => parseFloat(b.version) - parseFloat(a.version),
+                (a, b) => parseFloat(b.version) - parseFloat(a.version)
               );
               data.package.versions.forEach((item) => {
                 document
                   .querySelector('.cds--select-input')
                   .insertAdjacentHTML(
                     'beforeend',
-                    `<option class="cds--select-option" value="${item.version}">${item.version}</option>`,
+                    `<option class="cds--select-option" value="${item.version}">${item.version}</option>`
                   );
               });
               document.querySelector('.cds--select-input').value =
                 data.package.version;
               Array.from(
-                document.querySelectorAll('.cds--select-option'),
+                document.querySelectorAll('.cds--select-option')
               ).forEach((option) => {
                 option.addEventListener('click', (event) => {
                   const versionNumber = parseFloat(event.target.value);
@@ -776,8 +776,8 @@ function customClientRender() {
                     item.children === undefined ? [[]] : item.children,
                     item.url === undefined ? '' : item.url,
                     item.title,
-                    data.type,
-                  ),
+                    data.type
+                  )
                 );
             });
             Array.from(document.querySelectorAll('.expanding-button')).forEach(
@@ -785,7 +785,7 @@ function customClientRender() {
                 btn.addEventListener('click', () => {
                   btn.setAttribute(
                     'aria-expanded',
-                    !expandingValues[btn.getAttribute('aria-expanded')],
+                    !expandingValues[btn.getAttribute('aria-expanded')]
                   );
                   if (btn.getAttribute('aria-expanded')) {
                     btn.nextElementSibling.classList.remove('hidden');
@@ -793,16 +793,16 @@ function customClientRender() {
                     btn.nextElementSibling.classList.add('hidden');
                   }
                 });
-              },
+              }
             );
           });
         }
-      }),
+      })
     );
   });
   // Clicking API Reference button
   const apiReferenceButton = document.querySelector(
-    'button[aria-label="API Reference"]',
+    'button[aria-label="API Reference"]'
   );
   apiReferenceButton.addEventListener('click', () => {
     apiReferencesListToggled = !apiReferencesListToggled;
@@ -823,7 +823,7 @@ function customClientRender() {
       apiReferenceButton.classList.remove('text-text-primary');
       apiReferenceButton.parentElement.insertAdjacentHTML(
         'beforeend',
-        apiReferencesListElement,
+        apiReferencesListElement
       );
       if (location.pathname.match('api')) {
         document.querySelector('.cds--header__submenu').className =
@@ -853,7 +853,7 @@ function customClientRender() {
     ];
     if (document.querySelector('nav[aria-label="Side navigation"]')) {
       elements.push(
-        document.querySelector('nav[aria-label="Side navigation"]'),
+        document.querySelector('nav[aria-label="Side navigation"]')
       );
     }
     if (document.querySelector('main')) {
@@ -891,10 +891,10 @@ function customClientRender() {
       .insertAdjacentHTML('beforeend', modalSearchResultsElement);
     const scrollbarList = document.querySelector('.cds--modal div.scrollbar');
     const resultsList = document.querySelector(
-      '.cds--modal ul[role="listbox"]',
+      '.cds--modal ul[role="listbox"]'
     );
     const noResultsDiv = document.querySelector(
-      '.cds--modal .px-8.py-16.text-body-compact-01',
+      '.cds--modal .px-8.py-16.text-body-compact-01'
     );
     const getSearchResults = async () => {
       controller = new AbortController();
@@ -963,7 +963,7 @@ function customClientRender() {
         document.querySelector('#loading-indicator').outerHTML = '';
         document.querySelector('input[type="search"]').disabled = false;
         Array.from(
-          document.querySelectorAll('.cds--modal button[role="radio"]'),
+          document.querySelectorAll('.cds--modal button[role="radio"]')
         ).forEach((button) => (button.disabled = false));
         document.querySelector('.search-query-button').disabled = false;
         scrollbarList.addEventListener('scroll', getMoreData, {passive: true});
@@ -972,7 +972,7 @@ function customClientRender() {
       document.body.addEventListener('click', modalWindowEventDetect);
       document.body.removeEventListener(
         'keydown',
-        closeModalWindowWhileLoading,
+        closeModalWindowWhileLoading
       );
       document.body.removeEventListener('click', modalWindowEventDetect);
     };
@@ -985,7 +985,7 @@ function customClientRender() {
         .insertAdjacentHTML('afterend', loadingIndicatorElement);
       document.querySelector('input[type="search"]').disabled = true;
       Array.from(
-        document.querySelectorAll('.cds--modal button[role="radio"]'),
+        document.querySelectorAll('.cds--modal button[role="radio"]')
       ).forEach((button) => (button.disabled = true));
       document.querySelector('.search-query-button').disabled = true;
       scrollbarList.removeEventListener('scroll', getMoreData, {
@@ -1031,7 +1031,7 @@ function customClientRender() {
   };
   const modalWindowEventDetect = (event) => {
     const modalWindow = document.querySelector(
-      '.cds--modal[aria-hidden="false"]',
+      '.cds--modal[aria-hidden="false"]'
     );
     switch (event.type) {
       case 'click':
@@ -1062,7 +1062,7 @@ function customClientRender() {
     blockFocusOnElements(true);
     document.body.insertAdjacentHTML('beforeend', modalElement);
     const modalWindow = document.querySelector(
-      '.cds--modal[aria-hidden="false"]',
+      '.cds--modal[aria-hidden="false"]'
     );
     if (modalWindow) {
       searchData.query = '';
@@ -1070,11 +1070,11 @@ function customClientRender() {
       document.body.addEventListener('keydown', modalWindowEventDetect);
       document.body.removeEventListener('keydown', slashKeyPressFunction);
       const modalRadioButtons = Array.from(
-        modalWindow.querySelectorAll('button[role="radio"]'),
+        modalWindow.querySelectorAll('button[role="radio"]')
       );
       const uncheckRadioButtons = (value) => {
         const otherRadioButtons = modalRadioButtons.filter(
-          (item) => item.value !== value,
+          (item) => item.value !== value
         );
         otherRadioButtons.forEach((button) => {
           button.dataset.state = 'unchecked';
@@ -1093,11 +1093,11 @@ function customClientRender() {
         searchData.module = 'documentation';
       } else {
         const previouslySelectedRadioButton = modalRadioButtons.find(
-          (button) => button.value === localStorage.getItem('module'),
+          (button) => button.value === localStorage.getItem('module')
         );
         checkRadioButton(
           previouslySelectedRadioButton,
-          localStorage.getItem('module'),
+          localStorage.getItem('module')
         );
       }
       const searchInput = document.querySelector('input[type="search"]');
@@ -1106,17 +1106,17 @@ function customClientRender() {
 
       searchInput.addEventListener(
         'change',
-        (event) => (searchData.query = event.target.value.trim()),
+        (event) => (searchData.query = event.target.value.trim())
       );
       searchInput.addEventListener('input', (event) => {
         const clearSearchButton = document.querySelector(
-          'button[aria-label="Clear search"]',
+          'button[aria-label="Clear search"]'
         );
         if (event.target.value.trim().length > 0) {
           if (!clearSearchButton) {
             searchInput.insertAdjacentHTML(
               'afterend',
-              clearSearchButtonElement,
+              clearSearchButtonElement
             );
             document
               .querySelector('button[aria-label="Clear search"]')
@@ -1125,7 +1125,7 @@ function customClientRender() {
                 searchData.query = '';
                 clearSearchResults();
                 document.querySelector(
-                  'button[aria-label="Clear search"]',
+                  'button[aria-label="Clear search"]'
                 ).outerHTML = '';
               });
           }
@@ -1143,7 +1143,7 @@ function customClientRender() {
           if (searchInput.value.trim().length > 0) {
             getSearchData();
           }
-        }),
+        })
       );
     }
   };
