@@ -1,6 +1,6 @@
 {
   "name": "@quantum/iqp-channel-docs",
-  "version": "0.1.303",
+  "version": "0.1.363",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -26,5 +26,12 @@
   "packageManager": "yarn@3.4.1",
   "gitHooks": {
     "pre-commit": "lint-staged"
+  },
+  "devDependencies": {
+    "@cspell/cspell-types": "^8.3.2",
+    "@cspell/dict-markdown": "^2.0.1",
+    "@cspell/dict-python": "^4.1.11",
+    "@cspell/dict-scientific-terms-us": "^3.0.1",
+    "@cspell/dict-software-terms": "^3.3.18"
   }
 }
