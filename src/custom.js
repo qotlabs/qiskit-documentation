@@ -304,8 +304,11 @@ const topLeftNavElement = `
         </div>
         <h2 class="text-heading-03 text-text-primary px-16 my-16">Documentation</h2>
         <ul class="cds--side-nav__header-navigation static p-0">
-            <li class="cds--side-nav__item${location.pathname.split('/')[1] === 'start' ?
-            ' cds--side-nav__item--active' : ''}">
+            <li class="cds--side-nav__item${
+              location.pathname.split('/')[1] === 'start'
+                ? ' cds--side-nav__item--active'
+                : ''
+            }">
               <button
                 aria-expanded="false"
                 class="cds--side-nav__submenu"
@@ -320,8 +323,11 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item${location.pathname.split('/')[1] === 'build' ?
-            ' cds--side-nav__item--active' : ''}">
+            <li class="cds--side-nav__item${
+              location.pathname.split('/')[1] === 'build'
+                ? ' cds--side-nav__item--active'
+                : ''
+            }">
               <button
                 aria-expanded="false"
                 class="cds--side-nav__submenu"
@@ -336,8 +342,11 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item${location.pathname.split('/')[1] ==='transpile' ?
-            ' cds--side-nav__item--active' : ''}">
+            <li class="cds--side-nav__item${
+              location.pathname.split('/')[1] === 'transpile'
+                ? ' cds--side-nav__item--active'
+                : ''
+            }">
               <button
                 aria-expanded="false"
                 class="cds--side-nav__submenu"
@@ -352,8 +361,11 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item${location.pathname.split('/')[1] ==='verify' ?
-            ' cds--side-nav__item--active' : ''}">
+            <li class="cds--side-nav__item${
+              location.pathname.split('/')[1] === 'verify'
+                ? ' cds--side-nav__item--active'
+                : ''
+            }">
                 <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -368,8 +380,11 @@ const topLeftNavElement = `
                 ${navSubmenuChevron}
               </button>
             </li>
-            <li class="cds--side-nav__item${location.pathname.split('/')[1] ==='run' ?
-            ' cds--side-nav__item--active' : ''}">
+            <li class="cds--side-nav__item${
+              location.pathname.split('/')[1] === 'run'
+                ? ' cds--side-nav__item--active'
+                : ''
+            }">
               <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -386,9 +401,11 @@ const topLeftNavElement = `
             </li>
             <li class="cds--side-nav__divider"><hr></li>
             <li class="cds--side-nav__item${
-              location.pathname.split('/')[1]==='api' &&
-              location.pathname.split('/')[2]==='qiskit' ?
-            ' cds--side-nav__item--active' : ''}">
+              location.pathname.split('/')[1] === 'api' &&
+              location.pathname.split('/')[2] === 'qiskit'
+                ? ' cds--side-nav__item--active'
+                : ''
+            }">
               <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -404,9 +421,11 @@ const topLeftNavElement = `
               </button>
             </li>
             <li class="cds--side-nav__item${
-              location.pathname.split('/')[1]==='api' &&
-              location.pathname.split('/')[2]==='qiskit-ibm-runtime' ?
-            ' cds--side-nav__item--active' : ''}">
+              location.pathname.split('/')[1] === 'api' &&
+              location.pathname.split('/')[2] === 'qiskit-ibm-runtime'
+                ? ' cds--side-nav__item--active'
+                : ''
+            }">
               <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -422,9 +441,11 @@ const topLeftNavElement = `
               </button>
             </li>
             <li class="cds--side-nav__item${
-              location.pathname.split('/')[1]==='api' &&
-              location.pathname.split('/')[2]==='qiskit-ibm-provider' ?
-            ' cds--side-nav__item--active' : ''}">
+              location.pathname.split('/')[1] === 'api' &&
+              location.pathname.split('/')[2] === 'qiskit-ibm-provider'
+                ? ' cds--side-nav__item--active'
+                : ''
+            }">
               <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -440,9 +461,11 @@ const topLeftNavElement = `
               </button>
             </li>
             <li class="cds--side-nav__item${
-              location.pathname.split('/')[1]==='api' &&
-              location.pathname.split('/')[2]==='migration-guides' ?
-            ' cds--side-nav__item--active' : ''}">
+              location.pathname.split('/')[1] === 'api' &&
+              location.pathname.split('/')[2] === 'migration-guides'
+                ? ' cds--side-nav__item--active'
+                : ''
+            }">
               <button
                   aria-expanded="false"
                   class="cds--side-nav__submenu"
@@ -515,8 +538,7 @@ const hamburgerPath = `<path d="M2 14.8H18V16H2zM2 11.2H18V12.399999999999999H2z
 7.6H18V8.799999999999999H2zM2 4H18V5.2H2z"></path>`;
 const crossPath = `<path d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8
 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"></path>`;
-const dropdownMenuElement =
-`<div class="cds--form-item px-16 mb-24">
+const dropdownMenuElement = `<div class="cds--form-item px-16 mb-24">
   <div class="cds--select">
     <label for=":r26:" class="cds--label cds--visually-hidden" dir="auto">Select</label>
     <div class="cds--select-input__wrapper">
@@ -532,10 +554,9 @@ const dropdownMenuElement =
   </div>
 </div>`;
 
-
 const expandingValues = {
-  'true': true,
-  'false': false
+  true: true,
+  false: false,
 };
 
 // Checking top-left menu is opened
@@ -544,7 +565,7 @@ let isTopLeftMenuOpened = false;
 // Checking current link
 function setActiveLink() {
   const currentNavLink = document.querySelector(
-    '.cds--header__menu-item--current'
+    '.cds--header__menu-item--current',
   );
   if (currentNavLink) {
     currentNavLink.className = 'cds--header__menu-item';
@@ -556,13 +577,13 @@ function setActiveLink() {
   if (!location.pathname.match('api') && location.pathname !== '/') {
     const section = location.pathname.split('/');
     const activeLink = document.querySelector(
-      `.cds--header__menu-item[href="/${section[1]}"]`
+      `.cds--header__menu-item[href="/${section[1]}"]`,
     );
     if (activeLink) {
       activeLink.className +=
         ' cds--header__menu-item--current !text-text-primary';
     }
-  } else if (location.pathname.match("api")) {
+  } else if (location.pathname.match('api')) {
     if (headerSubmenuCurrent) {
       headerSubmenuCurrent.className = `cds--header__submenu after:absolute after:bottom-0
             after:w-full after:bg-border-interactive after:h-[3px]`;
@@ -583,14 +604,12 @@ new MutationObserver(() => {
     lastUrl = url;
     setActiveLink();
   }
-}).observe(document, { subtree: true, childList: true });
+}).observe(document, {subtree: true, childList: true});
 
 // Action connected to API Reference button
 let apiReferencesListToggled = false;
 function apiReferenceMenuClose() {
-  const apiReferencesLinksMenu = document.querySelector(
-    '.api-references-list'
-  );
+  const apiReferencesLinksMenu = document.querySelector('.api-references-list');
   if (apiReferencesLinksMenu) {
     apiReferencesLinksMenu.outerHTML = '';
   }
@@ -606,14 +625,13 @@ const backendURL = `${location.protocol}//${location.hostname}/api/search`;
 const getTreeFromQuery = async (href) => {
   const url = `/api/toc${href}`;
   const response = await fetch(url, {
-    headers: {'Content-Type': 'application/json'}
+    headers: {'Content-Type': 'application/json'},
   });
   if (!response.ok) {
     throw new Error(`An error occurred: ${response.status}`);
   }
   return await response.json();
-}
-
+};
 
 function customClientRender() {
   const header = document.querySelector('.cds--header');
@@ -626,7 +644,7 @@ function customClientRender() {
   setActiveLink();
   // Clicking top-left menu button
   const topLeftMenuButton = document.querySelector(
-    'button.cds--header__menu-toggle'
+    'button.cds--header__menu-toggle',
   );
   topLeftMenuButton.addEventListener('click', () => {
     isTopLeftMenuOpened = !isTopLeftMenuOpened;
@@ -639,7 +657,7 @@ function customClientRender() {
       .querySelector('svg')
       .setAttribute(
         'viewBox',
-        `0 0 ${isTopLeftMenuOpened ? '32 32' : '20 20'}`
+        `0 0 ${isTopLeftMenuOpened ? '32 32' : '20 20'}`,
       );
     topLeftMenuButton.querySelector('svg').innerHTML = buttonSvgPath;
     topLeftMenuButton.classList.toggle('cds--header__action--active');
@@ -647,20 +665,26 @@ function customClientRender() {
       isTopLeftMenuOpened ? topLeftNavElement : ''
     }`;
     const topLevelMenuButtons = Array.from(
-      document.querySelector('#lg-hidden').querySelectorAll('button[data-menu-level="0"]')
+      document
+        .querySelector('#lg-hidden')
+        .querySelectorAll('button[data-menu-level="0"]'),
     );
 
-    topLevelMenuButtons.forEach(
-      (button) => button.addEventListener('click', () => {
-        button.setAttribute('aria-expanded', !expandingValues[button.getAttribute('aria-expanded')]);
+    topLevelMenuButtons.forEach((button) =>
+      button.addEventListener('click', () => {
+        button.setAttribute(
+          'aria-expanded',
+          !expandingValues[button.getAttribute('aria-expanded')],
+        );
         button.parentElement.classList.remove('cds--side-nav__item--active');
         const createSubmenuLiElement = (children, url, title, type) => {
           const isExpanded = type === 'default';
           const submenuLiElement = '<li class="cds--side-nav__item">';
           if (children.length === 1) {
             const link = `<a
-            class="cds--side-nav__link${location.pathname === url ?
-              ' cds--side-nav__link--current': '' }"
+            class="cds--side-nav__link${
+              location.pathname === url ? ' cds--side-nav__link--current' : ''
+            }"
             style="padding-left: 16px;" href="${url}">
               <span class="cds--side-nav__link-text">${title}</span>
             </a>`;
@@ -671,108 +695,114 @@ function customClientRender() {
               <span class="cds--side-nav__submenu-title" title="${title}">${title}</span>
               ${expandedNavSubMenuChevron}
             </button>`;
-          const ulSideMenu = `<ul class="cds--side-nav__menu${isExpanded ? '' : ' hidden'}">`;
+          const ulSideMenu = `<ul class="cds--side-nav__menu${
+            isExpanded ? '' : ' hidden'
+          }">`;
           const sideMenuLiElements = children.map(
             (item) => `<li class="cds--side-nav__menu-item">
-              <a class="cds--side-nav__link${location.pathname.indexOf(item.url) !== -1 ?
-                ' cds--side-nav__link--current': '' }" style="padding-left: 32px; font-weight: 400"
+              <a class="cds--side-nav__link${
+                location.pathname.indexOf(item.url) !== -1
+                  ? ' cds--side-nav__link--current'
+                  : ''
+              }" style="padding-left: 32px; font-weight: 400"
                 href="${item.url}">
                 <span class="cds--side-nav__link-text">${item.title}</span>
               </a>
-            </li>`
+            </li>`,
           );
 
           return `${submenuLiElement}${buttonNavSubmenu}
           ${ulSideMenu}${sideMenuLiElements.join('')}</ul></li>`;
-        }
+        };
 
-        if(!document.querySelector('.inset-bg-element')) {
+        if (!document.querySelector('.inset-bg-element')) {
           button.parentElement.insertAdjacentHTML('beforeend', insetBgElement);
           button.parentElement.insertAdjacentHTML('beforeend', submenuElement);
-          document.querySelector('.all-documentation').addEventListener(
-            'click',
-            () => {
+          document
+            .querySelector('.all-documentation')
+            .addEventListener('click', () => {
               document.querySelector('.submenu-element').outerHTML = '';
               document.querySelector('.inset-bg-element').outerHTML = '';
               button.setAttribute('aria-expanded', false);
-              Array.from(document.querySelectorAll('button[data-menu-level="0"]')).forEach(
-                (element) => {
-                  if(location.pathname.indexOf(element.dataset.href) !== -1) {
-                    element.parentElement.classList.add('cds--side-nav__item--active');
-                  }
-                }
-              )
-            }
-          )
-          getTreeFromQuery(button.dataset.href).then(
-            (data) => {
-              document.querySelector('.submenu-text-heading').textContent = data.toc.title;
-              if(data.package) {
-                document.querySelector('.submenu-list').insertAdjacentHTML(
-                  'beforebegin',
-                  dropdownMenuElement
-                );
-                data.package.versions.sort(
-                  (a, b) => parseFloat(b.version) - parseFloat(a.version)
-                );
-                data.package.versions.forEach((item) => {
-                  document.querySelector('.cds--select-input').insertAdjacentHTML(
-                    'beforeend',
-                    `<option class="cds--select-option" value="${item.version}">${item.version}</option>`
-                  )
-                });
-                document.querySelector('.cds--select-input').value = data.package.version;
-                Array.from(document.querySelectorAll('.cds--select-option')).forEach(
-                  (option) => {
-                    option.addEventListener('click', (event) => {
-                      const versionNumber = parseFloat(event.target.value);
-                      const apiSection = button.dataset.href;
-                      const protocol = location.protocol;
-                      const hostname = location.hostname;
-                      const port = location.port;
-                      location.href = `${protocol}//${hostname}:${port}/${apiSection}/${versionNumber}`;
-                    });
-                  }
-                )
-              }
-              data.toc.children.forEach(
-                (item) => {
-                  document.querySelector('.submenu-list').insertAdjacentHTML(
-                    'beforeend',
-                    createSubmenuLiElement(
-                      item.children === undefined ? [[]] : item.children,
-                      item.url === undefined ? '' : item.url,
-                      item.title,
-                      data.type
-                    )
+              Array.from(
+                document.querySelectorAll('button[data-menu-level="0"]'),
+              ).forEach((element) => {
+                if (location.pathname.indexOf(element.dataset.href) !== -1) {
+                  element.parentElement.classList.add(
+                    'cds--side-nav__item--active',
                   );
                 }
+              });
+            });
+          getTreeFromQuery(button.dataset.href).then((data) => {
+            document.querySelector('.submenu-text-heading').textContent =
+              data.toc.title;
+            if (data.package) {
+              document
+                .querySelector('.submenu-list')
+                .insertAdjacentHTML('beforebegin', dropdownMenuElement);
+              data.package.versions.sort(
+                (a, b) => parseFloat(b.version) - parseFloat(a.version),
               );
-              Array.from(document.querySelectorAll('.expanding-button')).forEach(
-                (btn) => {
-                  btn.addEventListener('click', () => {
-                    btn.setAttribute(
-                      'aria-expanded',
-                      !expandingValues[btn.getAttribute('aria-expanded')]
-                    );
-                    if (btn.getAttribute('aria-expanded')) {
-                      btn.nextElementSibling.classList.remove('hidden');
-                    }
-                    else {
-                      btn.nextElementSibling.classList.add('hidden');
-                    }
-                  });
-                }
-              );
+              data.package.versions.forEach((item) => {
+                document
+                  .querySelector('.cds--select-input')
+                  .insertAdjacentHTML(
+                    'beforeend',
+                    `<option class="cds--select-option" value="${item.version}">${item.version}</option>`,
+                  );
+              });
+              document.querySelector('.cds--select-input').value =
+                data.package.version;
+              Array.from(
+                document.querySelectorAll('.cds--select-option'),
+              ).forEach((option) => {
+                option.addEventListener('click', (event) => {
+                  const versionNumber = parseFloat(event.target.value);
+                  const apiSection = button.dataset.href;
+                  const protocol = location.protocol;
+                  const hostname = location.hostname;
+                  const port = location.port;
+                  location.href = `${protocol}//${hostname}:${port}/${apiSection}/${versionNumber}`;
+                });
+              });
             }
-          );
+            data.toc.children.forEach((item) => {
+              document
+                .querySelector('.submenu-list')
+                .insertAdjacentHTML(
+                  'beforeend',
+                  createSubmenuLiElement(
+                    item.children === undefined ? [[]] : item.children,
+                    item.url === undefined ? '' : item.url,
+                    item.title,
+                    data.type,
+                  ),
+                );
+            });
+            Array.from(document.querySelectorAll('.expanding-button')).forEach(
+              (btn) => {
+                btn.addEventListener('click', () => {
+                  btn.setAttribute(
+                    'aria-expanded',
+                    !expandingValues[btn.getAttribute('aria-expanded')],
+                  );
+                  if (btn.getAttribute('aria-expanded')) {
+                    btn.nextElementSibling.classList.remove('hidden');
+                  } else {
+                    btn.nextElementSibling.classList.add('hidden');
+                  }
+                });
+              },
+            );
+          });
         }
-      })
-    )
+      }),
+    );
   });
   // Clicking API Reference button
   const apiReferenceButton = document.querySelector(
-    'button[aria-label="API Reference"]'
+    'button[aria-label="API Reference"]',
   );
   apiReferenceButton.addEventListener('click', () => {
     apiReferencesListToggled = !apiReferencesListToggled;
@@ -793,7 +823,7 @@ function customClientRender() {
       apiReferenceButton.classList.remove('text-text-primary');
       apiReferenceButton.parentElement.insertAdjacentHTML(
         'beforeend',
-        apiReferencesListElement
+        apiReferencesListElement,
       );
       if (location.pathname.match('api')) {
         document.querySelector('.cds--header__submenu').className =
@@ -823,7 +853,7 @@ function customClientRender() {
     ];
     if (document.querySelector('nav[aria-label="Side navigation"]')) {
       elements.push(
-        document.querySelector('nav[aria-label="Side navigation"]')
+        document.querySelector('nav[aria-label="Side navigation"]'),
       );
     }
     if (document.querySelector('main')) {
@@ -861,10 +891,10 @@ function customClientRender() {
       .insertAdjacentHTML('beforeend', modalSearchResultsElement);
     const scrollbarList = document.querySelector('.cds--modal div.scrollbar');
     const resultsList = document.querySelector(
-      '.cds--modal ul[role="listbox"]'
+      '.cds--modal ul[role="listbox"]',
     );
     const noResultsDiv = document.querySelector(
-      '.cds--modal .px-8.py-16.text-body-compact-01'
+      '.cds--modal .px-8.py-16.text-body-compact-01',
     );
     const getSearchResults = async () => {
       controller = new AbortController();
@@ -872,14 +902,14 @@ function customClientRender() {
       const index = resultsList.children.length;
       const query = `?query=${encodeURIComponent(searchData.query)}`;
       const module = `&module=${searchData.module}`;
-      const offsetStart = index > 0 ? `&offset=${index}` : "";
+      const offsetStart = index > 0 ? `&offset=${index}` : '';
       const url = backendURL + query + module + offsetStart;
       const options = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         mode: 'cors',
-        signal
+        signal,
       };
       const response = await fetch(url, options);
       if (!response.ok) {
@@ -926,21 +956,23 @@ function customClientRender() {
       }
     };
     const hideLoader = () => {
-      if(document.querySelector('.cds--modal[aria-hidden="false"]')) {
-        document.querySelector('button[aria-label="Clear search"]').classList.remove('hidden');
+      if (document.querySelector('.cds--modal[aria-hidden="false"]')) {
+        document
+          .querySelector('button[aria-label="Clear search"]')
+          .classList.remove('hidden');
         document.querySelector('#loading-indicator').outerHTML = '';
         document.querySelector('input[type="search"]').disabled = false;
         Array.from(
-          document.querySelectorAll('.cds--modal button[role="radio"]')
+          document.querySelectorAll('.cds--modal button[role="radio"]'),
         ).forEach((button) => (button.disabled = false));
         document.querySelector('.search-query-button').disabled = false;
-        scrollbarList.addEventListener('scroll', getMoreData, { passive: true });
+        scrollbarList.addEventListener('scroll', getMoreData, {passive: true});
       }
       document.body.addEventListener('keydown', modalWindowEventDetect);
       document.body.addEventListener('click', modalWindowEventDetect);
       document.body.removeEventListener(
         'keydown',
-        closeModalWindowWhileLoading
+        closeModalWindowWhileLoading,
       );
       document.body.removeEventListener('click', modalWindowEventDetect);
     };
@@ -950,13 +982,13 @@ function customClientRender() {
         .classList.add('hidden');
       document
         .querySelector('button[aria-label="Clear search"]')
-        .insertAdjacentHTML("afterend", loadingIndicatorElement);
+        .insertAdjacentHTML('afterend', loadingIndicatorElement);
       document.querySelector('input[type="search"]').disabled = true;
       Array.from(
-        document.querySelectorAll('.cds--modal button[role="radio"]')
+        document.querySelectorAll('.cds--modal button[role="radio"]'),
       ).forEach((button) => (button.disabled = true));
       document.querySelector('.search-query-button').disabled = true;
-      scrollbarList.removeEventListener("scroll", getMoreData, {
+      scrollbarList.removeEventListener('scroll', getMoreData, {
         passive: true,
       });
       document.body.removeEventListener('keydown', modalWindowEventDetect);
@@ -989,28 +1021,28 @@ function customClientRender() {
       launchSearch();
     };
     const getMoreData = (event) => {
-      const { scrollTop, scrollHeight, offsetHeight } = event.target;
+      const {scrollTop, scrollHeight, offsetHeight} = event.target;
       if (scrollTop + offsetHeight >= scrollHeight) {
         loadSearchResults();
       }
     };
-    scrollbarList.addEventListener('scroll', getMoreData, { passive: true });
+    scrollbarList.addEventListener('scroll', getMoreData, {passive: true});
     loadSearchResults();
   };
   const modalWindowEventDetect = (event) => {
     const modalWindow = document.querySelector(
-      '.cds--modal[aria-hidden="false"]'
+      '.cds--modal[aria-hidden="false"]',
     );
     switch (event.type) {
-      case "click":
+      case 'click':
         if (event.target === modalWindow) {
           removeModule();
         }
-      case "keydown":
-        if (event.key === "Escape") {
+      case 'keydown':
+        if (event.key === 'Escape') {
           removeModule();
         }
-        if (event.key === "Enter") {
+        if (event.key === 'Enter') {
           searchData.query = modalWindow
             .querySelector('input[type="search"]')
             .value.trim();
@@ -1030,7 +1062,7 @@ function customClientRender() {
     blockFocusOnElements(true);
     document.body.insertAdjacentHTML('beforeend', modalElement);
     const modalWindow = document.querySelector(
-      '.cds--modal[aria-hidden="false"]'
+      '.cds--modal[aria-hidden="false"]',
     );
     if (modalWindow) {
       searchData.query = '';
@@ -1038,11 +1070,11 @@ function customClientRender() {
       document.body.addEventListener('keydown', modalWindowEventDetect);
       document.body.removeEventListener('keydown', slashKeyPressFunction);
       const modalRadioButtons = Array.from(
-        modalWindow.querySelectorAll('button[role="radio"]')
+        modalWindow.querySelectorAll('button[role="radio"]'),
       );
       const uncheckRadioButtons = (value) => {
         const otherRadioButtons = modalRadioButtons.filter(
-          (item) => item.value !== value
+          (item) => item.value !== value,
         );
         otherRadioButtons.forEach((button) => {
           button.dataset.state = 'unchecked';
@@ -1061,11 +1093,11 @@ function customClientRender() {
         searchData.module = 'documentation';
       } else {
         const previouslySelectedRadioButton = modalRadioButtons.find(
-          (button) => button.value === localStorage.getItem('module')
+          (button) => button.value === localStorage.getItem('module'),
         );
         checkRadioButton(
           previouslySelectedRadioButton,
-          localStorage.getItem('module')
+          localStorage.getItem('module'),
         );
       }
       const searchInput = document.querySelector('input[type="search"]');
@@ -1074,17 +1106,17 @@ function customClientRender() {
 
       searchInput.addEventListener(
         'change',
-        (event) => (searchData.query = event.target.value.trim())
+        (event) => (searchData.query = event.target.value.trim()),
       );
       searchInput.addEventListener('input', (event) => {
         const clearSearchButton = document.querySelector(
-          'button[aria-label="Clear search"]'
+          'button[aria-label="Clear search"]',
         );
         if (event.target.value.trim().length > 0) {
           if (!clearSearchButton) {
             searchInput.insertAdjacentHTML(
               'afterend',
-              clearSearchButtonElement
+              clearSearchButtonElement,
             );
             document
               .querySelector('button[aria-label="Clear search"]')
@@ -1093,13 +1125,13 @@ function customClientRender() {
                 searchData.query = '';
                 clearSearchResults();
                 document.querySelector(
-                  'button[aria-label="Clear search"]'
-                ).outerHTML ='';
+                  'button[aria-label="Clear search"]',
+                ).outerHTML = '';
               });
           }
         } else {
           if (clearSearchButton) {
-            clearSearchButton.outerHTML = "";
+            clearSearchButton.outerHTML = '';
           }
         }
       });
@@ -1111,7 +1143,7 @@ function customClientRender() {
           if (searchInput.value.trim().length > 0) {
             getSearchData();
           }
-        })
+        }),
       );
     }
   };
