@@ -311,10 +311,9 @@ const topLeftNavElement = `
             }">
               <button
                 aria-expanded="false"
-                class="cds--side-nav__submenu"
+                class="cds--side-nav__submenu section__button"
                 type="button"
                 data-href="/start"
-                data-menu-level="0"
               >
                 <span
                   class="cds--side-nav__submenu-title"
@@ -330,10 +329,9 @@ const topLeftNavElement = `
             }">
               <button
                 aria-expanded="false"
-                class="cds--side-nav__submenu"
+                class="cds--side-nav__submenu section__button"
                 type="button"
                 data-href="/build"
-                data-menu-level="0"
               >
                 <span
                   class="cds--side-nav__submenu-title"
@@ -349,10 +347,9 @@ const topLeftNavElement = `
             }">
               <button
                 aria-expanded="false"
-                class="cds--side-nav__submenu"
+                class="cds--side-nav__submenu section__button"
                 type="button"
                 data-href="/transpile"
-                data-menu-level="0"
               >
                 <span
                   class="cds--side-nav__submenu-title"
@@ -368,10 +365,9 @@ const topLeftNavElement = `
             }">
                 <button
                   aria-expanded="false"
-                  class="cds--side-nav__submenu"
+                  class="cds--side-nav__submenu section__button"
                   type="button"
                   data-href="/verify"
-                  data-menu-level="0"
                 >
                 <span
                   class="cds--side-nav__submenu-title"
@@ -387,10 +383,9 @@ const topLeftNavElement = `
             }">
               <button
                   aria-expanded="false"
-                  class="cds--side-nav__submenu"
+                  class="cds--side-nav__submenu section__button"
                   type="button"
                   data-href="/run"
-                  data-menu-level="0"
               >
                 <span
                   class="cds--side-nav__submenu-title"
@@ -401,17 +396,15 @@ const topLeftNavElement = `
             </li>
             <li class="cds--side-nav__divider"><hr></li>
             <li class="cds--side-nav__item${
-              location.pathname.split('/')[1] === 'api' &&
               location.pathname.split('/')[2] === 'qiskit'
                 ? ' cds--side-nav__item--active'
                 : ''
             }">
               <button
                   aria-expanded="false"
-                  class="cds--side-nav__submenu"
+                  class="cds--side-nav__submenu section__button"
                   type="button"
                   data-href="/api/qiskit"
-                  data-menu-level="0"
               >
                 <span
                   class="cds--side-nav__submenu-title"
@@ -421,17 +414,15 @@ const topLeftNavElement = `
               </button>
             </li>
             <li class="cds--side-nav__item${
-              location.pathname.split('/')[1] === 'api' &&
               location.pathname.split('/')[2] === 'qiskit-ibm-runtime'
                 ? ' cds--side-nav__item--active'
                 : ''
             }">
               <button
                   aria-expanded="false"
-                  class="cds--side-nav__submenu"
+                  class="cds--side-nav__submenu section__button"
                   type="button"
                   data-href="/api/qiskit-ibm-runtime"
-                  data-menu-level="0"
               >
                 <span
                   class="cds--side-nav__submenu-title"
@@ -441,17 +432,15 @@ const topLeftNavElement = `
               </button>
             </li>
             <li class="cds--side-nav__item${
-              location.pathname.split('/')[1] === 'api' &&
               location.pathname.split('/')[2] === 'qiskit-ibm-provider'
                 ? ' cds--side-nav__item--active'
                 : ''
             }">
               <button
                   aria-expanded="false"
-                  class="cds--side-nav__submenu"
+                  class="cds--side-nav__submenu section__button"
                   type="button"
                   data-href="/api/qiskit-ibm-provider"
-                  data-menu-level="0"
               >
                 <span
                   class="cds--side-nav__submenu-title"
@@ -461,17 +450,15 @@ const topLeftNavElement = `
               </button>
             </li>
             <li class="cds--side-nav__item${
-              location.pathname.split('/')[1] === 'api' &&
               location.pathname.split('/')[2] === 'migration-guides'
                 ? ' cds--side-nav__item--active'
                 : ''
             }">
               <button
                   aria-expanded="false"
-                  class="cds--side-nav__submenu"
+                  class="cds--side-nav__submenu section__button"
                   type="button"
                   data-href="/api/migration-guides"
-                  data-menu-level="0"
               >
                 <span
                   class="cds--side-nav__submenu-title"
@@ -635,9 +622,8 @@ function customClientRender() {
       headerSubmenuCurrent.className = 'cds--header__submenu';
     }
     if (!location.pathname.match('api') && location.pathname !== '/') {
-      const section = location.pathname.split('/');
       const activeLink = document.querySelector(
-        `.cds--header__menu-item[href="/${section[1]}"]`
+        `.cds--header__menu-item[href="/${location.pathname.split('/')[1]}"]`
       );
       if (activeLink) {
         activeLink.className +=
@@ -710,13 +696,16 @@ function customClientRender() {
     document.body.addEventListener('click', closeTopLeftMenu);
 
     const topLevelMenuButtons = Array.from(
-      document
-        .querySelector('#lg-hidden')
-        .querySelectorAll('button[data-menu-level="0"]')
+      document.querySelectorAll('.section__button')
     );
 
     topLevelMenuButtons.forEach((button) =>
       button.addEventListener('click', () => {
+        if(document.querySelector('.cds--side-nav__item--active') !== null) {
+          document.querySelector('.cds--side-nav__item--active').classList.remove(
+            'cds--side-nav__item--active'
+          );
+        }
         button.setAttribute(
           'aria-expanded',
           !expandingValues[button.getAttribute('aria-expanded')]
@@ -726,9 +715,7 @@ function customClientRender() {
           const submenuLiElement = '<li class="cds--side-nav__item">';
           if (children.length === 1) {
             const link = `<a
-            class="cds--side-nav__link${
-              location.pathname === url ? ' cds--side-nav__link--current' : ''
-            }"
+            class="cds--side-nav__link"
             style="padding-left: 16px;" href="${url}">
               <span class="cds--side-nav__link-text">${title}</span>
             </a>`;
@@ -744,17 +731,12 @@ function customClientRender() {
           }">`;
           const sideMenuLiElements = children.map(
             (item) => `<li class="cds--side-nav__menu-item">
-              <a class="cds--side-nav__link${
-                location.pathname.indexOf(item.url) !== -1
-                  ? ' cds--side-nav__link--current'
-                  : ''
-              }" style="padding-left: 32px; font-weight: 400"
+              <a class="cds--side-nav__link" style="padding-left: 32px; font-weight: 400"
                 href="${item.url}">
                 <span class="cds--side-nav__link-text">${item.title}</span>
               </a>
             </li>`
           );
-
           return `${submenuLiElement}${buttonNavSubmenu}
           ${ulSideMenu}${sideMenuLiElements.join('')}</ul></li>`;
         };
@@ -768,30 +750,16 @@ function customClientRender() {
               document.querySelector('.submenu-element').outerHTML = '';
               document.querySelector('.inset-bg-element').outerHTML = '';
               button.setAttribute('aria-expanded', false);
-              Array.from(
-                document.querySelectorAll('button[data-menu-level="0"]')
-              ).forEach((element) => {
-                if (location.pathname.split('/')[1] !== 'api') {
-                  if (
-                    element.dataset.href.indexOf(
-                      `/${location.pathname.split('/')[1]}`
-                    ) !== -1
-                  ) {
-                    element.parentElement.classList.add(
-                      'cds--side-nav__item--active'
-                    );
-                  }
-                } else {
-                  const pathName = `/${location.pathname.split('/')[1]}/${
-                    location.pathname.split('/')[2]
-                  }`;
-                  if (element.dataset.href === pathName) {
-                    element.parentElement.classList.add(
-                      'cds--side-nav__item--active'
-                    );
-                  }
-                }
-              });
+              if(location.pathname.split('/')[1] !== 'api') {
+                topLevelMenuButtons.find(
+                  (element) => element.dataset.href === `/${location.pathname.split('/')[1]}`
+                ).parentElement.classList.add('cds--side-nav__item--active');
+              }
+              else if(location.pathname.split('/')[1] === 'api') {
+                topLevelMenuButtons.find(
+                  (element) => element.dataset.href === `/api/${location.pathname.split('/')[2]}`
+                ).parentElement.classList.add('cds--side-nav__item--active');
+              }
             });
           getTreeFromQuery(button.dataset.href).then((data) => {
             document.querySelector('.submenu-text-heading').textContent =
@@ -810,9 +778,6 @@ function customClientRender() {
               });
               document.querySelector('.cds--select-input').value =
                 data.package.version;
-              document
-                .querySelector('.cds--side-nav__item--active')
-                .classList.remove('cds--side-nav__item--active');
               Array.from(
                 document.querySelectorAll('.cds--select-option')
               ).forEach((option) => {
