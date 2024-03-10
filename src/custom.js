@@ -701,7 +701,7 @@ function customClientRender() {
 
     topLevelMenuButtons.forEach((button) =>
       button.addEventListener('click', () => {
-        if(document.querySelector('.cds--side-nav__item--active') !== null) {
+        if(document.querySelector('.cds--side-nav__item--active')) {
           document.querySelector('.cds--side-nav__item--active').classList.remove(
             'cds--side-nav__item--active'
           );
@@ -715,7 +715,9 @@ function customClientRender() {
           const submenuLiElement = '<li class="cds--side-nav__item">';
           if (children.length === 1) {
             const link = `<a
-            class="cds--side-nav__link"
+            class="cds--side-nav__link${location.pathname === url
+            ? ' cds--side-nav__link--current'
+            : ''}"
             style="padding-left: 16px;" href="${url}">
               <span class="cds--side-nav__link-text">${title}</span>
             </a>`;
@@ -731,12 +733,15 @@ function customClientRender() {
           }">`;
           const sideMenuLiElements = children.map(
             (item) => `<li class="cds--side-nav__menu-item">
-              <a class="cds--side-nav__link" style="padding-left: 32px; font-weight: 400"
+              <a class="cds--side-nav__link${location.pathname === item.url
+                ? ' cds--side-nav__link--current': ''}"
+                style="padding-left: 32px; font-weight: 400"
                 href="${item.url}">
                 <span class="cds--side-nav__link-text">${item.title}</span>
               </a>
             </li>`
           );
+
           return `${submenuLiElement}${buttonNavSubmenu}
           ${ulSideMenu}${sideMenuLiElements.join('')}</ul></li>`;
         };
@@ -778,6 +783,7 @@ function customClientRender() {
               });
               document.querySelector('.cds--select-input').value =
                 data.package.version;
+              document.querySelector('.cds--select-input').disabled = true;
               Array.from(
                 document.querySelectorAll('.cds--select-option')
               ).forEach((option) => {
@@ -816,6 +822,10 @@ function customClientRender() {
                     btn.nextElementSibling.classList.add('hidden');
                   }
                 });
+                if(btn.nextElementSibling.querySelector('.cds--side-nav__link--current')) {
+                  btn.setAttribute('aria-expanded', true);
+                  btn.nextElementSibling.classList.remove('hidden');
+                }
               }
             );
           });
