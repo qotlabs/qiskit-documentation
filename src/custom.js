@@ -698,13 +698,24 @@ function customClientRender() {
     const topLevelMenuButtons = Array.from(
       document.querySelectorAll('.section__button')
     );
-
+    if (location.pathname.split('/')[1] === 'api') {
+      const apiLinkButton = topLevelMenuButtons.find(
+        (button) =>
+          button.dataset.href === `/api/${location.pathname.split('/')[2]}`
+      );
+      const apiVersion =
+        !isNaN(parseFloat(location.pathname.split('/')[3])) ||
+        location.pathname.split('/')[3] === 'dev';
+      if (apiVersion) {
+        apiLinkButton.dataset.href += `/${location.pathname.split('/')[3]}`;
+      }
+    }
     topLevelMenuButtons.forEach((button) =>
       button.addEventListener('click', () => {
-        if(document.querySelector('.cds--side-nav__item--active')) {
-          document.querySelector('.cds--side-nav__item--active').classList.remove(
-            'cds--side-nav__item--active'
-          );
+        if (document.querySelector('.cds--side-nav__item--active')) {
+          document
+            .querySelector('.cds--side-nav__item--active')
+            .classList.remove('cds--side-nav__item--active');
         }
         button.setAttribute(
           'aria-expanded',
@@ -715,9 +726,9 @@ function customClientRender() {
           const submenuLiElement = '<li class="cds--side-nav__item">';
           if (children.length === 1) {
             const link = `<a
-            class="cds--side-nav__link${location.pathname === url
-            ? ' cds--side-nav__link--current'
-            : ''}"
+            class="cds--side-nav__link${
+              location.pathname === url ? ' cds--side-nav__link--current' : ''
+            }"
             style="padding-left: 16px;" href="${url}">
               <span class="cds--side-nav__link-text">${title}</span>
             </a>`;
@@ -733,15 +744,17 @@ function customClientRender() {
           }">`;
           const sideMenuLiElements = children.map(
             (item) => `<li class="cds--side-nav__menu-item">
-              <a class="cds--side-nav__link${location.pathname === item.url
-                ? ' cds--side-nav__link--current': ''}"
+              <a class="cds--side-nav__link${
+                location.pathname === item.url
+                  ? ' cds--side-nav__link--current'
+                  : ''
+              }"
                 style="padding-left: 32px; font-weight: 400"
                 href="${item.url}">
                 <span class="cds--side-nav__link-text">${item.title}</span>
               </a>
             </li>`
           );
-
           return `${submenuLiElement}${buttonNavSubmenu}
           ${ulSideMenu}${sideMenuLiElements.join('')}</ul></li>`;
         };
@@ -755,15 +768,22 @@ function customClientRender() {
               document.querySelector('.submenu-element').outerHTML = '';
               document.querySelector('.inset-bg-element').outerHTML = '';
               button.setAttribute('aria-expanded', false);
-              if(location.pathname.split('/')[1] !== 'api') {
-                topLevelMenuButtons.find(
-                  (element) => element.dataset.href === `/${location.pathname.split('/')[1]}`
-                ).parentElement.classList.add('cds--side-nav__item--active');
-              }
-              else if(location.pathname.split('/')[1] === 'api') {
-                topLevelMenuButtons.find(
-                  (element) => element.dataset.href === `/api/${location.pathname.split('/')[2]}`
-                ).parentElement.classList.add('cds--side-nav__item--active');
+              if (location.pathname.split('/')[1] !== 'api') {
+                topLevelMenuButtons
+                  .find(
+                    (element) =>
+                      element.dataset.href ===
+                      `/${location.pathname.split('/')[1]}`
+                  )
+                  .parentElement.classList.add('cds--side-nav__item--active');
+              } else if (location.pathname.split('/')[1] === 'api') {
+                topLevelMenuButtons
+                  .find(
+                    (element) =>
+                      element.dataset.href ===
+                      `/api/${location.pathname.split('/')[2]}`
+                  )
+                  .parentElement.classList.add('cds--side-nav__item--active');
               }
             });
           getTreeFromQuery(button.dataset.href).then((data) => {
@@ -783,7 +803,6 @@ function customClientRender() {
               });
               document.querySelector('.cds--select-input').value =
                 data.package.version;
-              document.querySelector('.cds--select-input').disabled = true;
               Array.from(
                 document.querySelectorAll('.cds--select-option')
               ).forEach((option) => {
@@ -822,7 +841,11 @@ function customClientRender() {
                     btn.nextElementSibling.classList.add('hidden');
                   }
                 });
-                if(btn.nextElementSibling.querySelector('.cds--side-nav__link--current')) {
+                if (
+                  btn.nextElementSibling.querySelector(
+                    '.cds--side-nav__link--current'
+                  )
+                ) {
                   btn.setAttribute('aria-expanded', true);
                   btn.nextElementSibling.classList.remove('hidden');
                 }
