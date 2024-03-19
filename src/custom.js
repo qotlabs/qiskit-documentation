@@ -803,17 +803,20 @@ function customClientRender() {
               });
               document.querySelector('.cds--select-input').value =
                 data.package.version;
-              Array.from(
-                document.querySelectorAll('.cds--select-option')
-              ).forEach((option) => {
-                option.addEventListener('click', (event) => {
-                  const versionAPI = event.target.dataset.path;
-                  const protocol = location.protocol;
-                  const hostname = location.hostname;
-                  const port = location.port;
+              document.querySelector('.cds--select-input').addEventListener(
+                'change',
+                (event) => {
+                  const options = Array.from(
+                    document.querySelectorAll('.cds--select-option')
+                  );
+                  const selectedOption = options.find(
+                    (option) => option.value === event.target.value
+                  );
+                  const versionAPI = selectedOption.dataset.path;
+                  const {protocol, hostname, port} = location;
                   location.href = `${protocol}//${hostname}:${port}${versionAPI}`;
-                });
-              });
+                }
+              );
             }
             data.toc.children.forEach((item) => {
               document
