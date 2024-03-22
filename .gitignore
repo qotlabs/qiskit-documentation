@@ -1,6 +1,7 @@
 *.swp
 *.out
 app/packages/preview/.next/static/chunks/custom.js
+app/packages/preview/public/sitemap.xml
 node_modules/
 app/packages/preview/.next/cache/
 search/index/
