@@ -185,54 +185,64 @@ const headerGlobalElement = `
   </span>
 </div>`;
 
-// Checking current link
+function activateSubmenu(submenu, active) {
+  const button = submenu.querySelector('button');
+  button.classList.toggle('text-text-primary', active);
+  button.classList.toggle('text-text-secondary', !active);
+  if (active) {
+    submenu.className = `cds--header__submenu after:absolute after:bottom-0
+      after:w-full after:bg-border-interactive after:h-[3px]`;
+  } else {
+    submenu.className = 'cds--header__submenu';
+  }
+}
+
 export function setActiveLink() {
+  // Unactivate old link
   const currentNavLink = document.querySelector(
     '.cds--header__menu-item--current'
   );
   if (currentNavLink) {
     currentNavLink.className = 'cds--header__menu-item';
   }
-  const headerSubmenuCurrent = document.querySelector('.cds--header__submenu');
-  if (headerSubmenuCurrent) {
-    headerSubmenuCurrent.className = 'cds--header__submenu';
-  }
-  if (!location.pathname.match('api') && location.pathname !== '/') {
+
+  // Activate new link
+  const headerSubmenu = document.querySelector('.cds--header__submenu');
+  if (location.pathname.match('/api/')) {
+    activateSubmenu(headerSubmenu, true);
+  } else {
+    activateSubmenu(headerSubmenu, false);
     const activeLink = document.querySelector(
       `.cds--header__menu-item[href="/${location.pathname.split('/')[1]}"]`
     );
     if (activeLink) {
-      activeLink.className +=
-        ' cds--header__menu-item--current !text-text-primary';
-    }
-  } else if (location.pathname.match('api')) {
-    if (headerSubmenuCurrent) {
-      headerSubmenuCurrent.className = `cds--header__submenu after:absolute after:bottom-0
-          after:w-full after:bg-border-interactive after:h-[3px]`;
-      headerSubmenuCurrent
-        .querySelector('button')
-        .classList.remove('text-text-secondary');
-      headerSubmenuCurrent
-        .querySelector('button')
-        .classList.add('text-text-primary');
+      activeLink.classList.add(
+        'cds--header__menu-item--current',
+        '!text-text-primary'
+      );
     }
   }
 }
 
-function apiReferenceMenuClose() {
-  const apiReferencesLinksMenu = document.querySelector('.api-references-list');
-  if (apiReferencesLinksMenu) {
-    apiReferencesLinksMenu.outerHTML = '';
-  }
-}
+function toggleMenu(button, open) {
+  const wasOpened = button.getAttribute('aria-expanded') === 'true';
+  if (open === undefined) open = !wasOpened;
+  if (open === wasOpened) return;
 
-function checkApiLink() {
-  if (location.pathname.match('api')) {
-    document.querySelector('.cds--header__submenu').className = `
-                cds--header__submenu after:absolute after:bottom-0 after:w-full
-                after:bg-border-interactive after:h-[3px]`;
-    apiReferenceButton.classList.remove('text-text-secondary');
-    apiReferenceButton.classList.add('text-text-primary');
+  button.setAttribute('aria-expanded', open);
+  button.classList.toggle('bg-layer', open);
+  button.classList.toggle('bg-background', !open);
+  if (open) {
+    button.parentElement.insertAdjacentHTML(
+      'beforeend',
+      apiReferencesListElement
+    );
+  } else {
+    button.nextElementSibling.outerHTML = '';
+  }
+
+  if (location.pathname.match('/api/')) {
+    activateSubmenu(button.parentElement, !open);
   }
 }
 
@@ -241,44 +251,18 @@ export default function render() {
   header.insertAdjacentHTML('beforeend', navElement);
   header.insertAdjacentHTML('beforeend', divLgHidden);
   header.insertAdjacentHTML('beforeend', headerGlobalElement);
+
   setActiveLink();
 
-  let apiReferencesListToggled = false;
-  // Clicking API Reference button
   const apiReferenceButton = document.querySelector(
     'button[aria-label="API Reference"]'
   );
   apiReferenceButton.addEventListener('click', () => {
-    apiReferencesListToggled = !apiReferencesListToggled;
-    apiReferenceButton.setAttribute('aria-expanded', apiReferencesListToggled);
-
-    if (apiReferencesListToggled) {
-      apiReferenceButton.classList.add('bg-layer');
-      apiReferenceButton.classList.remove('bg-background');
-      apiReferenceButton.classList.add('text-text-secondary');
-      apiReferenceButton.classList.remove('text-text-primary');
-      apiReferenceButton.parentElement.insertAdjacentHTML(
-        'beforeend',
-        apiReferencesListElement
-      );
-      if (location.pathname.match('api')) {
-        document.querySelector('.cds--header__submenu').className =
-          'cds--header__submenu';
-      }
-      document.body.addEventListener('click', (event) => {
-        if (event.target !== apiReferenceButton) {
-          apiReferenceButton.classList.remove('bg-layer');
-          apiReferenceButton.classList.add('bg-background');
-          apiReferencesListToggled = false;
-          apiReferenceMenuClose();
-          checkApiLink();
-        }
-      });
-    } else {
-      apiReferenceButton.classList.remove('bg-layer');
-      apiReferenceButton.classList.add('bg-background');
-      apiReferenceMenuClose();
-      checkApiLink();
+    toggleMenu(apiReferenceButton);
+  });
+  document.body.addEventListener('click', (event) => {
+    if (event.target !== apiReferenceButton) {
+      toggleMenu(apiReferenceButton, false);
     }
   });
 }
