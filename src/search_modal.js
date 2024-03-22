@@ -204,7 +204,7 @@ const clearSearchButtonElement = `
   </svg>
 </button>`;
 
-const backendURL = `${location.protocol}//${location.hostname}/api/search`;
+const backendURL = `${location.origin}/api/search`;
 
 let searchData = {
   query: '',
@@ -276,7 +276,7 @@ export default function render() {
       const url = backendURL + query + module + offsetStart;
       const options = {
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/json',
         },
         mode: 'cors',
         signal,

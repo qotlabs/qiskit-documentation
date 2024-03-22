@@ -551,9 +551,7 @@ export default function render() {
                   const selectedOption = options.find(
                     (option) => option.value === event.target.value
                   );
-                  const versionAPI = selectedOption.dataset.path;
-                  const {protocol, hostname, port} = location;
-                  location.href = `${protocol}//${hostname}:${port}${versionAPI}`;
+                  location.href = location.origin + selectedOption.dataset.path;
                 });
             }
             data.toc.children.forEach((item) => {
