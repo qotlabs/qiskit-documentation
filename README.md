@@ -25,9 +25,10 @@ sudo snap install node --channel 18/stable --classic
 ```
 3. Install Node.js modules in `app/` and `src/` directories:
 ```bash
-NODE_ENV=production yarn install
+NODE_ENV=production yarn install --cwd app
+yarn install --cwd src
 ```
-4. Run the installation script `node install.js` in the `src/` directory that minifies additional sources and copies files.
+4. Build sources from the `src/` directory by executing `yarn run build`.
 5. Install dependencies for the search backend:
 ```bash
 sudo apt install python3-xapian python3-fastapi uvicorn
