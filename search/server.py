@@ -8,7 +8,7 @@ import xapian
 import config
 from fastapi import FastAPI, Response, Header, Query, status
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel
 from enum import Enum
 from pathlib import Path
 from database import Database
@@ -26,11 +26,12 @@ class Result(BaseModel):
 
     text: str
     id: str
-    url: HttpUrl
+    url: str
     pageTitle: str
     module: DocModuleStr
     section: str
     title: str
+    level: int
 
 
 db = Database(Path(config.DATABASE_PATH))
@@ -90,5 +91,6 @@ def search(
             module=module,
             section=str(doc.section),
             title=doc.title,
+            level=doc.level.value,
         ))
     return reply

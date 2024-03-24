@@ -11,7 +11,7 @@ from pathlib import Path
 
 VERSION_LATEST = ""
 
-TITLE_REGEX = re.compile(r"[^\w\d_]+")
+TITLE_REGEX = re.compile(r"[^\w\d_\.]+")
 SPACE_REGEX = re.compile(r"\s+")
 VERSION_REGEX = re.compile(r"^$|dev|[0-9]\.[0-9]+")
 
@@ -49,6 +49,13 @@ class DocSection(Enum):
         return self.name.replace("_", "-").lower()
 
 
+class DocLevel(Enum):
+    """Document level."""
+    H1 = 1
+    H2 = 2
+    H3 = 3
+
+
 def calc_hash(s: str) -> str:
     """Calculate SHA-256 hash and return hex-encoded string."""
     return sha256(s.encode()).hexdigest()
@@ -80,6 +87,7 @@ class Document:
     section: DocSection | None = None
     version: str = VERSION_LATEST
     page_title: str | None = None
+    level: DocLevel | None = None
     _title: str | None = None
     text: str | None = None
     docid: int = 0

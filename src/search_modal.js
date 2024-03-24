@@ -275,10 +275,6 @@ export default function render() {
       const offsetStart = index > 0 ? `&offset=${index}` : '';
       const url = backendURL + query + module + offsetStart;
       const options = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        mode: 'cors',
         signal,
       };
       const response = await fetch(url, options);

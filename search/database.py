@@ -7,7 +7,7 @@ import json
 import threading
 from pathlib import Path
 from struct import Struct
-from document import Document, DocModule, DocSection, VERSION_LATEST
+from document import Document, DocModule, DocSection, DocLevel, VERSION_LATEST
 
 MTIME_SLOT = 0
 MTIME_STRUCT = Struct("<d")
@@ -29,6 +29,7 @@ class Database:
     DU - document URL.
     DT - document text.
     DS - page title.
+    DL - document level.
     """
 
     def __init__(
@@ -60,6 +61,7 @@ class Database:
         self._enquire = xapian.Enquire(self._database)
 
     def _update_etag(self):
+        """Update ETag property."""
         self._etag = f"{self._database.get_uuid().decode()}-{self._database.get_revision()}"
 
     @property
@@ -82,6 +84,18 @@ class Database:
             self._database.reopen()
             self._update_etag()
 
+    def _snippet(self, mset: xapian.MSet, text: str, length: int) -> str:
+        """Return a snippet of the given text.
+
+        mset - `MSet` with query results.
+        text - text for snippet.
+        length - number of characters in the snippet.
+        """
+        return mset.snippet(text, length, self._stemmer,
+            xapian.MSet.SNIPPET_BACKGROUND_MODEL | xapian.MSet.SNIPPET_EXHAUSTIVE,
+            "<em>", "</em>"
+        ).decode()
+
     def search(
         self,
         query: str,
@@ -89,7 +103,7 @@ class Database:
         version: str = VERSION_LATEST,
         offset: int = 0,
         limit: int = 50,
-        snippet_length: int = 200
+        snippet_length: int = 90
     ) -> list[Document]:
         """Search in the database.
 
@@ -107,7 +121,7 @@ class Database:
         with self._lock:
             Q = xapian.Query
             query = [self._stemmer(word) for word in query.lower().split()]
-            query = Q(Q.OP_PHRASE, query)
+            query = Q(Q.OP_OR, query)
             query = Q(Q.OP_AND, [f"XM{module.value}", f"XV{version}", query])
             self._enquire.set_query(query)
             docs = []
@@ -115,18 +129,12 @@ class Database:
             for match in mset:
                 json_data = json.loads(match.document.get_data().decode())
                 docs.append(Document(
-                    text=mset.snippet(
-                        json_data["DT"],
-                        snippet_length,
-                        self._stemmer,
-                        xapian.MSet.SNIPPET_BACKGROUND_MODEL |
-                        xapian.MSet.SNIPPET_EXHAUSTIVE,
-                        "<em>", "</em>"
-                    ).decode(),
+                    text=self._snippet(mset, json_data["DT"], snippet_length),
                     docid=match.docid,
                     _url=json_data["DU"],
                     page_title=json_data["DS"],
-                    _title=json_data["S"],
+                    level=DocLevel(json_data["DL"]),
+                    _title=self._snippet(mset, json_data["S"], snippet_length),
                     module=DocModule(json_data["XM"]),
                     section=DocSection(json_data["XS"]),
                 ))
@@ -164,7 +172,7 @@ class Database:
             self._term_generator.index_text(doc.title, 1, "S")
             self._term_generator.index_text(doc.page_title, 5)
             self._term_generator.increase_termpos()
-            self._term_generator.index_text(doc.title, 10)
+            self._term_generator.index_text(doc.title, 14 - 2 * doc.level.value)
             self._term_generator.increase_termpos()
             self._term_generator.index_text(doc.text)
 
@@ -179,6 +187,7 @@ class Database:
                 "DU": doc.url,
                 "DT": doc.text,
                 "DS": doc.page_title,
+                "DL": doc.level.value,
                 "S": doc.title,
                 "XM": doc.module.value,
                 "XS": doc.section.value,

@@ -2,7 +2,7 @@
   "private": true,
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack && node make_sitemap.js",
     "dev": "webpack watch"
   },
   "devDependencies": {

@@ -11,10 +11,10 @@ import argparse
 from pathlib import Path
 from typing import TextIO
 from time import time
-from document import Document, calc_hash
+from document import Document, DocLevel, calc_hash
 from database import Database
 
-HEADER_REGEX = re.compile(r"\s*#{1,3}[^#](.*)")
+HEADER_REGEX = re.compile(r"\s*(#{1,3})[^#](.*)")
 CODE_BLOCK_REGEX = re.compile(r"\s*```\s*[\w\d]*")
 
 REFERENCE_REGEX = re.compile(r"!?\[([^\]]+)\]\([^\)]+\)")
@@ -60,6 +60,12 @@ def skip_md_banner(file: TextIO) -> bool:
     # Fail-safe
     file.seek(0)
     return False
+
+
+def set_header(doc: Document, header: re.Match):
+    doc.level = DocLevel(len(header.group(1)))
+    doc.title = normalize_text(header.group(2))
+    doc.text = ""
 
 
 class Statistics:
@@ -141,6 +147,9 @@ class Visitor:
 
     def visit_path(self, doc: Document):
         logging.info("Index %s", doc.rel_path)
+        doc.level = DocLevel.H1
+        doc.title = doc.page_title
+        doc.text = ""
         match doc.path.suffix:
             case ".md" | ".mdx":
                 self.visit_md(doc)
@@ -154,8 +163,6 @@ class Visitor:
     def visit_md(self, doc: Document):
         with open(doc.path) as file:
             skip_md_banner(file)
-            doc.title = doc.page_title
-            doc.text = ""
             code_block = False
             for line in file:
                 if CODE_BLOCK_REGEX.match(line):
@@ -165,15 +172,12 @@ class Visitor:
                     doc.text += line
                     continue
                 self.visit_text(doc)
-                doc.title = normalize_text(header.group(1))
-                doc.text = ""
+                set_header(doc, header)
             self.visit_text(doc)
 
     def visit_ipynb(self, doc: Document):
         with open(doc.path, "r") as file:
             cells = json.load(file)["cells"]
-            doc.title = doc.page_title
-            doc.text = ""
             for cell in cells:
                 match cell["cell_type"]:
                     case "markdown":
@@ -183,8 +187,7 @@ class Visitor:
                                 doc.text += line
                                 continue
                             self.visit_text(doc)
-                            doc.title = normalize_text(header.group(1))
-                            doc.text = ""
+                            set_header(doc, header)
                     case "code":
                         doc.text += "".join(cell["source"])
             self.visit_text(doc)

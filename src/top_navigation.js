@@ -106,7 +106,7 @@ const apiReferencesListElement = `
       data-radix-collection-item=""
       href="/api/qiskit"
     >
-      <span class="truncate">Qiskit</span>
+      <span class="truncate">Qiskit SDK</span>
     </a>
   </li>
   <li class="" role="none">
