@@ -391,6 +391,30 @@ function sortVersions(versionA, versionB) {
   return arrB.length - arrA.length;
 }
 
+function setSideLink() {
+  if (document.querySelector('div[aria-label="Side Navigation"]')) {
+    if (location.pathname.split('/').length > 1) {
+      document
+        .querySelector('.cds--side-nav__item--active')
+        .classList.remove('cds--side-nav__item--active');
+      if (location.pathname.split('/')[1] !== 'api') {
+        document
+          .querySelector(
+            `button[data-href="/${location.pathname.split('/')[1]}"]`
+          )
+          .parentElement.classList.add('cds--side-nav__item--active');
+      } else {
+        document
+          .querySelector(
+            `button[data-href="/api/${location.pathname.split('/')[2]}`
+          )
+          .parentElement.classList.add('cds--side-nav__item--active');
+      }
+    }
+  }
+}
+window.addEventListener('popstate', setSideLink);
+
 export default function render() {
   // Checking top-left menu is opened
   let isTopLeftMenuOpened = false;
@@ -594,5 +618,6 @@ export default function render() {
         }
       })
     );
+    setSideLink();
   });
 }
