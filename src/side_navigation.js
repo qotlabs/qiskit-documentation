@@ -100,11 +100,7 @@ const topLeftNavElement = `
   <h2 class="text-heading-03 text-text-primary px-16 my-16">Documentation</h2>
   <ul class="cds--side-nav__header-navigation static p-0">
     <li
-      class="cds--side-nav__item${
-        location.pathname.split('/')[1] === 'start'
-          ? ' cds--side-nav__item--active'
-          : ''
-      }"
+      class="cds--side-nav__item"
     >
       <button
         aria-expanded="false"
@@ -117,11 +113,7 @@ const topLeftNavElement = `
       </button>
     </li>
     <li
-      class="cds--side-nav__item${
-        location.pathname.split('/')[1] === 'build'
-          ? ' cds--side-nav__item--active'
-          : ''
-      }"
+      class="cds--side-nav__item"
     >
       <button
         aria-expanded="false"
@@ -134,11 +126,7 @@ const topLeftNavElement = `
       </button>
     </li>
     <li
-      class="cds--side-nav__item${
-        location.pathname.split('/')[1] === 'transpile'
-          ? ' cds--side-nav__item--active'
-          : ''
-      }"
+      class="cds--side-nav__item"
     >
       <button
         aria-expanded="false"
@@ -153,11 +141,7 @@ const topLeftNavElement = `
       </button>
     </li>
     <li
-      class="cds--side-nav__item${
-        location.pathname.split('/')[1] === 'verify'
-          ? ' cds--side-nav__item--active'
-          : ''
-      }"
+      class="cds--side-nav__item"
     >
       <button
         aria-expanded="false"
@@ -170,11 +154,7 @@ const topLeftNavElement = `
       </button>
     </li>
     <li
-      class="cds--side-nav__item${
-        location.pathname.split('/')[1] === 'run'
-          ? ' cds--side-nav__item--active'
-          : ''
-      }"
+      class="cds--side-nav__item"
     >
       <button
         aria-expanded="false"
@@ -188,11 +168,7 @@ const topLeftNavElement = `
     </li>
     <li class="cds--side-nav__divider"><hr /></li>
     <li
-      class="cds--side-nav__item${
-        location.pathname.split('/')[2] === 'qiskit'
-          ? ' cds--side-nav__item--active'
-          : ''
-      }"
+      class="cds--side-nav__item"
     >
       <button
         aria-expanded="false"
@@ -207,11 +183,7 @@ const topLeftNavElement = `
       </button>
     </li>
     <li
-      class="cds--side-nav__item${
-        location.pathname.split('/')[2] === 'qiskit-ibm-runtime'
-          ? ' cds--side-nav__item--active'
-          : ''
-      }"
+      class="cds--side-nav__item"
     >
       <button
         aria-expanded="false"
@@ -228,11 +200,7 @@ const topLeftNavElement = `
       </button>
     </li>
     <li
-      class="cds--side-nav__item${
-        location.pathname.split('/')[2] === 'qiskit-ibm-provider'
-          ? ' cds--side-nav__item--active'
-          : ''
-      }"
+      class="cds--side-nav__item"
     >
       <button
         aria-expanded="false"
@@ -247,11 +215,7 @@ const topLeftNavElement = `
       </button>
     </li>
     <li
-      class="cds--side-nav__item${
-        location.pathname.split('/')[2] === 'migration-guides'
-          ? ' cds--side-nav__item--active'
-          : ''
-      }"
+      class="cds--side-nav__item"
     >
       <button
         aria-expanded="false"
@@ -391,29 +355,21 @@ function sortVersions(versionA, versionB) {
   return arrB.length - arrA.length;
 }
 
-function setSideLink() {
-  if (document.querySelector('div[aria-label="Side Navigation"]')) {
-    if (location.pathname.split('/').length > 1) {
-      document
-        .querySelector('.cds--side-nav__item--active')
-        .classList.remove('cds--side-nav__item--active');
-      if (location.pathname.split('/')[1] !== 'api') {
-        document
-          .querySelector(
-            `button[data-href="/${location.pathname.split('/')[1]}"]`
-          )
-          .parentElement.classList.add('cds--side-nav__item--active');
-      } else {
-        document
-          .querySelector(
-            `button[data-href="/api/${location.pathname.split('/')[2]}`
-          )
-          .parentElement.classList.add('cds--side-nav__item--active');
-      }
-    }
-  }
+function setActiveLink() {
+  if (!document.querySelector('div[aria-label="Side Navigation"]')) return;
+
+  let item = document.querySelector('.cds--side-nav__item--active');
+  if (item)
+    item.classList.remove('cds--side-nav__item--active');
+
+  const loc = location.pathname.split('/');
+  const href = loc[1] === 'api' ? `/api/${loc[2]}` : `/${loc[1]}`;
+  item = document.querySelector(`button[data-href="${href}"]`);
+  if (item)
+    item.parentElement.classList.add('cds--side-nav__item--active');
 }
-window.addEventListener('popstate', setSideLink);
+
+window.addEventListener('popstate', setActiveLink);
 
 export default function render() {
   // Checking top-left menu is opened
@@ -618,6 +574,6 @@ export default function render() {
         }
       })
     );
-    setSideLink();
+    setActiveLink();
   });
 }
