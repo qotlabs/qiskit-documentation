@@ -356,224 +356,283 @@ function sortVersions(versionA, versionB) {
 }
 
 function setActiveLink() {
-  if (!document.querySelector('div[aria-label="Side Navigation"]')) return;
+  if (!document.querySelector('div[aria-label="Side Navigation"]')) {
+    return;
+  }
 
   let item = document.querySelector('.cds--side-nav__item--active');
-  if (item)
+  if (item) {
     item.classList.remove('cds--side-nav__item--active');
+  }
 
   const loc = location.pathname.split('/');
-  const href = loc[1] === 'api' ? `/api/${loc[2]}` : `/${loc[1]}`;
+  let href = loc[1] === 'api' ? `/api/${loc[2]}` : `/${loc[1]}`;
+  if (loc[3]) {
+    href = `/api/${loc[2]}/${loc[3]}`;
+  }
   item = document.querySelector(`button[data-href="${href}"]`);
-  if (item)
+  if (item) {
     item.parentElement.classList.add('cds--side-nav__item--active');
+  }
 }
+
+// Checking top-left menu is opened
+let isTopLeftMenuOpened = false;
 
 window.addEventListener('popstate', setActiveLink);
 
-export default function render() {
-  // Checking top-left menu is opened
-  let isTopLeftMenuOpened = false;
+function setTopLeftMenuButtonStatus(status) {
+  const topLeftMenuButton = document.querySelector(
+    'button.cds--header__menu-toggle'
+  );
+  if (!topLeftMenuButton) {
+    return;
+  }
+  const buttonLabel = `${status ? 'Close' : 'Open'} menu`;
+  const buttonSvgPath = status ? crossPath : hamburgerPath;
+  topLeftMenuButton.setAttribute('aria-expanded', status);
+  topLeftMenuButton.setAttribute('title', buttonLabel);
+  topLeftMenuButton.setAttribute('aria-label', buttonLabel);
+  topLeftMenuButton
+    .querySelector('svg')
+    .setAttribute('viewBox', `0 0 ${status ? '32 32' : '20 20'}`);
+  topLeftMenuButton.querySelector('svg').innerHTML = buttonSvgPath;
+  document.querySelector('#lg-hidden').innerHTML = `${
+    status ? topLeftNavElement : ''
+  }`;
+  if (status) {
+    topLeftMenuButton.classList.add('cds--header__action--active');
+    setSideLinks();
+    setActiveLink();
+  } else {
+    topLeftMenuButton.classList.remove('cds--header__action--active');
+  }
+}
 
+function setStatusTopLeftMenu() {
+  isTopLeftMenuOpened = !isTopLeftMenuOpened;
+  setTopLeftMenuButtonStatus(isTopLeftMenuOpened);
+}
+
+function closeTopLeftMenu(event) {
+  if (event.target.classList.contains('bg-overlay')) {
+    setTopLeftMenuButtonStatus(false);
+    isTopLeftMenuOpened = false;
+    document.body.removeEventListener('click', closeTopLeftMenu);
+  }
+}
+
+function createSubmenuLiElement(children, url, title, type) {
+  const isExpanded = type === 'default';
+  const submenuLiElement = '<li class="cds--side-nav__item">';
+  if (children.length === 1) {
+    const link = `<a
+    class="cds--side-nav__link${
+      location.pathname === url ? ' cds--side-nav__link--current' : ''
+    }"
+    style="padding-left: 16px;" href="${url}">
+      <span class="cds--side-nav__link-text">${title}</span>
+    </a>`;
+    return `${submenuLiElement}${link}</li>`;
+  }
+  const buttonNavSubmenu = `<button aria-expanded="${isExpanded}"
+    class="cds--side-nav__submenu expanding-button" type="button" style="padding-left: 16px;">
+      <span class="cds--side-nav__submenu-title" title="${title}">${title}</span>
+      ${expandedNavSubMenuChevron}
+    </button>`;
+  const ulSideMenu = `<ul class="cds--side-nav__menu${
+    isExpanded ? '' : ' hidden'
+  }">`;
+  const sideMenuLiElements = children.map(
+    (item) => `<li class="cds--side-nav__menu-item">
+      <a class="cds--side-nav__link${
+        location.pathname === item.url ? ' cds--side-nav__link--current' : ''
+      }"
+        style="padding-left: 32px; font-weight: 400"
+        href="${item.url}">
+        <span class="cds--side-nav__link-text">${item.title}</span>
+      </a>
+    </li>`
+  );
+  return `${submenuLiElement}${buttonNavSubmenu}
+  ${ulSideMenu}${sideMenuLiElements.join('')}</ul></li>`;
+}
+
+function returnToSideMenu() {
+  const sideNavigation = document.querySelector(
+    '[aria-label="Side Navigation"]'
+  );
+  if (!sideNavigation) {
+    return;
+  }
+  const clickedButtonLink = sideNavigation.querySelector('.selected-section');
+  const currentSideNavElement = clickedButtonLink.parentElement;
+  currentSideNavElement.querySelector('.submenu-element').outerHTML = '';
+  currentSideNavElement.querySelector('.inset-bg-element').outerHTML = '';
+  clickedButtonLink.classList.remove('selected-section');
+  clickedButtonLink.setAttribute('aria-expanded', false);
+  const loc = location.pathname.split('/');
+  const href = loc[1] === 'api' ? `/api/${loc[2]}` : `/${loc[1]}`;
+  const topLevelMenuButtons = Array.from(
+    sideNavigation.querySelectorAll('.section__button')
+  );
+  const activeButtonLink = topLevelMenuButtons.find(
+    (element) => element.dataset.href === href
+  );
+  if (activeButtonLink) {
+    activeButtonLink.parentElement.classList.add('cds--side-nav__item--active');
+  }
+}
+
+function insertDropdownElement(pack) {
+  const sideNavigation = document.querySelector(
+    '[aria-label="Side Navigation"]'
+  );
+  if (!sideNavigation) {
+    return;
+  }
+  const clickedButtonLink = sideNavigation.querySelector('.selected-section');
+  const currentSideNavElement = clickedButtonLink.parentElement;
+  currentSideNavElement
+    .querySelector('.submenu-list')
+    .insertAdjacentHTML('beforebegin', dropdownMenuElement);
+  const versions = pack.versions.sort(sortVersions);
+  const selectVersionInput =
+    currentSideNavElement.querySelector('.cds--select-input');
+  versions.forEach((item) => {
+    selectVersionInput.insertAdjacentHTML(
+      'beforeend',
+      `<option class="cds--select-option" value="${item.version}"
+                  data-path="${item.path}">${item.version}</option>`
+    );
+  });
+  selectVersionInput.value = pack.version;
+  selectVersionInput.addEventListener('change', (event) => {
+    const options = Array.from(
+      document.querySelectorAll('.cds--select-option')
+    );
+    const selectedOption = options.find(
+      (option) => option.value === event.target.value
+    );
+    location.href = location.origin + selectedOption.dataset.path;
+  });
+}
+
+function insertSubmenuElements() {
+  const sideNavigation = document.querySelector(
+    '[aria-label="Side Navigation"]'
+  );
+  if (!sideNavigation) {
+    return;
+  }
+  const clickedButtonLink = sideNavigation.querySelector('.selected-section');
+  const currentSideNavElement = clickedButtonLink.parentElement;
+  currentSideNavElement.insertAdjacentHTML('beforeend', insetBgElement);
+  currentSideNavElement.insertAdjacentHTML('beforeend', submenuElement);
+  currentSideNavElement.querySelector('h2').textContent =
+    clickedButtonLink.textContent.trim();
+  currentSideNavElement
+    .querySelector('.all-documentation')
+    .addEventListener('click', returnToSideMenu);
+  getTreeFromQuery(clickedButtonLink.dataset.href).then((data) => {
+    if (data.package) {
+      insertDropdownElement(data.package);
+    }
+    data.toc.children.forEach((item) => {
+      currentSideNavElement
+        .querySelector('.submenu-list')
+        .insertAdjacentHTML(
+          'beforeend',
+          createSubmenuLiElement(
+            item.children === undefined ? [[]] : item.children,
+            item.url === undefined ? '' : item.url,
+            item.title,
+            data.type
+          )
+        );
+    });
+    Array.from(document.querySelectorAll('.expanding-button')).forEach(
+      (btn) => {
+        btn.addEventListener('click', () => {
+          btn.setAttribute(
+            'aria-expanded',
+            !expandingValues[btn.getAttribute('aria-expanded')]
+          );
+          if (btn.getAttribute('aria-expanded')) {
+            btn.nextElementSibling.classList.remove('hidden');
+          } else {
+            btn.nextElementSibling.classList.add('hidden');
+          }
+        });
+        if (
+          btn.nextElementSibling.querySelector('.cds--side-nav__link--current')
+        ) {
+          btn.setAttribute('aria-expanded', true);
+          btn.nextElementSibling.classList.remove('hidden');
+        }
+      }
+    );
+  });
+}
+
+function insertSubmenu() {
+  const sideNavigation = document.querySelector(
+    '[aria-label="Side Navigation"]'
+  );
+  if (!sideNavigation) {
+    return;
+  }
+  const clickedButtonLink = sideNavigation.querySelector('.selected-section');
+  if (sideNavigation.querySelector('.cds--side-nav__item--active')) {
+    sideNavigation
+      .querySelector('.cds--side-nav__item--active')
+      .classList.remove('cds--side-nav__item--active');
+  }
+  clickedButtonLink.setAttribute(
+    'aria-expanded',
+    !expandingValues[clickedButtonLink.getAttribute('aria-expanded')]
+  );
+  if (!sideNavigation.querySelector('.inset-bg-element')) {
+    insertSubmenuElements();
+  }
+}
+
+function setSideLinks() {
+  const sideNavigation = document.querySelector(
+    '[aria-label="Side Navigation"]'
+  );
+  if (!sideNavigation) {
+    return;
+  }
+  const loc = location.pathname.split('/');
+  const topLevelMenuButtons = Array.from(
+    sideNavigation.querySelectorAll('.section__button')
+  );
+  if (loc[1] === 'api') {
+    const apiLinkButton = topLevelMenuButtons.find(
+      (button) => button.dataset.href === `/api/${loc[2]}`
+    );
+    const apiVersion = !isNaN(parseFloat(loc[3])) || loc[3] === 'dev';
+    if (apiVersion) {
+      apiLinkButton.dataset.href += `/${loc[3]}`;
+    }
+  }
+  topLevelMenuButtons.forEach((button) =>
+    button.addEventListener('click', () => {
+      button.classList.add('selected-section');
+      insertSubmenu();
+    })
+  );
+}
+
+export default function render() {
   document
     .querySelector('.cds--skip-to-content')
     .insertAdjacentHTML('afterend', openTopLeftMenuElement);
 
-  // Clicking top-left menu button
   const topLeftMenuButton = document.querySelector(
     'button.cds--header__menu-toggle'
   );
-  topLeftMenuButton.addEventListener('click', () => {
-    isTopLeftMenuOpened = !isTopLeftMenuOpened;
-    const setTopLeftMenuButtonStatus = (status) => {
-      const buttonLabel = `${status ? 'Close' : 'Open'} menu`;
-      const buttonSvgPath = status ? crossPath : hamburgerPath;
-      topLeftMenuButton.setAttribute('aria-expanded', status);
-      topLeftMenuButton.setAttribute('title', buttonLabel);
-      topLeftMenuButton.setAttribute('aria-label', buttonLabel);
-      topLeftMenuButton
-        .querySelector('svg')
-        .setAttribute('viewBox', `0 0 ${status ? '32 32' : '20 20'}`);
-      topLeftMenuButton.querySelector('svg').innerHTML = buttonSvgPath;
-      if (status) {
-        topLeftMenuButton.classList.add('cds--header__action--active');
-      } else {
-        topLeftMenuButton.classList.remove('cds--header__action--active');
-      }
-      document.querySelector('#lg-hidden').innerHTML = `${
-        status ? topLeftNavElement : ''
-      }`;
-    };
-    setTopLeftMenuButtonStatus(isTopLeftMenuOpened);
-    const closeTopLeftMenu = (event) => {
-      if (event.target.classList.contains('bg-overlay')) {
-        setTopLeftMenuButtonStatus(false);
-        isTopLeftMenuOpened = false;
-        document.body.removeEventListener('click', closeTopLeftMenu);
-      }
-    };
-    document.body.addEventListener('click', closeTopLeftMenu);
-
-    const topLevelMenuButtons = Array.from(
-      document.querySelectorAll('.section__button')
-    );
-    if (location.pathname.split('/')[1] === 'api') {
-      const apiLinkButton = topLevelMenuButtons.find(
-        (button) =>
-          button.dataset.href === `/api/${location.pathname.split('/')[2]}`
-      );
-      const apiVersion =
-        !isNaN(parseFloat(location.pathname.split('/')[3])) ||
-        location.pathname.split('/')[3] === 'dev';
-      if (apiVersion) {
-        apiLinkButton.dataset.href += `/${location.pathname.split('/')[3]}`;
-      }
-    }
-    topLevelMenuButtons.forEach((button) =>
-      button.addEventListener('click', () => {
-        if (document.querySelector('.cds--side-nav__item--active')) {
-          document
-            .querySelector('.cds--side-nav__item--active')
-            .classList.remove('cds--side-nav__item--active');
-        }
-        button.setAttribute(
-          'aria-expanded',
-          !expandingValues[button.getAttribute('aria-expanded')]
-        );
-        const createSubmenuLiElement = (children, url, title, type) => {
-          const isExpanded = type === 'default';
-          const submenuLiElement = '<li class="cds--side-nav__item">';
-          if (children.length === 1) {
-            const link = `<a
-            class="cds--side-nav__link${
-              location.pathname === url ? ' cds--side-nav__link--current' : ''
-            }"
-            style="padding-left: 16px;" href="${url}">
-              <span class="cds--side-nav__link-text">${title}</span>
-            </a>`;
-            return `${submenuLiElement}${link}</li>`;
-          }
-          const buttonNavSubmenu = `<button aria-expanded="${isExpanded}"
-            class="cds--side-nav__submenu expanding-button" type="button" style="padding-left: 16px;">
-              <span class="cds--side-nav__submenu-title" title="${title}">${title}</span>
-              ${expandedNavSubMenuChevron}
-            </button>`;
-          const ulSideMenu = `<ul class="cds--side-nav__menu${
-            isExpanded ? '' : ' hidden'
-          }">`;
-          const sideMenuLiElements = children.map(
-            (item) => `<li class="cds--side-nav__menu-item">
-              <a class="cds--side-nav__link${
-                location.pathname === item.url
-                  ? ' cds--side-nav__link--current'
-                  : ''
-              }"
-                style="padding-left: 32px; font-weight: 400"
-                href="${item.url}">
-                <span class="cds--side-nav__link-text">${item.title}</span>
-              </a>
-            </li>`
-          );
-          return `${submenuLiElement}${buttonNavSubmenu}
-          ${ulSideMenu}${sideMenuLiElements.join('')}</ul></li>`;
-        };
-
-        if (!document.querySelector('.inset-bg-element')) {
-          button.parentElement.insertAdjacentHTML('beforeend', insetBgElement);
-          button.parentElement.insertAdjacentHTML('beforeend', submenuElement);
-          document
-            .querySelector('.all-documentation')
-            .addEventListener('click', () => {
-              document.querySelector('.submenu-element').outerHTML = '';
-              document.querySelector('.inset-bg-element').outerHTML = '';
-              button.setAttribute('aria-expanded', false);
-              if (location.pathname.split('/')[1] !== 'api') {
-                topLevelMenuButtons
-                  .find(
-                    (element) =>
-                      element.dataset.href ===
-                      `/${location.pathname.split('/')[1]}`
-                  )
-                  .parentElement.classList.add('cds--side-nav__item--active');
-              } else if (location.pathname.split('/')[1] === 'api') {
-                topLevelMenuButtons
-                  .find(
-                    (element) =>
-                      element.dataset.href ===
-                      `/api/${location.pathname.split('/')[2]}`
-                  )
-                  .parentElement.classList.add('cds--side-nav__item--active');
-              }
-            });
-          getTreeFromQuery(button.dataset.href).then((data) => {
-            document.querySelector('.submenu-text-heading').textContent =
-              data.toc.title;
-            if (data.package) {
-              document
-                .querySelector('.submenu-list')
-                .insertAdjacentHTML('beforebegin', dropdownMenuElement);
-              const versions = data.package.versions.sort(sortVersions);
-              versions.forEach((item) => {
-                document.querySelector('.cds--select-input').insertAdjacentHTML(
-                  'beforeend',
-                  `<option class="cds--select-option" value="${item.version}"
-                    data-path="${item.path}">${item.version}</option>`
-                );
-              });
-              document.querySelector('.cds--select-input').value =
-                data.package.version;
-              document
-                .querySelector('.cds--select-input')
-                .addEventListener('change', (event) => {
-                  const options = Array.from(
-                    document.querySelectorAll('.cds--select-option')
-                  );
-                  const selectedOption = options.find(
-                    (option) => option.value === event.target.value
-                  );
-                  location.href = location.origin + selectedOption.dataset.path;
-                });
-            }
-            data.toc.children.forEach((item) => {
-              document
-                .querySelector('.submenu-list')
-                .insertAdjacentHTML(
-                  'beforeend',
-                  createSubmenuLiElement(
-                    item.children === undefined ? [[]] : item.children,
-                    item.url === undefined ? '' : item.url,
-                    item.title,
-                    data.type
-                  )
-                );
-            });
-            Array.from(document.querySelectorAll('.expanding-button')).forEach(
-              (btn) => {
-                btn.addEventListener('click', () => {
-                  btn.setAttribute(
-                    'aria-expanded',
-                    !expandingValues[btn.getAttribute('aria-expanded')]
-                  );
-                  if (btn.getAttribute('aria-expanded')) {
-                    btn.nextElementSibling.classList.remove('hidden');
-                  } else {
-                    btn.nextElementSibling.classList.add('hidden');
-                  }
-                });
-                if (
-                  btn.nextElementSibling.querySelector(
-                    '.cds--side-nav__link--current'
-                  )
-                ) {
-                  btn.setAttribute('aria-expanded', true);
-                  btn.nextElementSibling.classList.remove('hidden');
-                }
-              }
-            );
-          });
-        }
-      })
-    );
-    setActiveLink();
-  });
+  topLeftMenuButton.addEventListener('click', setStatusTopLeftMenu);
+  document.body.addEventListener('click', closeTopLeftMenu);
 }
