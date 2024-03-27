@@ -274,12 +274,21 @@ async function getSearchResults() {
   const query = `?query=${encodeURIComponent(searchData.query)}`;
   const module = `&module=${searchData.module}`;
   const offsetStart = index > 0 ? `&offset=${index}` : '';
-  let version = '';
+  let version = '&version=';
   if (searchData.module === 'api' && location.pathname.match('api')) {
     const loc = location.pathname.split('/');
-    if (loc[2] === 'qiskit' && loc[3]) {
-      version = `&version=${loc[3]}`;
+    if (loc[2].match('qiskit') && loc[3]) {
+      if (loc[3] === 'release-notes') {
+        version += loc[4];
+      }
+      else {
+        version += loc[3];
+      }
+      
     } 
+  }
+  else {
+    version = '';
   }
   const url = backendURL + query + module + offsetStart + version;
   const options = {
