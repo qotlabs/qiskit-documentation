@@ -359,7 +359,6 @@ function setActiveLink() {
   if (!document.querySelector('div[aria-label="Side Navigation"]')) {
     return;
   }
-
   let item = document.querySelector('.cds--side-nav__item--active');
   if (item) {
     item.classList.remove('cds--side-nav__item--active');
@@ -368,7 +367,7 @@ function setActiveLink() {
   const loc = location.pathname.split('/');
   let href = loc[1] === 'api' ? `/api/${loc[2]}` : `/${loc[1]}`;
   if (loc[3]) {
-    href = `/api/${loc[2]}/${loc[3]}`;
+    href = `/api/${loc[2]}`;
   }
   item = document.querySelector(`button[data-href="${href}"]`);
   if (item) {
@@ -404,6 +403,7 @@ function setTopLeftMenuButtonStatus(status) {
     topLeftMenuButton.classList.add('cds--header__action--active');
     setSideLinks();
     setActiveLink();
+    document.body.addEventListener('click', closeTopLeftMenu);
   } else {
     topLeftMenuButton.classList.remove('cds--header__action--active');
   }
@@ -634,5 +634,4 @@ export default function render() {
     'button.cds--header__menu-toggle'
   );
   topLeftMenuButton.addEventListener('click', setStatusTopLeftMenu);
-  document.body.addEventListener('click', closeTopLeftMenu);
 }
