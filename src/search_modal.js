@@ -281,11 +281,13 @@ async function getSearchResults() {
       if (loc[3] === 'release-notes') {
         version += loc[4];
       }
-      else {
+      else if (!isNaN(loc[3]) || loc[3] === 'dev') {
         version += loc[3];
       }
-      
-    } 
+      else {
+        version = '';
+      }
+    }
   }
   else {
     version = '';
