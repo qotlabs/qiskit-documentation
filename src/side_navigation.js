@@ -370,7 +370,12 @@ function setActiveLink() {
   const loc = location.pathname.split('/');
   let href = loc[1] === 'api' ? `/api/${loc[2]}` : `/${loc[1]}`;
   if (loc[3]) {
-    href = `/api/${loc[2]}/${loc[3]}`;
+    if (!isNaN(parseFloat(loc[3])) || loc[3] === 'dev') {
+      href = `/api/${loc[2]}/${loc[3]}`;
+    }
+    else {
+      href = `/api/${loc[2]}`;
+    }
   }
   item = sideNavigation.querySelector(`button[data-href="${href}"]`);
   if (item) {
