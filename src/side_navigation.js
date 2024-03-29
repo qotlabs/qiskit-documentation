@@ -356,10 +356,13 @@ function sortVersions(versionA, versionB) {
 }
 
 function setActiveLink() {
-  if (!document.querySelector('div[aria-label="Side Navigation"]')) {
+  const sideNavigation = document.querySelector(
+    '[aria-label="Side Navigation"]'
+  );
+  if (!sideNavigation) {
     return;
   }
-  let item = document.querySelector('.cds--side-nav__item--active');
+  let item = sideNavigation.querySelector('.cds--side-nav__item--active');
   if (item) {
     item.classList.remove('cds--side-nav__item--active');
   }
@@ -367,9 +370,9 @@ function setActiveLink() {
   const loc = location.pathname.split('/');
   let href = loc[1] === 'api' ? `/api/${loc[2]}` : `/${loc[1]}`;
   if (loc[3]) {
-    href = `/api/${loc[2]}`;
+    href = `/api/${loc[2]}/${loc[3]}`;
   }
-  item = document.querySelector(`button[data-href="${href}"]`);
+  item = sideNavigation.querySelector(`button[data-href="${href}"]`);
   if (item) {
     item.parentElement.classList.add('cds--side-nav__item--active');
   }
