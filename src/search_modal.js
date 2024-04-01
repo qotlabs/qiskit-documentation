@@ -211,92 +211,68 @@ let searchData = {
   module: 'documentation',
 };
 
-let controller = null;
-let signal = null;
+let controller = new AbortController();
 
-// Actions connecting to modal window when it presents on the page
 function blockFocusOnElements(status) {
-  const elements = [
-    document.querySelector('header'),
-    document.querySelector('footer'),
+  const selectors = [
+    'header',
+    'footer',
+    'nav[aria-label="Side navigation"]',
+    'main',
+    'aside',
   ];
-  if (document.querySelector('nav[aria-label="Side navigation"]')) {
-    elements.push(document.querySelector('nav[aria-label="Side navigation"]'));
-  }
-  if (document.querySelector('main')) {
-    elements.push(document.querySelector('main'));
-  }
-  if (document.querySelector('aside')) {
-    elements.push(document.querySelector('aside'));
-  }
-  if (status) {
-    elements.forEach((element) => element.setAttribute('inert', ''));
-  } else {
-    elements.forEach((element) => element.removeAttribute('inert'));
-  }
+  selectors.forEach((selector) => {
+    const element = document.querySelector(selector);
+    if (element) element.toggleAttribute('inert', status);
+  });
 }
 
-function removeModuleWindow() {
+function closeModalWindow() {
   const modalWindow = document.querySelector('.modal-search');
   if (!modalWindow) {
     return;
   }
+  controller.abort();
   modalWindow.outerHTML = '';
   blockFocusOnElements(false);
   document.body.removeAttribute('class');
   document.body.removeAttribute('wfd-invisible');
-  document.body.removeEventListener('click', modalWindowEventDetect);
-  document.body.removeEventListener('keydown', modalWindowEventDetect);
-  document.body.addEventListener('keydown', slashKeyPressFunction);
+  document.body.removeEventListener('click', listenClose);
+  document.body.removeEventListener('keydown', listenClose);
+  document.body.removeEventListener('keydown', listenEnterKey);
+  document.body.addEventListener('keydown', listenSlashKey);
 }
 
 function removeScrollbar() {
-  const modalWindow = document.querySelector('.modal-search');
-  if (!modalWindow) {
-    return;
+  const scrollbar = document.querySelector('.modal-search div.scrollbar');
+  if (scrollbar) {
+    scrollbar.outerHTML = '';
   }
-  const scrollbar = modalWindow.querySelector('div.scrollbar');
-  if (!scrollbar) {
-    return;
-  }
-  scrollbar.outerHTML = '';
 }
 
-async function getSearchResults() {
+async function fetchSearchResults() {
   const modalWindow = document.querySelector('.modal-search');
   if (!modalWindow) {
     return;
   }
-  controller = new AbortController();
-  signal = controller.signal;
+
   const listBox = modalWindow.querySelector('ul[role="listbox"]');
-  const index = listBox.children.length;
-  const query = `?query=${encodeURIComponent(searchData.query)}`;
-  const module = `&module=${searchData.module}`;
-  const offsetStart = index > 0 ? `&offset=${index}` : '';
-  let version = '&version=';
-  if (searchData.module === 'api' && location.pathname.match('api')) {
-    const loc = location.pathname.split('/');
-    if (loc[2].match('qiskit') && loc[3]) {
-      if (loc[3] === 'release-notes') {
-        version += loc[4];
-      }
-      else if (!isNaN(loc[3]) || loc[3] === 'dev') {
-        version += loc[3];
-      }
-      else {
-        version = '';
-      }
+  const offset = listBox.children.length;
+  let url = backendURL;
+  url += `?query=${encodeURIComponent(searchData.query)}`;
+  url += `&module=${searchData.module}`;
+  url += `&offset=${offset}`;
+
+  const loc = location.pathname.split('/');
+  if (searchData.module === 'api' && loc[1] === 'api') {
+    const version = loc[3] === 'release-notes' ? loc[4] : loc[3];
+    if (version && version.match(/dev|[0-9]\.[0-9]+/)) {
+      url += `&version=${version}`;
     }
   }
-  else {
-    version = '';
-  }
-  const url = backendURL + query + module + offsetStart + version;
-  const options = {
-    signal,
-  };
-  const response = await fetch(url, options);
+
+  controller = new AbortController();
+  const response = await fetch(url, {signal: controller.signal});
   if (!response.ok) {
     throw new Error(`An error occurred: ${response.status}`);
   }
@@ -305,140 +281,104 @@ async function getSearchResults() {
   return await response.json();
 }
 
-function modalWindowEventDetect(event) {
+function listenClose(event) {
   const modalWindow = document.querySelector('.modal-search');
-  if (!modalWindow) {
-    return;
-  }
-  switch (event.type) {
-    case 'click':
-      if (event.target === modalWindow) {
-        removeModuleWindow();
-      }
-    case 'keydown':
-      if (event.key === 'Escape') {
-        removeModuleWindow();
-      }
-      if (event.key === 'Enter') {
-        searchData.query = modalWindow
-          .querySelector('input[type="search"]')
-          .value.trim();
-        getSearchData();
-      }
+  const clickedOutside = event.type === 'click' && event.target === modalWindow;
+  const escapePressed = event.type === 'keydown' && event.key === 'Escape';
+  if (clickedOutside || escapePressed) {
+    closeModalWindow();
   }
 }
-function slashKeyPressFunction(event) {
+
+function listenEnterKey(event) {
+  if (event.key === 'Enter') {
+    search();
+  }
+}
+
+function listenSlashKey(event) {
   if (event.key === '/') {
     event.preventDefault();
-    searchWindowOpen();
+    openModalWindow();
   }
 }
 
-function closeModalWindowWhileLoading(event) {
-  const isEscKeyPressed = event.type === 'keydown' && event.key === 'Escape';
-  const isClickedOutsideModalWindow =
-    event.type === 'click' && event.target.classList.contains('modal-search');
-  if (isEscKeyPressed || isClickedOutsideModalWindow) {
-    controller.abort();
-    removeModuleWindow();
+function toggleEventListener(element, force, type, listener, options) {
+  if (force) {
+    element.addEventListener(type, listener, options);
+  } else {
+    element.removeEventListener(type, listener, options);
   }
 }
 
-function hideLoader() {
+function toggleLoader(show) {
   const modalWindow = document.querySelector('.modal-search');
   if (!modalWindow) {
     return;
   }
-  modalWindow
-    .querySelector('button[aria-label="Clear search"]')
-    .classList.remove('hidden');
-  modalWindow.querySelector('#loading-indicator').outerHTML = '';
-  modalWindow.querySelector('input[type="search"]').disabled = false;
-  Array.from(
-    modalWindow.querySelectorAll('.cds--modal button[role="radio"]')
-  ).forEach((button) => (button.disabled = false));
-  modalWindow.querySelector('.search-query-button').disabled = false;
-  modalWindow
-    .querySelector('div.scrollbar')
-    .addEventListener('scroll', getMoreData, {
-      passive: true,
-    });
-  document.body.addEventListener('keydown', modalWindowEventDetect);
-  document.body.addEventListener('click', modalWindowEventDetect);
-  document.body.removeEventListener('keydown', closeModalWindowWhileLoading);
-  document.body.removeEventListener('click', modalWindowEventDetect);
-}
 
-function showLoader() {
-  const modalWindow = document.querySelector('.modal-search');
-  if (!modalWindow) {
-    return;
-  }
   const clearSearchButton = modalWindow.querySelector(
     'button[aria-label="Clear search"]'
   );
-  clearSearchButton.classList.add('hidden');
-  clearSearchButton.insertAdjacentHTML('afterend', loadingIndicatorElement);
-  modalWindow.querySelector('input[type="search"]').disabled = true;
-  Array.from(modalWindow.querySelectorAll('button[role="radio"]')).forEach(
-    (button) => (button.disabled = true)
-  );
-  modalWindow.querySelector('.search-query-button').disabled = true;
-  modalWindow
-    .querySelector('.cds--modal div.scrollbar')
-    .removeEventListener('scroll', getMoreData, {
-      passive: true,
-    });
-  document.body.removeEventListener('keydown', modalWindowEventDetect);
-  document.body.removeEventListener('click', modalWindowEventDetect);
-  document.body.addEventListener('keydown', closeModalWindowWhileLoading);
-  document.body.addEventListener('click', closeModalWindowWhileLoading);
-}
-
-function showSearchResults(response) {
-  const modalWindow = document.querySelector('.modal-search');
-  if (!modalWindow) {
-    return;
+  clearSearchButton.classList.toggle('hidden', show);
+  if (show) {
+    clearSearchButton.insertAdjacentHTML('afterend', loadingIndicatorElement);
+  } else {
+    modalWindow.querySelector('#loading-indicator').outerHTML = '';
   }
-  response.forEach((result) => {
-    const listElement = `<li
-              aria-disabled="false"
-              aria-selected="false"
-              id="downshift-:r0:-item-2"
-              role="option"
-              class="border-0 border-solid border-b border-border-subtle-01 last:border-0"
-              >
-                  <a
-                      class="block text-text-primary hover:text-text-primary cursor-pointer no-underline
-                      px-16 py-8 my-8"
-                      href="${result.url}">
-                      <div class="text-label-01 text-text-helper mb-4">${result.pageTitle}</div>
-                      <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-body-compact-01
-                      truncate mb-4">
-                          ${result.title}
-                      </div>
-                      <div class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-label-01
-                      truncate break-all">
-                          ${result.text}
-                      </div>
-                  </a>
-              </li>`;
-    modalWindow
-      .querySelector('ul[role="listbox"]')
-      .insertAdjacentHTML('beforeend', listElement);
+  modalWindow.querySelector('input[type="search"]').disabled = show;
+  Array.from(
+    modalWindow.querySelectorAll('.cds--modal button[role="radio"]')
+  ).forEach((button) => (button.disabled = show));
+  modalWindow.querySelector('.search-query-button').disabled = show;
+  const scrollbar = modalWindow.querySelector('div.scrollbar');
+  toggleEventListener(scrollbar, !show, 'scroll', loadMoreResults, {
+    passive: true,
   });
+  toggleEventListener(document.body, !show, 'keydown', listenEnterKey);
 }
 
-async function launchSearch() {
+function getListElement(searchResult) {
+  return `
+    <li
+      aria-disabled="false"
+      aria-selected="false"
+      id="downshift-:r0:-item-2"
+      role="option"
+      class="border-0 border-solid border-b border-border-subtle-01 last:border-0"
+    >
+      <a
+        class="block text-text-primary hover:text-text-primary cursor-pointer no-underline px-16 py-8 my-8"
+        href="${searchResult.url}"
+      >
+        <div class="text-label-01 text-text-helper mb-4">${searchResult.pageTitle}</div>
+        <div
+          class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-body-compact-01 truncate mb-4"
+        >
+          ${searchResult.title}
+        </div>
+        <div
+          class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-label-01 truncate break-all"
+        >
+          ${searchResult.text}
+        </div>
+      </a>
+    </li>`;
+}
+
+async function loadSearchResults() {
   const modalWindow = document.querySelector('.modal-search');
   if (!modalWindow) {
     return;
   }
+  toggleLoader(true);
   const listBox = modalWindow.querySelector('ul[role="listbox"]');
   try {
-    const response = await getSearchResults();
+    const response = await fetchSearchResults();
     if (response.length > 0) {
-      showSearchResults(response);
+      response.forEach((result) => {
+        listBox.insertAdjacentHTML('beforeend', getListElement(result));
+      });
       listBox.setAttribute('aria-hidden', false);
       listBox.classList.remove('hidden');
     } else {
@@ -446,67 +386,58 @@ async function launchSearch() {
         modalWindow
           .querySelector('.px-8.py-16.text-body-compact-01')
           .classList.remove('hidden');
-      } else {
-        return;
       }
     }
   } catch (error) {
-    throw new Error(error.message);
-  } finally {
-    hideLoader();
+    if (error.name !== 'AbortError') throw error;
   }
+  toggleLoader(false);
 }
 
-async function loadSearchResults() {
-  showLoader();
-  launchSearch();
-}
-
-function getMoreData(event) {
+function loadMoreResults(event) {
   const {scrollTop, scrollHeight, offsetHeight} = event.target;
   if (scrollTop + offsetHeight >= scrollHeight) {
     loadSearchResults();
   }
 }
 
-function getSearchData() {
+function search() {
   const modalWindow = document.querySelector('.modal-search');
   if (!modalWindow) {
     return;
   }
+  searchData.query = modalWindow
+    .querySelector('input[type="search"]')
+    .value.trim();
+  if (searchData.query.length === 0) {
+    return;
+  }
+
   removeScrollbar();
   modalWindow
     .querySelector('.cds--modal-content')
     .insertAdjacentHTML('beforeend', modalSearchResultsElement);
   modalWindow
     .querySelector('div.scrollbar')
-    .addEventListener('scroll', getMoreData, {passive: true});
+    .addEventListener('scroll', loadMoreResults, {passive: true});
   loadSearchResults();
 }
 
-function uncheckRadioButtons(value) {
+function checkRadioButton(button) {
+  // Uncheck previous button
   const modalWindow = document.querySelector('.modal-search');
-  if (!modalWindow) {
-    return;
-  }
-  const modalRadioButtons = Array.from(
-    modalWindow.querySelectorAll('button[role="radio"]')
+  const prevButton = modalWindow.querySelector(
+    'button[role="radio"][aria-checked="true"]'
   );
-  const otherRadioButtons = modalRadioButtons.filter(
-    (item) => item.value !== value
-  );
-  otherRadioButtons.forEach((button) => {
-    button.dataset.state = 'unchecked';
-    button.setAttribute('aria-checked', false);
-  });
-}
+  prevButton.setAttribute('aria-checked', false);
+  prevButton.dataset.state = 'unchecked';
 
-function checkRadioButton(button, value) {
+  // Check new button
   button.setAttribute('aria-checked', true);
   button.dataset.state = 'checked';
-  searchData.module = value;
-  uncheckRadioButtons(value);
-  localStorage.setItem('module', value);
+
+  searchData.module = button.value;
+  localStorage.setItem('module', button.value);
 }
 
 function insertClearSearchButton(event) {
@@ -522,7 +453,6 @@ function insertClearSearchButton(event) {
   if (searchValue.length > 0) {
     const resetSearchData = () => {
       inputSearch.value = '';
-      searchData.query = '';
       removeScrollbar();
       modalWindow.querySelector('button[aria-label="Clear search"]').outerHTML =
         '';
@@ -538,69 +468,45 @@ function insertClearSearchButton(event) {
   }
 }
 
-function modalWindowEventsInit() {
-  searchData.query = '';
-  document.body.addEventListener('click', modalWindowEventDetect);
-  document.body.addEventListener('keydown', modalWindowEventDetect);
-  document.body.removeEventListener('keydown', slashKeyPressFunction);
-}
-
-function modalWindowInit() {
-  const modalWindow = document.querySelector('.modal-search');
-  if (!modalWindow) {
-    return;
-  }
-  modalWindowEventsInit();
-  const modalRadioButtons = Array.from(
-    modalWindow.querySelectorAll('button[role="radio"]')
-  );
-
-  if (!localStorage.getItem('module')) {
-    localStorage.setItem('module', 'documentation');
-    searchData.module = 'documentation';
-  } else {
-    const previouslySelectedRadioButton = modalRadioButtons.find(
-      (button) => button.value === localStorage.getItem('module')
-    );
-    checkRadioButton(
-      previouslySelectedRadioButton,
-      localStorage.getItem('module')
-    );
-  }
-
-  const searchInput = modalWindow.querySelector('input[type="search"]');
-  searchInput.focus();
-  searchInput.value = '';
-  searchInput.addEventListener(
-    'change',
-    (event) => (searchData.query = event.target.value.trim())
-  );
-  searchInput.addEventListener('input', insertClearSearchButton);
-
-  const searchDataButton = modalWindow.querySelector('.search-query-button');
-  searchDataButton.addEventListener('click', getSearchData);
-
-  modalRadioButtons.forEach((button) =>
-    button.addEventListener('click', (event) => {
-      checkRadioButton(event.target, event.target.value);
-      if (searchInput.value.trim().length > 0) {
-        getSearchData();
-      }
-    })
-  );
-}
-
-function searchWindowOpen() {
+function openModalWindow() {
   document.body.className = 'cds--body--with-modal-open';
   document.body.setAttribute('wfd-invisible', true);
   blockFocusOnElements(true);
   document.body.insertAdjacentHTML('beforeend', modalElement);
-  modalWindowInit();
+  document.body.addEventListener('click', listenClose);
+  document.body.addEventListener('keydown', listenClose);
+  document.body.addEventListener('keydown', listenEnterKey);
+  document.body.removeEventListener('keydown', listenSlashKey);
+
+  const modalWindow = document.querySelector('.modal-search');
+  const module = localStorage.getItem('module') || 'documentation';
+  const radioButtons = Array.from(
+    modalWindow.querySelectorAll('button[role="radio"]')
+  );
+  const previouslyCheckedButton = radioButtons.find(
+    (button) => button.value === module
+  );
+  checkRadioButton(previouslyCheckedButton);
+
+  const searchInput = modalWindow.querySelector('input[type="search"]');
+  searchInput.value = '';
+  searchInput.focus();
+  searchInput.addEventListener('input', insertClearSearchButton);
+
+  const searchDataButton = modalWindow.querySelector('.search-query-button');
+  searchDataButton.addEventListener('click', search);
+
+  radioButtons.forEach((button) =>
+    button.addEventListener('click', (event) => {
+      checkRadioButton(event.target);
+      search();
+    })
+  );
 }
 
 export default function render() {
   document
     .querySelector('button[aria-label="Search"]')
-    .addEventListener('click', searchWindowOpen);
-  document.body.addEventListener('keydown', slashKeyPressFunction);
+    .addEventListener('click', openModalWindow);
+  document.body.addEventListener('keydown', listenSlashKey);
 }
