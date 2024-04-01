@@ -307,11 +307,6 @@ const crossPath = `
   d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"
 ></path>`;
 
-const expandingValues = {
-  true: true,
-  false: false,
-};
-
 async function getTreeFromQuery(href) {
   const url = `/api/toc${href}`;
   const response = await fetch(url, {
@@ -323,36 +318,18 @@ async function getTreeFromQuery(href) {
   return await response.json();
 }
 
-function sortVersions(versionA, versionB) {
-  if (!versionA) {
-    return 1;
-  }
-  if (!versionB) {
-    return -1;
-  }
-
-  const arrA = versionA.version.split('.');
-  const arrB = versionB.version.split('.');
-
-  if (!arrA || !arrA.length) {
-    return 1;
-  }
-
-  if (!arrB || !arrB.length) {
-    return -1;
-  }
-
-  for (let i = 0; i < Math.min(arrA.length, arrB.length); i++) {
-    const numberA = +arrA[i].replace(/\D/g, '') + 100000;
-    const numberB = +arrB[i].replace(/\D/g, '') + 100000;
-
-    if (numberA === numberB) {
+function compareVersions(node1, node2) {
+  const arr1 = node1.version.replace('-dev', '').split('.');
+  const arr2 = node2.version.replace('-dev', '').split('.');
+  for (let i = 0; i < Math.min(arr1.length, arr2.length); i++) {
+    const v1 = parseInt(arr1[i]);
+    const v2 = parseInt(arr2[i]);
+    if (v1 === v2) {
       continue;
     }
-
-    return numberB - numberA;
+    return v2 - v1;
   }
-  return arrB.length - arrA.length;
+  return arr2.length - arr1.length;
 }
 
 function setActiveLink() {
@@ -372,8 +349,7 @@ function setActiveLink() {
   if (loc[3]) {
     if (!isNaN(parseFloat(loc[3])) || loc[3] === 'dev') {
       href = `/api/${loc[2]}/${loc[3]}`;
-    }
-    else {
+    } else {
       href = `/api/${loc[2]}`;
     }
   }
@@ -504,7 +480,7 @@ function insertDropdownElement(pack) {
   currentSideNavElement
     .querySelector('.submenu-list')
     .insertAdjacentHTML('beforebegin', dropdownMenuElement);
-  const versions = pack.versions.sort(sortVersions);
+  const versions = pack.versions.sort(compareVersions);
   const selectVersionInput =
     currentSideNavElement.querySelector('.cds--select-input');
   versions.forEach((item) => {
@@ -562,15 +538,9 @@ function insertSubmenuElements() {
     Array.from(document.querySelectorAll('.expanding-button')).forEach(
       (btn) => {
         btn.addEventListener('click', () => {
-          btn.setAttribute(
-            'aria-expanded',
-            !expandingValues[btn.getAttribute('aria-expanded')]
-          );
-          if (btn.getAttribute('aria-expanded')) {
-            btn.nextElementSibling.classList.remove('hidden');
-          } else {
-            btn.nextElementSibling.classList.add('hidden');
-          }
+          const expanded = btn.getAttribute('aria-expanded') === 'true';
+          btn.setAttribute('aria-expanded', !expanded);
+          btn.nextElementSibling.classList.toggle('hidden', expanded);
         });
         if (
           btn.nextElementSibling.querySelector('.cds--side-nav__link--current')
@@ -596,10 +566,8 @@ function insertSubmenu() {
       .querySelector('.cds--side-nav__item--active')
       .classList.remove('cds--side-nav__item--active');
   }
-  clickedButtonLink.setAttribute(
-    'aria-expanded',
-    !expandingValues[clickedButtonLink.getAttribute('aria-expanded')]
-  );
+  const expanded = clickedButtonLink.getAttribute('aria-expanded') === 'true';
+  clickedButtonLink.setAttribute('aria-expanded', !expanded);
   if (!sideNavigation.querySelector('.inset-bg-element')) {
     insertSubmenuElements();
   }
