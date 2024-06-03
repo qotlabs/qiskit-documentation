@@ -1,6 +1,6 @@
 {
   "name": "@quantum/iqp-channel-docs",
-  "version": "0.1.363",
+  "version": "0.1.568",
   "private": true,
   "workspaces": [
     "packages/*"

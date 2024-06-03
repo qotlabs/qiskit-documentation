@@ -1,1 +1,22 @@
-{}
+{
+  "../../../node_modules/@quantum/composer-next/dist/ComposerOperationInfo.js -> @quantum/composer-next-operations-glossary": {
+    "id": null,
+    "files": []
+  },
+  "../../../node_modules/@quantum/composer-next/dist/phase-disk/getPhaseDiskData.js -> @quantum/composer-next-utils-wasm": {
+    "id": 8172,
+    "files": [
+      "static/chunks/172.963d7e67a20259d5.js"
+    ]
+  },
+  "../../shared/src/components/Composer.tsx -> ./ComposerReadOnly": {
+    "id": 53028,
+    "files": [
+      "static/chunks/2fe73f54.8b901c69ea5c520c.js",
+      "static/chunks/712-6da8d5038e21e2d9.js",
+      "static/chunks/168-e6b886905d42545c.js",
+      "static/chunks/642.8709a340f420d2e9.js",
+      "static/chunks/28.67e4274892385b4f.js"
+    ]
+  }
+}
