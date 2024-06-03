@@ -266,7 +266,7 @@ async function fetchSearchResults() {
   const loc = location.pathname.split('/');
   if (searchData.module === 'api' && loc[1] === 'api') {
     const version = loc[3] === 'release-notes' ? loc[4] : loc[3];
-    if (version && version.match(/dev|[0-9]\.[0-9]+/)) {
+    if (version && version.match(/^(dev|[0-9]\.[0-9]+)$/)) {
       url += `&version=${version}`;
     }
   }
