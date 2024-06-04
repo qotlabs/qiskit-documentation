@@ -126,9 +126,20 @@ const apiReferencesListElement = `
       class="text-body-compact-01 flex items-center h-48 px-16 border-2 transition-colors hover:bg-background-hover hover:text-text-primary border-transparent focus-outline bg-layer text-text-secondary"
       tabindex="0"
       data-radix-collection-item=""
+      href="/api/qiskit-transpiler-service"
+    >
+      <span class="truncate">Qiskit Transpiler Service Client</span>
+    </a>
+  </li>
+  <li class="" role="none">
+    <a
+      role="menuitem"
+      class="text-body-compact-01 flex items-center h-48 px-16 border-2 transition-colors hover:bg-background-hover hover:text-text-primary border-transparent focus-outline bg-layer text-text-secondary"
+      tabindex="0"
+      data-radix-collection-item=""
       href="/api/qiskit-ibm-provider"
     >
-      <span class="truncate">Qiskit IBM Provider</span>
+      <span class="truncate">Qiskit IBM Provider (deprecated)</span>
     </a>
   </li>
   <li class="" role="none">
