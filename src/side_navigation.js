@@ -206,10 +206,27 @@ const topLeftNavElement = `
         aria-expanded="false"
         class="cds--side-nav__submenu section__button"
         type="button"
+        data-href="/api/qiskit-transpiler-service"
+      >
+        <span
+          class="cds--side-nav__submenu-title"
+          title="Qiskit Transpiler Service"
+          >Qiskit Transpiler Service Client</span
+        >
+        ${navSubmenuChevron}
+      </button>
+    </li>
+    <li
+      class="cds--side-nav__item"
+    >
+      <button
+        aria-expanded="false"
+        class="cds--side-nav__submenu section__button"
+        type="button"
         data-href="/api/qiskit-ibm-provider"
       >
-        <span class="cds--side-nav__submenu-title" title="Qiskit IBM Provider"
-          >Qiskit IBM Provider</span
+        <span class="cds--side-nav__submenu-title" title="Qiskit IBM Provider (deprecated)"
+          >Qiskit IBM Provider (deprecated)</span
         >
         ${navSubmenuChevron}
       </button>
@@ -408,38 +425,48 @@ function closeTopLeftMenu(event) {
 
 function createSubmenuLiElement(children, url, title, type) {
   const isExpanded = type === 'default';
-  const submenuLiElement = '<li class="cds--side-nav__item">';
-  if (children.length === 1) {
-    const link = `<a
-    class="cds--side-nav__link${
+  const createNavItemLiElement = (className, child) =>
+    `<li class="${className}">${child}</li>`;
+  const createNestedLink = (url, title, paddingLeft) =>
+    `<a class="cds--side-nav__link${
       location.pathname === url ? ' cds--side-nav__link--current' : ''
-    }"
-    style="padding-left: 16px;" href="${url}">
-      <span class="cds--side-nav__link-text">${title}</span>
-    </a>`;
-    return `${submenuLiElement}${link}</li>`;
+    }" style="padding-left: ${paddingLeft}px;" href="${url}">
+    <span class="cds--side-nav__link-text">${title}</span></a>`;
+  if (children.length === 1) {
+    return createNavItemLiElement('cds--side-nav__item', createNestedLink(url, title, 16));
   }
-  const buttonNavSubmenu = `<button aria-expanded="${isExpanded}"
-    class="cds--side-nav__submenu expanding-button" type="button" style="padding-left: 16px;">
+  const createButtonNavSubmenu = (isExpanded, paddingLeft, title, children) => {
+    return `<button aria-expanded="${isExpanded}"
+    class="cds--side-nav__submenu expanding-button" type="button" style="padding-left: ${paddingLeft}px;">
       <span class="cds--side-nav__submenu-title" title="${title}">${title}</span>
       ${expandedNavSubMenuChevron}
-    </button>`;
-  const ulSideMenu = `<ul class="cds--side-nav__menu${
-    isExpanded ? '' : ' hidden'
-  }">`;
+    </button>
+    ${children}`;
+  }
+  const createUlSideMenu = (isExpanded, children) =>
+    `<ul class="cds--side-nav__menu${
+      isExpanded ? '' : ' hidden'
+    }">${children}</ul>`;
+
   const sideMenuLiElements = children.map(
-    (item) => `<li class="cds--side-nav__menu-item">
-      <a class="cds--side-nav__link${
-        location.pathname === item.url ? ' cds--side-nav__link--current' : ''
-      }"
-        style="padding-left: 32px; font-weight: 400"
-        href="${item.url}">
-        <span class="cds--side-nav__link-text">${item.title}</span>
-      </a>
-    </li>`
+    (item) => {
+      if (item.url !== undefined) {
+        return createNavItemLiElement('cds--side-nav__menu-item', createNestedLink(item.url, item.title, 32));
+      }
+      else {
+        const nestedElements = item.children.map(
+          (element) =>
+            createNavItemLiElement('cds--side-nav__item', createNestedLink(element.url, element.title, 48))
+        );
+        return createNavItemLiElement(
+          'cds--side-nav__menu-item',
+          createButtonNavSubmenu(isExpanded, 32, item.title, createUlSideMenu(isExpanded, nestedElements.join('')))
+        );
+      }
+    }
   );
-  return `${submenuLiElement}${buttonNavSubmenu}
-  ${ulSideMenu}${sideMenuLiElements.join('')}</ul></li>`;
+  const navSubmenu = createButtonNavSubmenu(isExpanded, 16, title, createUlSideMenu(isExpanded, sideMenuLiElements.join('')))
+  return createNavItemLiElement('cds--side-nav__item', navSubmenu);
 }
 
 function returnToSideMenu() {
