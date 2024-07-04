@@ -1,6 +1,6 @@
 {
   "name": "@quantum/iqp-channel-docs-shared",
-  "version": "0.1.568",
+  "version": "0.1.616",
   "private": true,
   "sideEffects": false,
   "type": "module",
@@ -55,7 +55,7 @@
     "server-only": "^0.0.1",
     "shiki": "^0.14.1",
     "unified": "^10.1.2",
-    "ws": "^8.16.0",
+    "ws": "^8.17.1",
     "zod": "^3.11.6"
   },
   "devDependencies": {
