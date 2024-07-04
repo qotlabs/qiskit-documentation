@@ -102,15 +102,13 @@ const topLeftNavElement = `
     <li
       class="cds--side-nav__item"
     >
-      <button
-        aria-expanded="false"
-        class="cds--side-nav__submenu section__button"
-        type="button"
-        data-href="/start"
+      <a
+        class="cds--side-nav__link"
+        tabindex="0"
+        href="/"
       >
-        <span class="cds--side-nav__submenu-title" title="Start">Start</span>
-        ${navSubmenuChevron}
-      </button>
+        <span class="cds--side-nav__link-text">Overview</span>
+      </a>
     </li>
     <li
       class="cds--side-nav__item"
@@ -119,50 +117,9 @@ const topLeftNavElement = `
         aria-expanded="false"
         class="cds--side-nav__submenu section__button"
         type="button"
-        data-href="/build"
+        data-href="/guides"
       >
-        <span class="cds--side-nav__submenu-title" title="Build">Build</span>
-        ${navSubmenuChevron}
-      </button>
-    </li>
-    <li
-      class="cds--side-nav__item"
-    >
-      <button
-        aria-expanded="false"
-        class="cds--side-nav__submenu section__button"
-        type="button"
-        data-href="/transpile"
-      >
-        <span class="cds--side-nav__submenu-title" title="Transpile"
-          >Transpile</span
-        >
-        ${navSubmenuChevron}
-      </button>
-    </li>
-    <li
-      class="cds--side-nav__item"
-    >
-      <button
-        aria-expanded="false"
-        class="cds--side-nav__submenu section__button"
-        type="button"
-        data-href="/verify"
-      >
-        <span class="cds--side-nav__submenu-title" title="Verify">Verify</span>
-        ${navSubmenuChevron}
-      </button>
-    </li>
-    <li
-      class="cds--side-nav__item"
-    >
-      <button
-        aria-expanded="false"
-        class="cds--side-nav__submenu section__button"
-        type="button"
-        data-href="/run"
-      >
-        <span class="cds--side-nav__submenu-title" title="Run">Run</span>
+        <span class="cds--side-nav__submenu-title" title="Guides">Guides</span>
         ${navSubmenuChevron}
       </button>
     </li>
@@ -360,6 +317,10 @@ function setActiveLink() {
   if (item) {
     item.classList.remove('cds--side-nav__item--active');
   }
+  const link_home = sideNavigation.querySelector('.cds--side-nav__link');
+  if (link_home.classList.contains('cds--side-nav__link--current')) {
+    link_home.classList.remove('cds--side-nav__link--current');
+  }
 
   const loc = location.pathname.split('/');
   let href = loc[1] === 'api' ? `/api/${loc[2]}` : `/${loc[1]}`;
@@ -373,6 +334,8 @@ function setActiveLink() {
   item = sideNavigation.querySelector(`button[data-href="${href}"]`);
   if (item) {
     item.parentElement.classList.add('cds--side-nav__item--active');
+  } else if (loc[1] === '') {
+    link_home.classList.add('cds--side-nav__link--current');
   }
 }
 
@@ -433,7 +396,10 @@ function createSubmenuLiElement(children, url, title, type) {
     }" style="padding-left: ${paddingLeft}px;" href="${url}">
     <span class="cds--side-nav__link-text">${title}</span></a>`;
   if (children.length === 1) {
-    return createNavItemLiElement('cds--side-nav__item', createNestedLink(url, title, 16));
+    return createNavItemLiElement(
+      'cds--side-nav__item',
+      createNestedLink(url, title, 16)
+    );
   }
   const createButtonNavSubmenu = (isExpanded, paddingLeft, title, children) => {
     return `<button aria-expanded="${isExpanded}"
@@ -442,30 +408,42 @@ function createSubmenuLiElement(children, url, title, type) {
       ${expandedNavSubMenuChevron}
     </button>
     ${children}`;
-  }
+  };
   const createUlSideMenu = (isExpanded, children) =>
     `<ul class="cds--side-nav__menu${
       isExpanded ? '' : ' hidden'
     }">${children}</ul>`;
 
-  const sideMenuLiElements = children.map(
-    (item) => {
-      if (item.url !== undefined) {
-        return createNavItemLiElement('cds--side-nav__menu-item', createNestedLink(item.url, item.title, 32));
-      }
-      else {
-        const nestedElements = item.children.map(
-          (element) =>
-            createNavItemLiElement('cds--side-nav__item', createNestedLink(element.url, element.title, 48))
-        );
-        return createNavItemLiElement(
-          'cds--side-nav__menu-item',
-          createButtonNavSubmenu(isExpanded, 32, item.title, createUlSideMenu(isExpanded, nestedElements.join('')))
-        );
-      }
+  const sideMenuLiElements = children.map((item) => {
+    if (item.url !== undefined) {
+      return createNavItemLiElement(
+        'cds--side-nav__menu-item',
+        createNestedLink(item.url, item.title, 32)
+      );
+    } else {
+      const nestedElements = item.children.map((element) =>
+        createNavItemLiElement(
+          'cds--side-nav__item',
+          createNestedLink(element.url, element.title, 48)
+        )
+      );
+      return createNavItemLiElement(
+        'cds--side-nav__menu-item',
+        createButtonNavSubmenu(
+          isExpanded,
+          32,
+          item.title,
+          createUlSideMenu(isExpanded, nestedElements.join(''))
+        )
+      );
     }
+  });
+  const navSubmenu = createButtonNavSubmenu(
+    isExpanded,
+    16,
+    title,
+    createUlSideMenu(isExpanded, sideMenuLiElements.join(''))
   );
-  const navSubmenu = createButtonNavSubmenu(isExpanded, 16, title, createUlSideMenu(isExpanded, sideMenuLiElements.join('')))
   return createNavItemLiElement('cds--side-nav__item', navSubmenu);
 }
 

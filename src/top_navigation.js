@@ -12,52 +12,22 @@ const navElement = `
   >
     <li role="none">
       <a
-        href="/start"
+        href="/"
         role="menuitem"
         tabindex="0"
         class="cds--header__menu-item"
       >
-        <span class="cds--text-truncate--end">Start</span>
+        <span class="cds--text-truncate--end">Home</span>
       </a>
     </li>
     <li role="none">
       <a
-        href="/build"
+        href="/guides"
         role="menuitem"
         tabindex="0"
         class="cds--header__menu-item"
       >
-        <span class="cds--text-truncate--end">Build</span>
-      </a>
-    </li>
-    <li role="none">
-      <a
-        href="/transpile"
-        role="menuitem"
-        tabindex="0"
-        class="cds--header__menu-item"
-      >
-        <span class="cds--text-truncate--end">Transpile</span>
-      </a>
-    </li>
-    <li role="none">
-      <a
-        href="/verify"
-        role="menuitem"
-        tabindex="0"
-        class="cds--header__menu-item"
-      >
-        <span class="cds--text-truncate--end">Verify</span>
-      </a>
-    </li>
-    <li role="none">
-      <a
-        href="/run"
-        role="menuitem"
-        tabindex="0"
-        class="cds--header__menu-item"
-      >
-        <span class="cds--text-truncate--end">Run</span>
+        <span class="cds--text-truncate--end">Guides</span>
       </a>
     </li>
     <li class="cds--header__submenu" role="none">
