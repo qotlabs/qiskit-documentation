@@ -36,11 +36,7 @@ class DocSection(Enum):
     QISKIT_IBM_PROVIDER = 3
     QISKIT_IBM_RUNTIME = 4
     QISKIT_TRANSPILER_SERVICE = 5
-    BUILD = 10
-    RUN = 20
-    START = 30
-    TRANSPILE = 40
-    VERIFY = 50
+    GUIDES = 10
 
     @staticmethod
     def from_str(s: str):
