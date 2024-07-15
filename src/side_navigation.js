@@ -65,146 +65,57 @@ const expandedNavSubMenuChevron = `
 </div>`;
 
 const topLeftNavElement = `
-<div
-  class="z-[600] bg-overlay fixed inset-0 top-[var(--shell-header-height)]"
-  style="opacity: 1"
-></div>
-<div
-  class="fixed z-[800] top-[var(--shell-header-height)] bottom-0 left-0 overflow-x-hidden overflow-y-auto w-[var(--shell-header-mobile-nav-width)] bg-background scrollbar"
-  aria-label="Side Navigation"
-  style="transform: none"
->
-  <div
-    class="h-48 mx-16 flex items-center border-solid border-0 border-b border-border-subtle"
-  >
-    <svg
-      focusable="false"
-      preserveAspectRatio="xMidYMid meet"
-      xmlns="http://www.w3.org/2000/svg"
-      fill="currentColor"
-      width="16"
-      height="16"
-      viewBox="0 0 32 32"
-      aria-hidden="true"
-    >
-      <path
-        d="M31 16L24 23 22.59 21.59 28.17 16 22.59 10.41 24 9 31 16zM1
-                16L8 9 9.41 10.41 3.83 16 9.41 21.59 8 23 1 16z"
-      ></path>
-      <path
-        d="M5.91 15H26.080000000000002V17H5.91z"
-        transform="rotate(-75 15.996 16)"
-      ></path>
-    </svg>
-  </div>
-  <h2 class="text-heading-03 text-text-primary px-16 my-16">Documentation</h2>
-  <ul class="cds--side-nav__header-navigation static p-0">
-    <li
-      class="cds--side-nav__item"
-    >
-      <a
-        class="cds--side-nav__link"
-        tabindex="0"
-        href="/"
-      >
-        <span class="cds--side-nav__link-text">Overview</span>
-      </a>
-    </li>
-    <li
-      class="cds--side-nav__item"
-    >
-      <button
-        aria-expanded="false"
-        class="cds--side-nav__submenu section__button"
-        type="button"
-        data-href="/guides"
-      >
-        <span class="cds--side-nav__submenu-title" title="Guides">Guides</span>
-        ${navSubmenuChevron}
-      </button>
-    </li>
-    <li class="cds--side-nav__divider"><hr /></li>
-    <li
-      class="cds--side-nav__item"
-    >
-      <button
-        aria-expanded="false"
-        class="cds--side-nav__submenu section__button"
-        type="button"
-        data-href="/api/qiskit"
-      >
-        <span class="cds--side-nav__submenu-title" title="Qiskit SDK"
-          >Qiskit SDK</span
-        >
-        ${navSubmenuChevron}
-      </button>
-    </li>
-    <li
-      class="cds--side-nav__item"
-    >
-      <button
-        aria-expanded="false"
-        class="cds--side-nav__submenu section__button"
-        type="button"
-        data-href="/api/qiskit-ibm-runtime"
-      >
-        <span
-          class="cds--side-nav__submenu-title"
-          title="Qiskit Runtime IBM Client"
-          >Qiskit Runtime IBM Client</span
-        >
-        ${navSubmenuChevron}
-      </button>
-    </li>
-    <li
-      class="cds--side-nav__item"
-    >
-      <button
-        aria-expanded="false"
-        class="cds--side-nav__submenu section__button"
-        type="button"
-        data-href="/api/qiskit-transpiler-service"
-      >
-        <span
-          class="cds--side-nav__submenu-title"
-          title="Qiskit Transpiler Service"
-          >Qiskit Transpiler Service Client</span
-        >
-        ${navSubmenuChevron}
-      </button>
-    </li>
-    <li
-      class="cds--side-nav__item"
-    >
-      <button
-        aria-expanded="false"
-        class="cds--side-nav__submenu section__button"
-        type="button"
-        data-href="/api/qiskit-ibm-provider"
-      >
-        <span class="cds--side-nav__submenu-title" title="Qiskit IBM Provider (deprecated)"
-          >Qiskit IBM Provider (deprecated)</span
-        >
-        ${navSubmenuChevron}
-      </button>
-    </li>
-    <li
-      class="cds--side-nav__item"
-    >
-      <button
-        aria-expanded="false"
-        class="cds--side-nav__submenu section__button"
-        type="button"
-        data-href="/api/migration-guides"
-      >
-        <span class="cds--side-nav__submenu-title" title="Migration guides"
-          >Migration guides</span
-        >
-        ${navSubmenuChevron}
-      </button>
-    </li>
-  </ul>
-</div>`;
+<div class="z-[600] bg-overlay fixed inset-0 top-[var(--shell-header-height)]" style="opacity: 1;"></div>
+	<div class="fixed z-[800] top-[var(--shell-header-height)] bottom-0 left-0 overflow-x-hidden overflow-y-auto w-[var(--shell-header-mobile-nav-width)] bg-background scrollbar"
+		aria-label="Side Navigation" style="transform: none;">
+		<div class="h-48 mx-16 flex items-center border-solid border-0 border-b border-border-subtle"><svg
+				focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="16" height="16"
+				viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+				<path
+					d="M31 16L24 23 22.59 21.59 28.17 16 22.59 10.41 24 9 31 16zM1 16L8 9 9.41 10.41 3.83 16 9.41 21.59 8 23 1 16z">
+				</path>
+				<path d="M5.91 15H26.080000000000002V17H5.91z" transform="rotate(-75 15.996 16)"></path>
+			</svg></div>
+		<h2 class="text-heading-03 text-text-primary px-16 my-16">Documentation</h2>
+		<ul class="cds--side-nav__header-navigation static p-0">
+			<li class="cds--side-nav__item"><a class="cds--side-nav__link cds--side-nav__link--current" tabindex="0"
+					href="/"><span class="cds--side-nav__link-text">Overview</span></a></li>
+			<li class="cds--side-nav__item"><button aria-expanded="false" class="cds--side-nav__submenu section__button"
+					type="button" data-href="/guides"><span class="cds--side-nav__submenu-title"
+						title="Guides">Guides</span>
+            ${navSubmenuChevron}
+				</button></li>
+			<li class="cds--side-nav__divider">
+				<hr>
+			</li>
+			<li class="cds--side-nav__item"><button aria-expanded="false" class="cds--side-nav__submenu section__button"
+					type="button" data-href="/api/qiskit"><span class="cds--side-nav__submenu-title" title="Qiskit SDK">Qiskit SDK</span>
+            ${navSubmenuChevron}
+				</button></li>
+			<li class="cds--side-nav__item"><button aria-expanded="false" class="cds--side-nav__submenu section__button"
+					type="button" data-href="/api/qiskit-ibm-runtime"><span class="cds--side-nav__submenu-title"
+						title="Qiskit Runtime IBM Client">Qiskit
+						Runtime IBM Client</span>
+            ${navSubmenuChevron}
+				</button></li>
+			<li class="cds--side-nav__item"><button aria-expanded="false" class="cds--side-nav__submenu section__button"
+					type="button" data-href="/api/qiskit-transpiler-service"><span class="cds--side-nav__submenu-title"
+						title="Qiskit Transpiler Service Client">Qiskit Transpiler Service Client</span>
+            ${navSubmenuChevron}
+				</button></li>
+			<li class="cds--side-nav__item"><button aria-expanded="false" class="cds--side-nav__submenu section__button"
+					type="button" data-href="/api/qiskit-ibm-provider"><span class="cds--side-nav__submenu-title"
+						title="Qiskit IBM Provider (deprecated)">Qiskit IBM Provider (deprecated)</span>
+            ${navSubmenuChevron}
+				</button></li>
+			<li class="cds--side-nav__item"><button aria-expanded="false" class="cds--side-nav__submenu section__button"
+					type="button" data-href="/api/migration-guides"><span class="cds--side-nav__submenu-title"
+						title="Migration guides">Migration
+						guides</span>
+            ${navSubmenuChevron}
+				</button></li>
+		</ul>
+	</div>`;
 
 const insetBgElement = `
 <div
@@ -281,6 +192,8 @@ const crossPath = `
   d="M17.4141 16L24 9.4141 22.5859 8 16 14.5859 9.4143 8 8 9.4141 14.5859 16 8 22.5859 9.4143 24 16 17.4141 22.5859 24 24 22.5859 17.4141 16z"
 ></path>`;
 
+const navDivider = `<li class="cds--side-nav__divider border-t border-border-subtle-00"><hr></li>`;
+
 async function getTreeFromQuery(href) {
   const url = `/api/toc${href}`;
   const response = await fetch(url, {
@@ -322,7 +235,7 @@ function setActiveLink() {
     link_home.classList.remove('cds--side-nav__link--current');
   }
 
-  const loc = location.pathname.split('/');
+  /*const loc = location.pathname.split('/');
   let href = loc[1] === 'api' ? `/api/${loc[2]}` : `/${loc[1]}`;
   if (loc[3]) {
     if (!isNaN(parseFloat(loc[3])) || loc[3] === 'dev') {
@@ -336,7 +249,7 @@ function setActiveLink() {
     item.parentElement.classList.add('cds--side-nav__item--active');
   } else if (loc[1] === '') {
     link_home.classList.add('cds--side-nav__link--current');
-  }
+  }*/
 }
 
 // Checking top-left menu is opened
@@ -386,67 +299,6 @@ function closeTopLeftMenu(event) {
   }
 }
 
-function createSubmenuLiElement(children, url, title, type) {
-  const isExpanded = type === 'default';
-  const createNavItemLiElement = (className, child) =>
-    `<li class="${className}">${child}</li>`;
-  const createNestedLink = (url, title, paddingLeft) =>
-    `<a class="cds--side-nav__link${
-      location.pathname === url ? ' cds--side-nav__link--current' : ''
-    }" style="padding-left: ${paddingLeft}px;" href="${url}">
-    <span class="cds--side-nav__link-text">${title}</span></a>`;
-  if (children.length === 1) {
-    return createNavItemLiElement(
-      'cds--side-nav__item',
-      createNestedLink(url, title, 16)
-    );
-  }
-  const createButtonNavSubmenu = (isExpanded, paddingLeft, title, children) => {
-    return `<button aria-expanded="${isExpanded}"
-    class="cds--side-nav__submenu expanding-button" type="button" style="padding-left: ${paddingLeft}px;">
-      <span class="cds--side-nav__submenu-title" title="${title}">${title}</span>
-      ${expandedNavSubMenuChevron}
-    </button>
-    ${children}`;
-  };
-  const createUlSideMenu = (isExpanded, children) =>
-    `<ul class="cds--side-nav__menu${
-      isExpanded ? '' : ' hidden'
-    }">${children}</ul>`;
-
-  const sideMenuLiElements = children.map((item) => {
-    if (item.url !== undefined) {
-      return createNavItemLiElement(
-        'cds--side-nav__menu-item',
-        createNestedLink(item.url, item.title, 32)
-      );
-    } else {
-      const nestedElements = item.children.map((element) =>
-        createNavItemLiElement(
-          'cds--side-nav__item',
-          createNestedLink(element.url, element.title, 48)
-        )
-      );
-      return createNavItemLiElement(
-        'cds--side-nav__menu-item',
-        createButtonNavSubmenu(
-          isExpanded,
-          32,
-          item.title,
-          createUlSideMenu(isExpanded, nestedElements.join(''))
-        )
-      );
-    }
-  });
-  const navSubmenu = createButtonNavSubmenu(
-    isExpanded,
-    16,
-    title,
-    createUlSideMenu(isExpanded, sideMenuLiElements.join(''))
-  );
-  return createNavItemLiElement('cds--side-nav__item', navSubmenu);
-}
-
 function returnToSideMenu() {
   const sideNavigation = document.querySelector(
     '[aria-label="Side Navigation"]'
@@ -488,11 +340,18 @@ function insertDropdownElement(pack) {
   const versions = pack.versions.sort(compareVersions);
   const selectVersionInput =
     currentSideNavElement.querySelector('.cds--select-input');
+  const latestVersion = versions[0].version.match('dev')
+    ? versions[1].version
+    : versions[0].version;
   versions.forEach((item) => {
     selectVersionInput.insertAdjacentHTML(
       'beforeend',
       `<option class="cds--select-option" value="${item.version}"
-                  data-path="${item.path}">${item.version}</option>`
+                  data-path="${item.path}">${
+        item.version !== latestVersion
+          ? item.version
+          : item.version + ' (latest)'
+      }</option>`
     );
   });
   selectVersionInput.value = pack.version;
@@ -507,14 +366,23 @@ function insertDropdownElement(pack) {
   });
 }
 
-function insertSubmenuElements() {
+function expandSubMenu() {
+  this.setAttribute(
+    'aria-expanded',
+    !JSON.parse(this.getAttribute('aria-expanded'))
+  );
+}
+
+function insertSecondLevelSubmenu() {
   const sideNavigation = document.querySelector(
     '[aria-label="Side Navigation"]'
   );
   if (!sideNavigation) {
     return;
   }
+
   const clickedButtonLink = sideNavigation.querySelector('.selected-section');
+
   const currentSideNavElement = clickedButtonLink.parentElement;
   currentSideNavElement.insertAdjacentHTML('beforeend', insetBgElement);
   currentSideNavElement.insertAdjacentHTML('beforeend', submenuElement);
@@ -523,41 +391,167 @@ function insertSubmenuElements() {
   currentSideNavElement
     .querySelector('.all-documentation')
     .addEventListener('click', returnToSideMenu);
+  const submenuList = document.querySelector('.submenu-list');
+
+  function createGuidesLinks(child, depth) {
+    if (Array.isArray(child)) {
+      return `<ul class="cds--side-nav__menu">
+    ${child
+      .map((item) => {
+        if (Object.hasOwn(item, 'url')) {
+          return `<li class="cds--side-nav__item">
+            <a
+              class="cds--side-nav__link ![block-size:auto] !py-[6px] [&amp;>span]:break-words [&amp;>span]:!whitespace-normal"
+              style="padding-left: ${16 * depth}px; font-weight: normal;"
+              href="${item.url}">
+                <span class="cds--side-nav__link-text">${item.title}</span>
+            </a>
+          </li>`;
+        } else if (Object.hasOwn(item, 'children')) {
+          return `<li class="cds--side-nav__item [&>.cds--side-nav\\_\\_submenu]:![block-size:auto] [&>.cds--side-nav\\_\\_submenu]:[min-block-size:2rem] [&>.cds--side-nav\\_\\_submenu]:flex [&>.cds--side-nav\\_\\_submenu]:gap-4 [&>.cds--side-nav\\_\\_submenu]:py-[6px] [&>.cds--side-nav\\_\\_submenu]:items-start [&>.cds--side-nav\\_\\_submenu>span]:break-words [&>.cds--side-nav\\_\\_submenu>span]:!whitespace-normal [&>.cds--side-nav\\_\\_submenu>.cds--side-nav\\_\\_icon]:items-baseline">
+            <button
+              aria-expanded="false"
+              class="cds--side-nav__submenu"
+              type="button"
+              style="padding-left: ${16 * depth}px; font-weight: normal;"
+            >
+              <span class="cds--side-nav__submenu-title" title="${item.title}">
+                ${item.title}
+              </span>${expandedNavSubMenuChevron}</button>
+              ${createGuidesLinks(item.children, depth + 1)}
+          </li>`;
+        }
+      })
+      .join('')}
+    </ul>`;
+    } else if (Object.hasOwn(child, 'children')) {
+      return `<ul class="cds--side-nav__menu">
+    ${child.children
+      .map((item) => {
+        if (Object.hasOwn(item, 'url')) {
+          return `<li class="cds--side-nav__item">
+            <a
+              class="cds--side-nav__link ![block-size:auto] !py-[6px] [&amp;>span]:break-words [&amp;>span]:!whitespace-normal"
+              style="padding-left: ${16 * depth}px; font-weight: normal;"
+              href="${item.url}">
+                <span class="cds--side-nav__link-text">${item.title}</span>
+            </a>
+          </li>`;
+        } else if (Object.hasOwn(item, 'children')) {
+          return `<li class="cds--side-nav__item [&>.cds--side-nav\\_\\_submenu]:![block-size:auto] [&>.cds--side-nav\\_\\_submenu]:[min-block-size:2rem] [&>.cds--side-nav\\_\\_submenu]:flex [&>.cds--side-nav\\_\\_submenu]:gap-4 [&>.cds--side-nav\\_\\_submenu]:py-[6px] [&>.cds--side-nav\\_\\_submenu]:items-start [&>.cds--side-nav\\_\\_submenu>span]:break-words [&>.cds--side-nav\\_\\_submenu>span]:!whitespace-normal [&>.cds--side-nav\\_\\_submenu>.cds--side-nav\\_\\_icon]:items-baseline">
+            <button
+              aria-expanded="false"
+              class="cds--side-nav__submenu"
+              type="button"
+              style="padding-left: ${16 * depth}px; font-weight: normal;"
+            >
+              <span class="cds--side-nav__submenu-title" title="${item.title}">
+                ${item.title}
+              </span>${expandedNavSubMenuChevron}</button>
+              ${createGuidesLinks(item.children, depth + 1)}
+          </li>`;
+        }
+      })
+      .join('')}
+    </ul>`;
+    }
+  }
+  function createAPILinks(child, depth) {
+    if (Array.isArray(child)) {
+      return `<ul class="cds--side-nav__menu">
+      ${child
+        .map((item) => {
+          if (Object.hasOwn(item, 'url')) {
+            return `<li class="cds--side-nav__item">
+              <a
+                class="cds--side-nav__link ![block-size:auto] !py-[6px] [&>span]:break-words [&>span]:!whitespace-normal"
+                style="padding-left: ${16 * depth}px;"
+                href="${item.url}">
+                  <span class="cds--side-nav__link-text">${item.title}</span>
+              </a>
+            </li>`;
+          } else if (Object.hasOwn(item, 'children')) {
+            return `<li class="cds--side-nav__item [&>.cds--side-nav\\_\\_submenu]:![block-size:auto] [&>.cds--side-nav\\_\\_submenu]:[min-block-size:2rem] [&>.cds--side-nav\\_\\_submenu]:flex [&>.cds--side-nav\\_\\_submenu]:gap-4 [&>.cds--side-nav\\_\\_submenu]:py-[6px] [&>.cds--side-nav\\_\\_submenu]:items-start [&>.cds--side-nav\\_\\_submenu>span]:break-words [&>.cds--side-nav\\_\\_submenu>span]:!whitespace-normal [&>.cds--side-nav\\_\\_submenu>.cds--side-nav\\_\\_icon]:items-baseline">
+              <button
+                aria-expanded="false"
+                class="cds--side-nav__submenu"
+                type="button"
+                style="padding-left: ${16 * depth}px; font-weight: normal"
+              >
+                <span class="cds--side-nav__submenu-title" title="${
+                  item.title
+                }">
+                  ${item.title}
+                </span>${expandedNavSubMenuChevron}</button>
+                ${createAPILinks(item.children, depth + 1)}
+            </li>`;
+          }
+        })
+        .join('')}
+      </ul>`;
+    } else if (Object.hasOwn(child, 'url')) {
+      return `<li class="cds--side-nav__item">
+        <a
+          class="cds--side-nav__link ![block-size:auto] !py-[6px] [&>span]:break-words [&>span]:!whitespace-normal"
+          style="padding-left: ${16 * depth}px;"
+          href="${child.url}">
+            <span class="cds--side-nav__link-text">${child.title}</span>
+        </a>
+      </li>`;
+    } else if (Object.hasOwn(child, 'children')) {
+      return `<li class="cds--side-nav__item [&>.cds--side-nav\\_\\_submenu]:![block-size:auto] [&>.cds--side-nav\\_\\_submenu]:[min-block-size:2rem] [&>.cds--side-nav\\_\\_submenu]:flex [&>.cds--side-nav\\_\\_submenu]:gap-4 [&>.cds--side-nav\\_\\_submenu]:py-[6px] [&>.cds--side-nav\\_\\_submenu]:items-start [&>.cds--side-nav\\_\\_submenu>span]:break-words [&>.cds--side-nav\\_\\_submenu>span]:!whitespace-normal [&>.cds--side-nav\\_\\_submenu>.cds--side-nav\\_\\_icon]:items-baseline">
+        <button
+          aria-expanded="false"
+          class="cds--side-nav__submenu"
+          type="button"
+          style="padding-left: ${16 * depth}px;"
+        >
+          <span class="cds--side-nav__submenu-title" title="${child.title}">
+            ${child.title}
+          </span>${expandedNavSubMenuChevron}</button>
+          ${createAPILinks(child.children, depth + 1)}
+      </li>`;
+    }
+  }
   getTreeFromQuery(clickedButtonLink.dataset.href).then((data) => {
     if (data.package) {
       insertDropdownElement(data.package);
     }
-    data.toc.children.forEach((item) => {
-      currentSideNavElement
-        .querySelector('.submenu-list')
-        .insertAdjacentHTML(
+    if (data.path.match('/guides')) {
+      for (let child of data.toc.children) {
+        submenuList.insertAdjacentHTML(
           'beforeend',
-          createSubmenuLiElement(
-            item.children === undefined ? [[]] : item.children,
-            item.url === undefined ? '' : item.url,
-            item.title,
-            data.type
-          )
+          `<li
+            class="cds--side-nav__item [&amp;>.cds--side-nav\\_\\_submenu]:![block-size:auto] [&amp;>.cds--side-nav\\_\\_submenu]:[min-block-size:2rem] [&amp;>.cds--side-nav\\_\\_submenu]:flex [&amp;>.cds--side-nav\\_\\_submenu]:gap-4 [&amp;>.cds--side-nav\\_\\_submenu]:py-[6px] [&amp;>.cds--side-nav\\_\\_submenu]:items-start [&amp;>.cds--side-nav\\_\\_submenu>span]:break-words [&amp;>.cds--side-nav\\_\\_submenu>span]:!whitespace-normal [&amp;>.cds--side-nav\\_\\_submenu>.cds--side-nav\\_\\_icon]:items-baseline">
+            <p
+              aria-expanded="true"
+              class="cds--side-nav__submenu pointer-events-none"
+              style="padding-left: 16px;">
+                <span
+                  class="cds--side-nav__submenu-title"
+                    title="${child.title}">${child.title}</span>
+            </p>
+            ${createGuidesLinks(child, 1)}
+          </li>`
         );
-    });
-    Array.from(document.querySelectorAll('.expanding-button')).forEach(
-      (btn) => {
-        btn.addEventListener('click', () => {
-          const expanded = btn.getAttribute('aria-expanded') === 'true';
-          btn.setAttribute('aria-expanded', !expanded);
-          btn.nextElementSibling.classList.toggle('hidden', expanded);
-        });
-        if (
-          btn.nextElementSibling.querySelector('.cds--side-nav__link--current')
-        ) {
-          btn.setAttribute('aria-expanded', true);
-          btn.nextElementSibling.classList.remove('hidden');
-        }
       }
-    );
+    } else if (data.path.match('/api')) {
+      for (let child of data.toc.children) {
+        submenuList.insertAdjacentHTML('beforeend', createAPILinks(child, 1));
+      }
+    }
+    Array.from(
+      submenuList.querySelectorAll('.cds--side-nav__submenu[type="button"]')
+    ).forEach((button) => button.addEventListener('click', expandSubMenu));
+    if (data.path.match('/guides')) {
+      Array.from(submenuList.children).forEach((child, index) => {
+        if (index < data.toc.children.length - 1) {
+          console.log(child.insertAdjacentHTML('afterend', navDivider));
+        }
+      })
+    }
   });
 }
-
 function insertSubmenu() {
   const sideNavigation = document.querySelector(
     '[aria-label="Side Navigation"]'
@@ -574,7 +568,7 @@ function insertSubmenu() {
   const expanded = clickedButtonLink.getAttribute('aria-expanded') === 'true';
   clickedButtonLink.setAttribute('aria-expanded', !expanded);
   if (!sideNavigation.querySelector('.inset-bg-element')) {
-    insertSubmenuElements();
+    insertSecondLevelSubmenu();
   }
 }
 
