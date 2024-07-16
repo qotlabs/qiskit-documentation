@@ -230,12 +230,11 @@ function setActiveLink() {
   if (item) {
     item.classList.remove('cds--side-nav__item--active');
   }
-  const link_home = sideNavigation.querySelector('.cds--side-nav__link');
-  if (link_home.classList.contains('cds--side-nav__link--current')) {
-    link_home.classList.remove('cds--side-nav__link--current');
+  const link_current = sideNavigation.querySelector('.cds--side-nav__link');
+  if (link_current.classList.contains('cds--side-nav__link--current')) {
+    link_current.classList.remove('cds--side-nav__link--current');
   }
-
-  /*const loc = location.pathname.split('/');
+  const loc = location.pathname.split('/');
   let href = loc[1] === 'api' ? `/api/${loc[2]}` : `/${loc[1]}`;
   if (loc[3]) {
     if (!isNaN(parseFloat(loc[3])) || loc[3] === 'dev') {
@@ -245,11 +244,12 @@ function setActiveLink() {
     }
   }
   item = sideNavigation.querySelector(`button[data-href="${href}"]`);
+
   if (item) {
     item.parentElement.classList.add('cds--side-nav__item--active');
   } else if (loc[1] === '') {
-    link_home.classList.add('cds--side-nav__link--current');
-  }*/
+    link_current.classList.add('cds--side-nav__link--current');
+  }
 }
 
 // Checking top-left menu is opened
@@ -393,7 +393,7 @@ function insertSecondLevelSubmenu() {
     .addEventListener('click', returnToSideMenu);
   const submenuList = document.querySelector('.submenu-list');
 
-  function createGuidesLinks(child, depth) {
+  function createGuidesLinks(child, level) {
     if (Array.isArray(child)) {
       return `<ul class="cds--side-nav__menu">
     ${child
@@ -401,9 +401,11 @@ function insertSecondLevelSubmenu() {
         if (Object.hasOwn(item, 'url')) {
           return `<li class="cds--side-nav__item">
             <a
-              class="cds--side-nav__link ![block-size:auto] !py-[6px] [&amp;>span]:break-words [&amp;>span]:!whitespace-normal"
-              style="padding-left: ${16 * depth}px; font-weight: normal;"
-              href="${item.url}">
+              class="cds--side-nav__link ${location.pathname === item.url ? 'cds--side-nav__link--current' : ''} ![block-size:auto] !py-[6px] [&amp;>span]:break-words [&amp;>span]:!whitespace-normal"
+              style="padding-left: ${16 * level}px; font-weight: normal;"
+              href="${item.url}"
+              ${location.pathname === item.url ? 'id="TocTreeElement__active"' : ''}
+              >
                 <span class="cds--side-nav__link-text">${item.title}</span>
             </a>
           </li>`;
@@ -413,12 +415,12 @@ function insertSecondLevelSubmenu() {
               aria-expanded="false"
               class="cds--side-nav__submenu"
               type="button"
-              style="padding-left: ${16 * depth}px; font-weight: normal;"
+              style="padding-left: ${16 * level}px; font-weight: normal;"
             >
               <span class="cds--side-nav__submenu-title" title="${item.title}">
                 ${item.title}
               </span>${expandedNavSubMenuChevron}</button>
-              ${createGuidesLinks(item.children, depth + 1)}
+              ${createGuidesLinks(item.children, level + 1)}
           </li>`;
         }
       })
@@ -431,9 +433,11 @@ function insertSecondLevelSubmenu() {
         if (Object.hasOwn(item, 'url')) {
           return `<li class="cds--side-nav__item">
             <a
-              class="cds--side-nav__link ![block-size:auto] !py-[6px] [&amp;>span]:break-words [&amp;>span]:!whitespace-normal"
-              style="padding-left: ${16 * depth}px; font-weight: normal;"
-              href="${item.url}">
+              class="cds--side-nav__link ${location.pathname === item.url ? 'cds--side-nav__link--current' : ''} ![block-size:auto] !py-[6px] [&amp;>span]:break-words [&amp;>span]:!whitespace-normal"
+              style="padding-left: ${16 * level}px; font-weight: normal;"
+              href="${item.url}"
+              ${location.pathname === item.url ? 'id="TocTreeElement__active"' : ''}
+              >
                 <span class="cds--side-nav__link-text">${item.title}</span>
             </a>
           </li>`;
@@ -443,12 +447,12 @@ function insertSecondLevelSubmenu() {
               aria-expanded="false"
               class="cds--side-nav__submenu"
               type="button"
-              style="padding-left: ${16 * depth}px; font-weight: normal;"
+              style="padding-left: ${16 * level}px; font-weight: normal;"
             >
               <span class="cds--side-nav__submenu-title" title="${item.title}">
                 ${item.title}
               </span>${expandedNavSubMenuChevron}</button>
-              ${createGuidesLinks(item.children, depth + 1)}
+              ${createGuidesLinks(item.children, level + 1)}
           </li>`;
         }
       })
@@ -456,7 +460,8 @@ function insertSecondLevelSubmenu() {
     </ul>`;
     }
   }
-  function createAPILinks(child, depth) {
+  function createAPILinks(child, level) {
+
     if (Array.isArray(child)) {
       return `<ul class="cds--side-nav__menu">
       ${child
@@ -464,9 +469,11 @@ function insertSecondLevelSubmenu() {
           if (Object.hasOwn(item, 'url')) {
             return `<li class="cds--side-nav__item">
               <a
-                class="cds--side-nav__link ![block-size:auto] !py-[6px] [&>span]:break-words [&>span]:!whitespace-normal"
-                style="padding-left: ${16 * depth}px;"
-                href="${item.url}">
+                class="cds--side-nav__link ${location.pathname === item.url ? 'cds--side-nav__link--current' : ''} ![block-size:auto] !py-[6px] [&>span]:break-words [&>span]:!whitespace-normal"
+                style="padding-left: ${16 * level}px;"
+                href="${item.url}"
+                ${location.pathname === item.url ? 'id="TocTreeElement__active"' : ''}
+                >
                   <span class="cds--side-nav__link-text">${item.title}</span>
               </a>
             </li>`;
@@ -476,14 +483,14 @@ function insertSecondLevelSubmenu() {
                 aria-expanded="false"
                 class="cds--side-nav__submenu"
                 type="button"
-                style="padding-left: ${16 * depth}px; font-weight: normal"
+                style="padding-left: ${16 * level}px; font-weight: normal"
               >
                 <span class="cds--side-nav__submenu-title" title="${
                   item.title
                 }">
                   ${item.title}
                 </span>${expandedNavSubMenuChevron}</button>
-                ${createAPILinks(item.children, depth + 1)}
+                ${createAPILinks(item.children, level + 1)}
             </li>`;
           }
         })
@@ -492,9 +499,11 @@ function insertSecondLevelSubmenu() {
     } else if (Object.hasOwn(child, 'url')) {
       return `<li class="cds--side-nav__item">
         <a
-          class="cds--side-nav__link ![block-size:auto] !py-[6px] [&>span]:break-words [&>span]:!whitespace-normal"
-          style="padding-left: ${16 * depth}px;"
-          href="${child.url}">
+          class="cds--side-nav__link ${location.pathname === child.url ? 'cds--side-nav__link--current' : ''} ![block-size:auto] !py-[6px] [&>span]:break-words [&>span]:!whitespace-normal"
+          style="padding-left: ${16 * level}px;"
+          href="${child.url}"
+          ${location.pathname === child.url ? 'id="TocTreeElement__active"' : ''}
+          >
             <span class="cds--side-nav__link-text">${child.title}</span>
         </a>
       </li>`;
@@ -504,12 +513,12 @@ function insertSecondLevelSubmenu() {
           aria-expanded="false"
           class="cds--side-nav__submenu"
           type="button"
-          style="padding-left: ${16 * depth}px;"
+          style="padding-left: ${16 * level}px;"
         >
           <span class="cds--side-nav__submenu-title" title="${child.title}">
             ${child.title}
           </span>${expandedNavSubMenuChevron}</button>
-          ${createAPILinks(child.children, depth + 1)}
+          ${createAPILinks(child.children, level + 1)}
       </li>`;
     }
   }
