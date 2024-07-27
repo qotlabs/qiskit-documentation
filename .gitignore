@@ -1,8 +1,12 @@
 *.swp
 *.out
+*.body
+*.meta
+*.rsc
+app/packages/preview/.next/cache/
+app/packages/preview/.next/server/app/**/*.html
 app/packages/preview/.next/static/chunks/custom.js
 app/packages/preview/public/sitemap.xml
 node_modules/
-app/packages/preview/.next/cache/
 search/index/
 __pycache__/
