@@ -31,12 +31,13 @@ class DocModule(Enum):
 
 class DocSection(Enum):
     """Documentation section."""
-    MIGRATION_GUIDES = 1
-    QISKIT = 2
-    QISKIT_IBM_PROVIDER = 3
-    QISKIT_IBM_RUNTIME = 4
-    QISKIT_TRANSPILER_SERVICE = 5
+    QISKIT = 1
+    QISKIT_IBM_PROVIDER = 2
+    QISKIT_IBM_RUNTIME = 3
+    QISKIT_TRANSPILER_SERVICE = 4
     GUIDES = 10
+    MIGRATION_GUIDES = 20
+    OPEN_SOURCE = 30
 
     @staticmethod
     def from_str(s: str):
