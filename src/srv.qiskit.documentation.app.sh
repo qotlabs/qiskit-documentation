@@ -29,6 +29,7 @@ profile @{QISKIT_REPO}/app.sh {
     owner @{QISKIT_REPO}/app/packages/** r,
     owner @{QISKIT_REPO}/app/packages/preview/.next/cache/ w,
     owner @{QISKIT_REPO}/app/packages/preview/.next/cache/** w,
+    owner @{QISKIT_REPO}/app/packages/preview/.next/server/app/** w,
     owner @{QISKIT_REPO}/docs/docs/ r,
     owner @{QISKIT_REPO}/docs/docs/** r,
     owner @{QISKIT_REPO}/docs/public/** r,
