@@ -1,6 +1,6 @@
 {
   "name": "@quantum/iqp-channel-docs",
-  "version": "0.1.616",
+  "version": "0.1.667",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -9,13 +9,12 @@
     "dev": "turbo run dev --filter iqp-channel-docs-web",
     "build": "turbo run build",
     "lint": "turbo run lint",
-    "clean": "turbon run clean",
+    "clean": "turbo run clean",
     "test": "turbo run test"
   },
   "dependencies": {
     "dotenv-cli": "^7.1.0",
     "lint-staged": "^13.2.1",
-    "sharp": "^0.33.3",
     "turbo": "^1.10.14",
     "yorkie": "^2.0.0"
   },

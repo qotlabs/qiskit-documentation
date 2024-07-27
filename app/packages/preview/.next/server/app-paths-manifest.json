@@ -1,8 +1,8 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/api/toc/[[...tocPath]]/route": "app/api/toc/[[...tocPath]]/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/icon.svg/route": "app/icon.svg/route.js",
   "/(home)/page": "app/(home)/page.js",
+  "/api/toc/[[...tocPath]]/route": "app/api/toc/[[...tocPath]]/route.js",
   "/(docs)/[...slug]/page": "app/(docs)/[...slug]/page.js"
 }
