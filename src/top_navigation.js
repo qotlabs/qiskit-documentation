@@ -5,6 +5,7 @@
 
 // prettier-ignore
 const menuStruct = [
+  {title: 'Home', url: '/'},
   {title: 'Guides', url: '/guides'},
   {title: 'API reference', children: [
     {title: 'Qiskit SDK', url: '/api/qiskit'},
@@ -76,6 +77,10 @@ function createElement(html) {
   }
 }
 
+function matchSection(section, url) {
+  return section === url || url.startsWith(section + '/');
+}
+
 class Menu {
   static navHtml() {
     return `
@@ -131,7 +136,7 @@ class MenuItem {
   }
 
   highlight(url) {
-    if(url.startsWith(this.anchor.getAttribute('href'))) {
+    if(matchSection(this.anchor.getAttribute('href'), url)) {
       this.anchor.className = 'cds--header__menu-item cds--header__menu-item--current !text-text-primary';
     } else {
       this.anchor.className = 'cds--header__menu-item';
@@ -237,7 +242,7 @@ class Submenu {
   }
 
   highlight(url) {
-    const on = this.urls.some(thisUrl => url.startsWith(thisUrl));
+    const on = this.urls.some(thisUrl => matchSection(thisUrl, url));
     this.button.classList.toggle('text-text-primary', on);
     this.button.classList.toggle('text-text-secondary', !on);
     if (on) {
