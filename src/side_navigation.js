@@ -391,7 +391,7 @@ class CollapsibleItem {
   static rootHtml(title, level, padding) {
     return `
     <li
-      class="cds--side-nav__item [&>.cds--side-nav__submenu]:![block-size:auto] [&>.cds--side-nav__submenu]:[min-block-size:2rem] [&>.cds--side-nav__submenu]:flex [&>.cds--side-nav__submenu]:gap-4 [&>.cds--side-nav__submenu]:py-[6px] [&>.cds--side-nav__submenu]:items-start [&>.cds--side-nav__submenu>span]:break-words [&>.cds--side-nav__submenu>span]:!whitespace-normal [&>.cds--side-nav__submenu>.cds--side-nav__icon]:items-baseline"
+      class="cds--side-nav__item [&>.cds--side-nav\\\\_\\\\_submenu]:![block-size:auto] [&>.cds--side-nav\\\\_\\\\_submenu]:[min-block-size:2rem] [&>.cds--side-nav\\\\_\\\\_submenu]:flex [&>.cds--side-nav\\\\_\\\\_submenu]:gap-4 [&>.cds--side-nav\\\\_\\\\_submenu]:py-[6px] [&>.cds--side-nav\\\\_\\\\_submenu]:items-start [&>.cds--side-nav\\\\_\\\\_submenu>span]:break-words [&>.cds--side-nav\\\\_\\\\_submenu>span]:!whitespace-normal [&>.cds--side-nav\\\\_\\\\_submenu>.cds--side-nav\\\\_\\\\_icon]:items-baseline"
     >
       <button
         aria-expanded="false"
