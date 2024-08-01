@@ -47,7 +47,7 @@ const headerGlobalHtml = `
   </div>`;
 
 class Menu {
-  static navHtml() {
+  static rootHtml() {
     return `
     <nav class="cds--header__nav" aria-label="IBM Documentation">
       <ul
@@ -61,7 +61,7 @@ class Menu {
 
   constructor(menuStruct, parent) {
     this.parent = parent;
-    this.root = createElement(Menu.navHtml());
+    this.root = createElement(Menu.rootHtml());
     this.menu = this.root.querySelector('ul');
     this.items = [];
     for (const dict of menuStruct) {
@@ -80,7 +80,7 @@ class Menu {
 }
 
 class MenuItem {
-  static itemHtml(title, url) {
+  static rootHtml(title, url) {
     return `
     <li role="none">
       <a
@@ -96,7 +96,7 @@ class MenuItem {
 
   constructor(dict, parent) {
     this.parent = parent;
-    this.root = createElement(MenuItem.itemHtml(dict.title, dict.url));
+    this.root = createElement(MenuItem.rootHtml(dict.title, dict.url));
     this.anchor = this.root.querySelector('a');
     this.parent.appendChild(this.root);
   }

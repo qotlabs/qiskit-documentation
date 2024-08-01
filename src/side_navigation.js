@@ -138,14 +138,14 @@ class Menu {
     this.menu = this.panel.querySelector('ul');
 
     this.items = [];
-    for (const dict of menuStruct) {
-      if (dict.hasOwnProperty('children')) {
+    for (const toc of menuStruct) {
+      if (toc.hasOwnProperty('children')) {
         this.appendDivider();
-        for (const child of dict.children) {
+        for (const child of toc.children) {
           this.appendItem(child);
         }
       } else {
-        this.appendItem(dict);
+        this.appendItem(toc);
       }
     }
 
@@ -187,7 +187,7 @@ class Menu {
 }
 
 class MenuItem {
-  static itemHtml(title, url) {
+  static rootHtml(title, url) {
     return `
     <li class="cds--side-nav__item">
       <a
@@ -202,7 +202,7 @@ class MenuItem {
 
   constructor(dict, parent) {
     this.parent = parent;
-    this.root = createElement(MenuItem.itemHtml(dict.title, dict.url));
+    this.root = createElement(MenuItem.rootHtml(dict.title, dict.url));
     this.anchor = this.root.querySelector('a');
     this.parent.appendChild(this.root);
   }
@@ -429,7 +429,6 @@ class CollapsibleItem {
       CollapsibleItem.rootHtml(toc.title, level, padding)
     );
     this.button = this.root.querySelector('button');
-    this.svg = this.root.querySelector('svg');
     this.menu = this.root.querySelector('ul');
     itemFactory(toc, level + 1, padding + 16, this.menu);
     this.parent.appendChild(this.root);
