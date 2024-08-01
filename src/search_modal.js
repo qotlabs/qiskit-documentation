@@ -3,6 +3,8 @@
 // SPDX-FileContributor: Fedor Medvedev <fedor_medvedev42@rambler.ru>
 // SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
 
+import { parseUrl } from "./common";
+
 const modalElement = `
 <div
   role="presentation"
@@ -263,12 +265,9 @@ async function fetchSearchResults() {
   url += `&module=${searchData.module}`;
   url += `&offset=${offset}`;
 
-  const loc = location.pathname.split('/');
-  if (searchData.module === 'api' && loc[1] === 'api') {
-    const version = loc[3] === 'release-notes' ? loc[4] : loc[3];
-    if (version && version.match(/^(dev|[0-9]\.[0-9]+)$/)) {
-      url += `&version=${version}`;
-    }
+  if (searchData.module === 'api') {
+    const version = parseUrl(location.pathname).version;
+    if (version) url += `&version=${version}`;
   }
 
   controller = new AbortController();

@@ -11,7 +11,8 @@ import renderTopNavigation from './top_navigation.js';
 import renderSideNavigation from './side_navigation.js';
 import renderSearchModal from './search_modal.js';
 
-import {menu} from './top_navigation.js';
+import {topMenu} from './top_navigation.js';
+import {sideMenu} from './side_navigation.js';
 
 function render() {
   renderTopNavigation();
@@ -25,7 +26,8 @@ new MutationObserver(() => {
   const url = location.href;
   if (url !== lastUrl) {
     lastUrl = url;
-    menu.highlight();
+    topMenu.highlight();
+    sideMenu.highlight();
   }
 }).observe(document, {subtree: true, childList: true});
 

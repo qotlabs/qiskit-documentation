@@ -3,22 +3,7 @@
 // SPDX-FileContributor: Fedor Medvedev <fedor_medvedev42@rambler.ru>
 // SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
 
-// prettier-ignore
-const menuStruct = [
-  {title: 'Home', url: '/'},
-  {title: 'Guides', url: '/guides'},
-  {title: 'API reference', children: [
-    {title: 'Qiskit SDK', url: '/api/qiskit'},
-    {title: 'Qiskit Runtime IBM Client', url: '/api/qiskit-ibm-runtime'},
-    {title: 'Qiskit Transpiler Service Client', url: '/api/qiskit-transpiler-service'},
-    {title: 'Qiskit IBM Provider (deprecated)', url: '/api/qiskit-ibm-provider'},
-  ]},
-  {title: 'Additional resources', children: [
-    {title: 'Migration guides', url: '/migration-guides'},
-    {title: 'Open-source resources', url: '/open-source'},
-    {title: 'Responsible quantum computing', url: '/responsible-quantum-computing'},
-  ]},
-];
+import {uid, createElement, matchSection, menuStruct} from './common.js'
 
 const headerGlobalHtml = `
   <div class="lg:hidden" id="lg-hidden"></div>
@@ -61,26 +46,6 @@ const headerGlobalHtml = `
     </span>
   </div>`;
 
-let uid = (() => {
-  let id = 0;
-  return () => id++;
-})();
-
-function createElement(html) {
-  let t = document.createElement('template');
-  t.innerHTML = html;
-  const result = t.content.children;
-  if (result.length === 1) {
-    return result[0];
-  } else {
-    return result;
-  }
-}
-
-function matchSection(section, url) {
-  return section === url || url.startsWith(section + '/');
-}
-
 class Menu {
   static navHtml() {
     return `
@@ -94,13 +59,13 @@ class Menu {
     </nav>`;
   }
 
-  constructor(array, parent) {
+  constructor(menuStruct, parent) {
     this.parent = parent;
     this.root = createElement(Menu.navHtml());
     this.menu = this.root.querySelector('ul');
     this.items = [];
-    for (const dict of array) {
-      const ItemType = 'url' in dict ? MenuItem : Submenu;
+    for (const dict of menuStruct) {
+      const ItemType = dict.hasOwnProperty('children') ? Submenu : MenuItem;
       this.items.push(new ItemType(dict, this.menu));
     }
     this.parent.appendChild(this.root);
@@ -108,8 +73,9 @@ class Menu {
   }
 
   highlight() {
-    for (const item of this.items)
-      item.highlight(location.pathname);
+    for (const item of this.items) {
+      item.highlight();
+    }
   }
 }
 
@@ -135,7 +101,8 @@ class MenuItem {
     this.parent.appendChild(this.root);
   }
 
-  highlight(url) {
+  highlight() {
+    const url = location.pathname;
     if(matchSection(this.anchor.getAttribute('href'), url)) {
       this.anchor.className = 'cds--header__menu-item cds--header__menu-item--current !text-text-primary';
     } else {
@@ -241,7 +208,8 @@ class Submenu {
     }
   }
 
-  highlight(url) {
+  highlight() {
+    const url = location.pathname;
     const on = this.urls.some(thisUrl => matchSection(thisUrl, url));
     this.button.classList.toggle('text-text-primary', on);
     this.button.classList.toggle('text-text-secondary', !on);
@@ -254,10 +222,10 @@ class Submenu {
   }
 }
 
-export let menu;
+export let topMenu;
 
 export default function render() {
   const header = document.querySelector('.cds--header');
-  menu = new Menu(menuStruct, header);
+  topMenu = new Menu(menuStruct, header);
   header.insertAdjacentHTML('beforeend', headerGlobalHtml);
 }
