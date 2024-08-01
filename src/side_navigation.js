@@ -313,10 +313,6 @@ class Submenu {
     return this.button.getAttribute('aria-expanded') === 'true';
   }
 
-  set isOpened(open) {
-    this.button.setAttribute('aria-expanded', open);
-  }
-
   getVersionedUrl() {
     let url = this.url;
     if (matchSection(url, location.pathname)) {
@@ -342,7 +338,7 @@ class Submenu {
     if (open === undefined) open = !wasOpened;
     if (open === wasOpened) return;
 
-    this.isOpened = open;
+    this.button.setAttribute('aria-expanded', open);
     if (open) {
       this.root.appendChild(this.inset);
       this.root.appendChild(this.panel);

@@ -173,13 +173,12 @@ class Submenu {
 
   constructor(dict, parent) {
     const id = uid();
+    this.highlighted = false;
     this.parent = parent;
     this.root = createElement(Submenu.rootHtml(dict.title, id));
     this.button = this.root.querySelector('button');
     this.menu = createElement(Submenu.menuHtml(id));
-    this.urls = [];
     for (const child of dict.children) {
-      this.urls.push(child.url);
       const item = createElement(Submenu.itemHtml(child.title, child.url));
       this.menu.appendChild(item);
     }
@@ -193,14 +192,19 @@ class Submenu {
     });
   }
 
+  get isOpened() {
+    return this.button.getAttribute('aria-expanded') === 'true';
+  }
+
   toggle(open) {
-    const wasOpened = this.button.getAttribute('aria-expanded') === 'true';
+    const wasOpened = this.isOpened;
     if (open === undefined) open = !wasOpened;
     if (open === wasOpened) return;
 
     this.button.setAttribute('aria-expanded', open);
     this.button.classList.toggle('bg-layer', open);
     this.button.classList.toggle('bg-background', !open);
+    this.highlightButton(this.highlighted & !open);
     if (open) {
       this.root.appendChild(this.menu);
     } else {
@@ -210,7 +214,27 @@ class Submenu {
 
   highlight() {
     const url = location.pathname;
-    const on = this.urls.some(thisUrl => matchSection(thisUrl, url));
+    let someOn = false;
+    for (const item of this.menu.children) {
+      const anchor = item.querySelector('a');
+      const on = matchSection(anchor.getAttribute('href'), url);
+      if (on) {
+        item.className = `relative after:absolute after:w-[3px] after:left-0
+        after:top-0 after:bg-border-interactive after:h-full`;
+      } else {
+        item.className = '';
+      }
+      anchor.classList.toggle('bg-layer-selected', on);
+      anchor.classList.toggle('text-text-primary', on);
+      anchor.classList.toggle('bg-layer', !on);
+      anchor.classList.toggle('text-text-secondary', !on);
+      someOn |= on;
+    }
+    this.highlightButton(someOn & !this.isOpened);
+    this.highlighted = someOn;
+  }
+
+  highlightButton(on) {
     this.button.classList.toggle('text-text-primary', on);
     this.button.classList.toggle('text-text-secondary', !on);
     if (on) {
