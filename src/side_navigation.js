@@ -9,7 +9,7 @@ import {
   fetchToc,
   uid,
   matchSection,
-  semverCompare,
+  versionCompare,
   parseUrl,
 } from './common';
 
@@ -344,16 +344,16 @@ class Submenu {
     this.createdTocForUrl = url;
   }
 
-  async toggle(open) {
+  toggle(open) {
     const wasOpened = this.isOpened;
     if (open === undefined) open = !wasOpened;
     if (open === wasOpened) return;
 
     this.button.setAttribute('aria-expanded', open);
     if (open) {
-      await this.createToc();
       this.root.appendChild(this.inset);
       this.root.appendChild(this.panel);
+      this.createToc();
     } else {
       this.inset.remove();
       this.panel.remove();
@@ -619,12 +619,18 @@ class VersionDropdown {
     this.select.innerHTML = '';
 
     const latestVersion = pack.versions[0].version;
-    pack.versions.sort((v1, v2) => semverCompare(v2.version, v1.version));
+    pack.versions.sort((v1, v2) => versionCompare(v2.version, v1.version));
+    let devVersion = true;
     for (const version of pack.versions) {
       const value = version.version;
       let title = 'v' + value;
-      if (value === latestVersion) title += ' (latest)';
-      if (value.endsWith('-dev')) title = title.replace('-dev', ' (dev)');
+      if (value === latestVersion) {
+        title += ' (latest)';
+        devVersion = false;
+      }
+      if (devVersion) {
+        title = title.replace(/(\-\D+)?$/, ' (dev)');
+      }
 
       const option = createElement(VersionDropdown.optionHtml(title, value));
       this.select.appendChild(option);

@@ -84,26 +84,28 @@ export let fetchToc = (() => {
 })();
 
 /**
- * Simplified comparison of semantic versions.
- * @param {string} v1 - the first semver string.
- * @param {string} v2 - the second semver string.
- * @returns Positive integer if v2 > v1, negative integer if v1 < v2, and zero
+ * Compare versions.
+ * @param {string} v1 - the first version string.
+ * @param {string} v2 - the second version string.
+ * @returns Positive integer if v1 > v2, negative integer if v1 < v2, and zero
  * if v1 = v2.
  *
- * The function assumes that semver strings are in the format:
- * "major.minor.patch-dev",
- * where "-dev" is optional.
+ * The function assumes that version strings are in the format:
+ * "major.minor.patch-suffix",
+ * where "suffix" and "-" are optional.
  */
-export function semverCompare(v1, v2) {
-  const regex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-(dev))?$/;
-  const [_1, major1, minor1, patch1, dev1] = v1.match(regex);
-  const [_2, major2, minor2, patch2, dev2] = v2.match(regex);
+export function versionCompare(v1, v2) {
+  const regex = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\-?(\D\w*)?$/;
+  let [_1, major1, minor1, patch1, suf1] = v1.match(regex);
+  let [_2, major2, minor2, patch2, suf2] = v2.match(regex);
+  suf1 = suf1 ?? '';
+  suf2 = suf2 ?? '';
   if (major1 !== major2) return major1 - major2;
   else if (minor1 !== minor2) return minor1 - minor2;
   else if (patch1 !== patch2) return patch1 - patch2;
-  else if (!dev1 && dev2) return -1;
-  else if (dev1 && !dev2) return 1;
-  else return 0;
+  // `localeCompare` gives the correct result since:
+  // '' < 'dev' , 'dev' < 'rc', 'rc1' < 'rc2', etc.
+  else return suf1.localeCompare(suf2);
 }
 
 /**
