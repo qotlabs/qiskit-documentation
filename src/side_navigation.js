@@ -200,9 +200,9 @@ class MenuItem {
     </li>`;
   }
 
-  constructor(dict, parent) {
+  constructor(toc, parent) {
     this.parent = parent;
-    this.root = createElement(MenuItem.rootHtml(dict.title, dict.url));
+    this.root = createElement(MenuItem.rootHtml(toc.title, toc.url));
     this.anchor = this.root.querySelector('a');
     this.parent.appendChild(this.root);
   }
@@ -293,20 +293,29 @@ class Submenu {
   }
 
   constructor(toc, parent) {
-    this.url = toc.url;
     this.parent = parent;
+    this.url = toc.url;
+    this.level = 0;
+    this.childPadding = 16;
+    this.items = new Map();
+
     this.root = createElement(Submenu.rootHtml(toc.title));
     this.button = this.root.querySelector('button');
     this.inset = createElement(Submenu.insetHtml());
     this.panel = createElement(Submenu.panelHtml(toc.title));
-    this.backButton = this.panel.querySelector('button');
+    const backButton = this.panel.querySelector('button');
     this.menu = this.panel.querySelector('ul');
     if (parseUrl(this.url).package) {
-      this.dropdown = new VersionDropdown(null, this.menu);
+      this.dropdown = new VersionDropdown(this.menu);
     }
+
     this.parent.appendChild(this.root);
     this.button.addEventListener('click', () => this.toggle());
-    this.backButton.addEventListener('click', () => this.toggle(false));
+    backButton.addEventListener('click', () => this.toggle(false));
+  }
+
+  appendChild(item) {
+    this.menu.appendChild(item);
   }
 
   get isOpened() {
@@ -329,7 +338,9 @@ class Submenu {
     const toc = await fetchToc(url);
     this.dropdown?.setPackage(toc.package);
     this.menu.innerHTML = '';
-    itemFactory(toc.toc, 1, 16, this.menu);
+    this.items.clear();
+    itemFactory(this, toc.toc.children, this.items);
+    this.highlight();
     this.createdTocForUrl = url;
   }
 
@@ -340,50 +351,79 @@ class Submenu {
 
     this.button.setAttribute('aria-expanded', open);
     if (open) {
+      await this.createToc();
       this.root.appendChild(this.inset);
       this.root.appendChild(this.panel);
-      await this.createToc();
     } else {
       this.inset.remove();
       this.panel.remove();
     }
-    this.highlight();
+    this.highlightButton();
   }
 
   highlight() {
-    const url = location.pathname;
-    const needsHighlight = !this.isOpened && matchSection(this.url, url);
-    this.root.classList.toggle('cds--side-nav__item--active', needsHighlight);
+    this.activeItem?.highlight(false);
+    this.activeItem = this.items.get(location.pathname);
+    if (this.activeItem) {
+      this.activeItem.highlight(true);
+      let parent = this.activeItem.parent;
+      while (parent !== this) {
+        parent.toggle(true);
+        parent = parent.parent;
+      }
+    }
+    this.highlightButton();
+  }
 
-    this.activeItem?.classList.remove('cds--side-nav__link--current');
-    this.activeItem = this.menu.querySelector(`a[href="${url}"]`);
-    this.activeItem?.classList.add('cds--side-nav__link--current');
+  highlightButton() {
+    const on = !this.isOpened && matchSection(this.url, location.pathname);
+    this.root.classList.toggle('cds--side-nav__item--active', on);
   }
 }
 
 /**
  * Construct submenu items according to the description in `toc`.
- * @param {Object} toc - table of contents object.
- * @param {int} level - level of child elements.
- * @param {int} padding - padding in pixels of child elements.
- * @param {Element} parent - parent element for appending childs.
+ * @param {Submenu | SubmenuItem} parent - parent of created items.
+ * @param {Array} toc - table of contents.
+ * @param {Map<string, SubmenuItem>} urlItemMap - map between URLs and created
+ * items.
  */
-function itemFactory(toc, level, padding, parent) {
-  for (const child of toc.children) {
-    const hasChildren = child.hasOwnProperty('children');
+function itemFactory(parent, toc, urlItemMap) {
+  for (const entry of toc) {
+    const hasChildren = entry.hasOwnProperty('children');
     // prettier-ignore
     const ItemType =
       !hasChildren      ? ChildlessItem :
-      child.collapsible ? CollapsibleItem :
+      entry.collapsible ? CollapsibleItem :
                           NonCollapsibleItem;
-    new ItemType(child, level, padding, parent);
+    const item = new ItemType(parent, entry, urlItemMap);
+    urlItemMap.set(entry.url, item);
   }
+}
+
+/**
+ * Base class for submenu items.
+ */
+class SubmenuItem {
+  constructor(parent, paddingIncrement = 16) {
+    this.parent = parent;
+    this.level = this.parent.level + 1;
+    this.childPadding = this.padding + paddingIncrement;
+  }
+
+  get padding() {
+    return this.parent.childPadding;
+  }
+
+  appendChild(child) {}
+
+  toggle(on) {}
 }
 
 /**
  * Collapsible item inside Submenu.
  */
-class CollapsibleItem {
+class CollapsibleItem extends SubmenuItem {
   static rootHtml(title, level, padding) {
     return `
     <li
@@ -418,17 +458,20 @@ class CollapsibleItem {
     </li>`;
   }
 
-  constructor(toc, level, padding, parent) {
-    this.parent = parent;
-    this.level = level;
+  constructor(parent, toc, urlItemMap) {
+    super(parent);
     this.root = createElement(
-      CollapsibleItem.rootHtml(toc.title, level, padding)
+      CollapsibleItem.rootHtml(toc.title, this.level, this.padding)
     );
     this.button = this.root.querySelector('button');
     this.menu = this.root.querySelector('ul');
-    itemFactory(toc, level + 1, padding + 16, this.menu);
+    itemFactory(this, toc.children, urlItemMap);
     this.parent.appendChild(this.root);
     this.button.addEventListener('click', () => this.toggle());
+  }
+
+  appendChild(item) {
+    this.menu.appendChild(item);
   }
 
   toggle(open) {
@@ -443,7 +486,7 @@ class CollapsibleItem {
 /**
  * Childless item (ordinary link) inside Submenu.
  */
-class ChildlessItem {
+class ChildlessItem extends SubmenuItem {
   static rootHtml(title, url, level, padding) {
     return `
     <li class="cds--side-nav__item">
@@ -458,20 +501,24 @@ class ChildlessItem {
     </li>`;
   }
 
-  constructor(toc, level, padding, parent) {
-    this.parent = parent;
-    this.level = level;
+  constructor(parent, toc) {
+    super(parent);
     this.root = createElement(
-      ChildlessItem.rootHtml(toc.title, toc.url, level, padding)
+      ChildlessItem.rootHtml(toc.title, toc.url, this.level, this.padding)
     );
+    this.anchor = this.root.querySelector('a');
     this.parent.appendChild(this.root);
+  }
+
+  highlight(on) {
+    this.anchor.classList.toggle('cds--side-nav__link--current', on);
   }
 }
 
 /**
  * Non-collapsible item inside Submenu.
  */
-class NonCollapsibleItem {
+class NonCollapsibleItem extends SubmenuItem {
   static rootHtml(title, level, padding) {
     return `
     <li
@@ -501,17 +548,20 @@ class NonCollapsibleItem {
     </li>`;
   }
 
-  constructor(toc, level, padding, parent) {
-    this.parent = parent;
-    this.level = level;
+  constructor(parent, toc, urlItemMap) {
+    super(parent, 0);
     this.root = createElement(
-      NonCollapsibleItem.rootHtml(toc.title, level, padding)
+      NonCollapsibleItem.rootHtml(toc.title, this.level, this.padding)
     );
     this.menu = this.root.querySelector('ul');
-    itemFactory(toc, level + 1, padding, this.menu);
+    itemFactory(this, toc.children, urlItemMap);
     this.divider = createElement(NonCollapsibleItem.dividerHtml());
     this.parent.appendChild(this.root);
     this.parent.appendChild(this.divider);
+  }
+
+  appendChild(item) {
+    this.menu.appendChild(item);
   }
 }
 
@@ -553,21 +603,20 @@ class VersionDropdown {
     </option>`;
   }
 
-  constructor(pack, parent) {
+  constructor(parent) {
     this.parent = parent;
     this.root = createElement(VersionDropdown.rootHtml(uid()));
     this.select = this.root.querySelector('select');
-    this.setPackage(pack);
+    this.paths = new Map();
     this.parent.insertAdjacentElement('beforebegin', this.root);
     this.select.addEventListener('change', (event) => {
-      location.href = this.paths[event.target.value];
+      location.href = this.paths.get(event.target.value);
     });
   }
 
   setPackage(pack) {
-    this.paths = {};
+    this.paths.clear();
     this.select.innerHTML = '';
-    if (!pack) return;
 
     const latestVersion = pack.versions[0].version;
     pack.versions.sort((v1, v2) => semverCompare(v2.version, v1.version));
@@ -579,7 +628,7 @@ class VersionDropdown {
 
       const option = createElement(VersionDropdown.optionHtml(title, value));
       this.select.appendChild(option);
-      this.paths[value] = version.path;
+      this.paths.set(value, version.path);
     }
     this.select.value = pack.version;
   }
