@@ -1,5 +1,7 @@
+import os
+
 # URL for accessing documentation (main application) without trailing "/":
-DOCUMENTATION_HOST = "https://example.com"
+DOCUMENTATION_HOST = os.environ.get("QISKIT_HOST", "https://example.com")
 
 # Path to the Xapian database in the filesystem:
 DATABASE_PATH = "./index"

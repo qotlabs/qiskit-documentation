@@ -2,7 +2,7 @@ const filehound = require('filehound');
 const fs = require('fs');
 const xml = require('xmlbuilder2');
 
-const URL_ORIGIN = 'https://example.com';
+const URL_ORIGIN = process.env.QISKIT_HOST ?? 'https://example.com';
 const DOCS_DIR = '../docs/docs';
 const SITEMAP_PATH = '../app/packages/preview/public/sitemap.xml';
 
@@ -11,7 +11,9 @@ function visitToc(toc, urls) {
     urls.push(toc.url);
   }
   if (toc.children) {
-    toc.children.forEach((child) => visitToc(child, urls));
+    for (const child of toc.children) {
+      visitToc(child, urls);
+    }
   }
 }
 
@@ -38,13 +40,15 @@ const tocs = filehound
   .paths(DOCS_DIR)
   .findSync();
 let urls = [''];
-tocs.forEach((toc) => visitToc(JSON.parse(fs.readFileSync(toc)), urls));
+for (const toc of tocs) {
+  visitToc(JSON.parse(fs.readFileSync(toc)), urls);
+}
 
 let sitemap = xml.create({encoding: 'UTF-8'}).ele('urlset', {
   xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9',
 });
 
-urls.forEach((url) => {
+for (const url of urls) {
   const path = urlToPath(DOCS_DIR, url);
   const date = fs.statSync(path).mtime;
 
@@ -52,6 +56,6 @@ urls.forEach((url) => {
   item.ele('loc').txt(`${URL_ORIGIN}${url}`);
   item.ele('lastmod').txt(date.toISOString());
   item.ele('changefreq').txt('weekly');
-});
+}
 
 fs.writeFileSync(SITEMAP_PATH, sitemap.end());

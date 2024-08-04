@@ -6,6 +6,7 @@ After=network.target
 Type=simple
 User=qiskit
 Group=qiskit
+Environment="QISKIT_HOST=https://example.com"
 WorkingDirectory=/srv/qiskit/documentation/search/
 ExecStart=/usr/bin/uvicorn \
 	--host 127.0.0.1 \
