@@ -9,7 +9,7 @@ description: Welcome page
 Welcome to the community-hosted documentation mirror for Qiskit – a popular open-source SDK for quantum computing. You can find recent Qiskit documentation similar to the [original IBM site](https://docs.quantum.ibm.com/) but without geo-blocking restrictions.
 
 ## Get started with Qiskit
-**Run the [Hello World](/guides/hello-world) program.**
+**Run the [Hello World](/guides/hello-world) program**
 1. [Map problem to quantum circuits and operators](/guides/map-problem-to-circuits)
 2. [Optimize for target hardware](/guides/optimize-for-hardware)
 3. [Execute on target hardware](/guides/execute-on-hardware)
