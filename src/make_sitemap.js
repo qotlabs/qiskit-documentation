@@ -30,7 +30,8 @@ function urlToPath(root, url) {
       return path;
     }
   }
-  throw new Error(`Cannot find path for URL ${url}`);
+  console.log(`Cannot find path for URL ${url}`);
+  return null;
 }
 
 const tocs = filehound
@@ -50,6 +51,7 @@ let sitemap = xml.create({encoding: 'UTF-8'}).ele('urlset', {
 
 for (const url of urls) {
   const path = urlToPath(DOCS_DIR, url);
+  if (path === null) continue;
   const date = fs.statSync(path).mtime;
 
   let item = sitemap.ele('url');

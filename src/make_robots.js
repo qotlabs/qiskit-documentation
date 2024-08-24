@@ -13,12 +13,11 @@ Disallow: /api/qiskit/0.*
 Disallow: /api/qiskit/1.*
 Disallow: /api/qiskit/dev
 
-Disallow: /api/qiskit-ibm-provider
-
 Disallow: /api/qiskit-ibm-runtime/0.*
 Disallow: /api/qiskit-ibm-runtime/dev
 
 Disallow: /api/qiskit-transpiler-service/0.*
+Disallow: /api/qiskit-transpiler-service/dev
 `;
 
 fs.writeFileSync(ROBOTS_PATH, robots)
