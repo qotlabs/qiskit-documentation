@@ -3,7 +3,13 @@
 // SPDX-FileContributor: Fedor Medvedev <fedor_medvedev42@rambler.ru>
 // SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
 
-import {uid, createElement, matchSection, menuStruct} from './common.js'
+import {
+  uid,
+  createElement,
+  matchSection,
+  menuStruct,
+  arrowIconHtml,
+} from './common.js';
 
 const headerGlobalHtml = `
   <div class="lg:hidden" id="lg-hidden"></div>
@@ -103,7 +109,7 @@ class MenuItem {
 
   highlight() {
     const url = location.pathname;
-    if(matchSection(this.anchor.getAttribute('href'), url)) {
+    if (matchSection(this.anchor.getAttribute('href'), url)) {
       this.anchor.className = 'cds--header__menu-item cds--header__menu-item--current !text-text-primary';
     } else {
       this.anchor.className = 'cds--header__menu-item';
@@ -158,6 +164,7 @@ class Submenu {
   // Clickable item in the menu
   static itemHtml(title, url) {
     const externalUrl = !url.startsWith('/');
+    // prettier-ignore
     return `
     <li class="" role="none">
       <a
@@ -169,27 +176,9 @@ class Submenu {
         ${externalUrl ? 'target="_blank" rel="noopener noreferrer nofollow"' : ''}
       >
         <span class="truncate">${title}</span>
-        ${externalUrl ? Submenu.arrowIconHtml() : ''}
+        ${externalUrl ? arrowIconHtml('inline ml-2 mt-[1%]') : ''}
       </a>
     </li>`;
-  }
-
-  static arrowIconHtml() {
-    return `
-    <svg
-      focusable="false"
-      preserveAspectRatio="xMidYMid meet"
-      fill="currentColor"
-      aria-label="(opens in a new tab)"
-      width="16"
-      height="16"
-      viewBox="0 0 32 32"
-      role="img"
-      class="inline ml-2 mt-[1%]"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M10 6L10 8 22.59 8 6 24.59 7.41 26 24 9.41 24 22 26 22 26 6 10 6z"></path>
-    </svg>`;
   }
 
   constructor(dict, parent) {

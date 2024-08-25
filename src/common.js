@@ -80,7 +80,7 @@ export let fetchToc = (() => {
     }
     tocs[url] = await response.json();
     return tocs[url];
-  }
+  };
 })();
 
 /**
@@ -125,4 +125,27 @@ export function parseUrl(url) {
     return {package: true, version: version};
   }
   return {package: true, version: undefined};
+}
+
+/**
+ * Return HTML of the arrow icon.
+ * @param {string} classList - classes for `<svg>` tag.
+ * @returns String containing HTML markup.
+ */
+export function arrowIconHtml(classList) {
+  return `
+  <svg
+    focusable="false"
+    preserveAspectRatio="xMidYMid meet"
+    fill="currentColor"
+    aria-label="(opens in a new tab)"
+    width="16"
+    height="16"
+    viewBox="0 0 32 32"
+    role="img"
+    class="${classList}"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M10 6L10 8 22.59 8 6 24.59 7.41 26 24 9.41 24 22 26 22 26 6 10 6z"></path>
+  </svg>`;
 }

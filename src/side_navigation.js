@@ -11,6 +11,7 @@ import {
   matchSection,
   versionCompare,
   parseUrl,
+  arrowIconHtml,
 } from './common';
 
 class HamburgerButton {
@@ -188,14 +189,18 @@ class Menu {
 
 class MenuItem {
   static rootHtml(title, url) {
+    const externalUrl = !url.startsWith('/');
+    // prettier-ignore
     return `
     <li class="cds--side-nav__item">
       <a
         class="cds--side-nav__link"
         tabindex="0"
         href="${url}"
+        ${externalUrl ? 'target="_blank" rel="noopener noreferrer nofollow"' : ''}
       >
         <span class="cds--side-nav__link-text">${title}</span>
+        ${externalUrl ? arrowIconHtml('inline ml-2 ml-8 text-text-placeholder shrink-0 mt-[1%]') : ''}
       </a>
     </li>`;
   }
@@ -488,15 +493,19 @@ class CollapsibleItem extends SubmenuItem {
  */
 class ChildlessItem extends SubmenuItem {
   static rootHtml(title, url, level, padding) {
+    const externalUrl = !url.startsWith('/');
+    // prettier-ignore
     return `
     <li class="cds--side-nav__item">
       <a
-        class="cds--side-nav__link ![block-size:auto] !py-[6px] [&>span]:break-words [&>span]:!whitespace-normal"
+        class="text-link-primary no-underline hover:underline inline cds--side-nav__link ![block-size:auto] !py-[6px] [&>span]:break-words [&>span]:!whitespace-normal hover:no-underline"
         style="padding-left: ${padding}px;
                ${level > 1 ? 'font-weight: normal' : ''}"
         href="${url}"
+        ${externalUrl ? 'target="_blank" rel="noopener noreferrer nofollow"' : ''}
       >
         <span class="cds--side-nav__link-text">${title}</span>
+        ${externalUrl ? arrowIconHtml('inline ml-2 ml-8 text-text-placeholder shrink-0 mt-[1%]') : ''}
       </a>
     </li>`;
   }
