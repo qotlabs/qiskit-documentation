@@ -157,18 +157,39 @@ class Submenu {
 
   // Clickable item in the menu
   static itemHtml(title, url) {
+    const externalUrl = !url.startsWith('/');
     return `
     <li class="" role="none">
       <a
         role="menuitem"
-        class="text-body-compact-01 flex items-center h-48 px-16 border-2 transition-colors hover:bg-background-hover hover:text-text-primary border-transparent focus-outline bg-layer text-text-secondary"
+        class="text-link-primary no-underline hover:underline inline text-body-compact-01 flex items-center h-48 px-16 border-2 transition-colors hover:bg-background-hover hover:text-text-primary border-transparent focus-outline bg-layer text-text-secondary hover:no-underline"
         tabindex="0"
         data-radix-collection-item=""
         href="${url}"
+        ${externalUrl ? 'target="_blank" rel="noopener noreferrer nofollow"' : ''}
       >
         <span class="truncate">${title}</span>
+        ${externalUrl ? Submenu.arrowIconHtml() : ''}
       </a>
     </li>`;
+  }
+
+  static arrowIconHtml() {
+    return `
+    <svg
+      focusable="false"
+      preserveAspectRatio="xMidYMid meet"
+      fill="currentColor"
+      aria-label="(opens in a new tab)"
+      width="16"
+      height="16"
+      viewBox="0 0 32 32"
+      role="img"
+      class="inline ml-2 mt-[1%]"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M10 6L10 8 22.59 8 6 24.59 7.41 26 24 9.41 24 22 26 22 26 6 10 6z"></path>
+    </svg>`;
   }
 
   constructor(dict, parent) {
