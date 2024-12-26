@@ -16,8 +16,8 @@ Disallow: /api/qiskit/dev
 Disallow: /api/qiskit-ibm-runtime/0.*
 Disallow: /api/qiskit-ibm-runtime/dev
 
-Disallow: /api/qiskit-transpiler-service/0.*
-Disallow: /api/qiskit-transpiler-service/dev
+Disallow: /api/qiskit-ibm-transpiler/0.*
+Disallow: /api/qiskit-ibm-transpiler/dev
 `;
 
 fs.writeFileSync(ROBOTS_PATH, robots)
