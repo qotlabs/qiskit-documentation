@@ -18,14 +18,15 @@ export const menuStruct = [
     {title: 'Guides', url: '/guides', toc: true},
     {title: 'API reference', children: [
       {title: 'Qiskit SDK', url: '/api/qiskit', toc: true},
-      {title: 'Qiskit Runtime IBM Client', url: '/api/qiskit-ibm-runtime', toc: true},
-      {title: 'Qiskit Transpiler Service Client', url: '/api/qiskit-transpiler-service', toc: true},
+      {title: 'Qiskit Runtime client', url: '/api/qiskit-ibm-runtime', toc: true},
+      {title: 'Qiskit Transpiler Service client', url: '/api/qiskit-ibm-transpiler', toc: true},
     ]},
     {title: 'Additional resources', children: [
       {title: 'Migration guides', url: '/migration-guides', toc: true},
       {title: 'Open-source resources', url: '/open-source', toc: true},
       {title: 'Responsible quantum computing', url: '/responsible-quantum-computing', toc: false},
       {title: 'Qiskit ecosystem', url: 'https://www.ibm.com/quantum/ecosystem', toc: false},
+      {title: 'Frequently asked questions', url: '/faq', toc: false},
     ]},
   ];
 

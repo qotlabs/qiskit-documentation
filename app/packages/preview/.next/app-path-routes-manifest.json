@@ -1,1 +1,1 @@
-{"/_not-found/page":"/_not-found","/favicon.ico/route":"/favicon.ico","/icon.svg/route":"/icon.svg","/(home)/page":"/","/api/toc/[[...tocPath]]/route":"/api/toc/[[...tocPath]]","/(docs)/[...slug]/page":"/[...slug]"}
+{"/_not-found/page":"/_not-found","/favicon.ico/route":"/favicon.ico","/icon.svg/route":"/icon.svg","/api/toc/[[...tocPath]]/route":"/api/toc/[[...tocPath]]","/(docs)/[...slug]/page":"/[...slug]","/(home)/page":"/"}

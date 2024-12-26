@@ -1,36 +1,5 @@
 {
-  "name": "@quantum/iqp-channel-docs",
-  "version": "0.1.667",
-  "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
-  "scripts": {
-    "dev": "turbo run dev --filter iqp-channel-docs-web",
-    "build": "turbo run build",
-    "lint": "turbo run lint",
-    "clean": "turbo run clean",
-    "test": "turbo run test"
-  },
   "dependencies": {
-    "dotenv-cli": "^7.1.0",
-    "lint-staged": "^13.2.1",
-    "turbo": "^1.10.14",
-    "yorkie": "^2.0.0"
-  },
-  "resolutions": {
-    "yaml": "^2.3.2",
-    "@types/react": "18.2.16",
-    "@types/react-dom": "18.2.7"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
-  },
-  "devDependencies": {
-    "@cspell/cspell-types": "^8.3.2",
-    "@cspell/dict-markdown": "^2.0.1",
-    "@cspell/dict-python": "^4.1.11",
-    "@cspell/dict-scientific-terms-us": "^3.0.1",
-    "@cspell/dict-software-terms": "^3.3.18"
+    "sharp": "^0.33.5"
   }
 }

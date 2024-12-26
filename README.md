@@ -19,9 +19,9 @@ Source code is largely based on the documentation-preview Docker image by IBM. S
 ```bash
 git submodule update --init
 ```
-2. Install Node.js 18.20.3 and Yarn 1.22.19. On Ubuntu, you can run the following command for this:
+2. Install Node.js 20.18.1 and Yarn 1.22.22. On Ubuntu, you can run the following command for this:
 ```bash
-sudo snap install node --channel 18/stable --classic
+sudo snap install node --channel 20/stable --classic
 ```
 3. Install Node.js modules in `app/` and `src/` directories:
 ```bash
