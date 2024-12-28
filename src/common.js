@@ -21,6 +21,14 @@ export const menuStruct = [
       {title: 'Qiskit Runtime client', url: '/api/qiskit-ibm-runtime', toc: true},
       {title: 'Qiskit Transpiler Service client', url: '/api/qiskit-ibm-transpiler', toc: true},
     ]},
+    {title: 'Qiskit addons', children: [
+      {title: 'Approximate quantum compilation (AQC-Tensor)', url: '/api/qiskit-addon-aqc-tensor', toc: true},
+      {title: 'Circuit cutting', url: '/api/qiskit-addon-cutting', toc: true},
+      {title: 'Operator backpropagation (OBP)', url: '/api/qiskit-addon-obp', toc: true},
+      {title: 'Multi-product formulas (MPF)', url: '/api/qiskit-addon-mpf', toc: true},
+      {title: 'Sample-based quantum diagonalization (SQD)', url: '/api/qiskit-addon-sqd', toc: true},
+      {title: 'Addon utilities', url: '/api/qiskit-addon-utils', toc: true}
+    ]},
     {title: 'Additional resources', children: [
       {title: 'Migration guides', url: '/migration-guides', toc: true},
       {title: 'Open-source resources', url: '/open-source', toc: true},
