@@ -25,7 +25,7 @@ sudo snap install node --channel 20/stable --classic
 ```
 3. Install Node.js modules in `app/` and `src/` directories:
 ```bash
-NODE_ENV=production yarn install --cwd app
+NODE_ENV=production yarn install --cwd app/packages/preview
 yarn install --cwd src
 ```
 4. Build sources from the `src/` directory by executing `yarn run build`.
