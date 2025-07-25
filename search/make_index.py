@@ -211,7 +211,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("-s, --source", dest="source",
                         metavar="DIR",
-                        default=path_relative_to_script("../docs/docs"),
+                        default=path_relative_to_script("../content"),
                         help="set source directory with documentation for indexing")
     parser.add_argument("-d, --destination", dest="destination",
                         metavar="DIR",

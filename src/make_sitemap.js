@@ -3,7 +3,7 @@ const fs = require('fs');
 const xml = require('xmlbuilder2');
 
 const URL_ORIGIN = process.env.QISKIT_HOST ?? 'https://example.com';
-const DOCS_DIR = '../docs/docs';
+const CONTENT_DIR = '../content';
 const SITEMAP_PATH = '../app/packages/preview/public/sitemap.xml';
 
 function visitToc(toc, urls) {
@@ -38,9 +38,9 @@ const tocs = filehound
   .create()
   .match('_toc.json')
   .discard(/dev|-new|[0-9]\.[0-9]+/)
-  .paths(DOCS_DIR)
+  .paths(CONTENT_DIR)
   .findSync();
-let urls = [''];
+let urls = ['/docs/', '/learning/'];
 for (const toc of tocs) {
   visitToc(JSON.parse(fs.readFileSync(toc)), urls);
 }
@@ -50,7 +50,7 @@ let sitemap = xml.create({encoding: 'UTF-8'}).ele('urlset', {
 });
 
 for (const url of urls) {
-  const path = urlToPath(DOCS_DIR, url);
+  const path = urlToPath(CONTENT_DIR, url);
   if (path === null) continue;
   const date = fs.statSync(path).mtime;
 

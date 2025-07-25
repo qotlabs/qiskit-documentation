@@ -13,7 +13,7 @@ module.exports = {
         test: /\.(md|mdx|ipynb)/,
         type: 'asset/resource',
         generator: {
-          filename: 'docs/docs/[file]',
+          filename: 'content/[file]',
           publicPath: '[name]',
         }
       },

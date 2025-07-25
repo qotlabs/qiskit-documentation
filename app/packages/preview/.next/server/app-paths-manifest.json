@@ -1,8 +1,9 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/icon.svg/route": "app/icon.svg/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
   "/api/toc/[[...tocPath]]/route": "app/api/toc/[[...tocPath]]/route.js",
-  "/(docs)/[...slug]/page": "app/(docs)/[...slug]/page.js",
-  "/(home)/page": "app/(home)/page.js"
+  "/(home)/page": "app/(home)/page.js",
+  "/(content)/learning/[...slug]/page": "app/(content)/learning/[...slug]/page.js",
+  "/(content)/docs/[...slug]/page": "app/(content)/docs/[...slug]/page.js"
 }

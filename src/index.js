@@ -4,7 +4,8 @@
 // SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
 
 // Additional files in docs
-import './index.md';
+import './docs/index.md';
+//import './learning/index.mdx';
 
 // JavaScript stuff
 import renderTopNavigation from './top_navigation.js';

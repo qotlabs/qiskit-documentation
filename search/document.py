@@ -40,9 +40,13 @@ class DocSection(Enum):
     QISKIT_ADDON_OBP = 7
     QISKIT_ADDON_SQD = 8
     QISKIT_ADDON_UTILS = 9
+    QISKIT_C = 10
     GUIDES = 20
     MIGRATION_GUIDES = 30
     OPEN_SOURCE = 40
+    SECURITY = 50
+    SUPPORT = 60
+    TUTORIALS = 70
 
     @staticmethod
     def from_str(s: str):
@@ -128,20 +132,20 @@ class Document:
         Post-condition: `module`, `section`, and `version` are modified.
         """
         chunks = self.page_url.split("/")
-        if chunks[1] == "api":
+        if chunks[2] == "api":
             self.module = DocModule.API
-            self.section = DocSection.from_str(chunks[2])
+            self.section = DocSection.from_str(chunks[3])
             try:
-                if chunks[3] == "release-notes":
-                    version = chunks[4]
+                if chunks[4] == "release-notes":
+                    version = chunks[5]
                 else:
-                    version = chunks[3]
+                    version = chunks[4]
             except:
                 version = VERSION_LATEST
             if VERSION_REGEX.fullmatch(version):
                 self.version = version
             #else:
-            #    assert(not any(VERSION_REGEX.fullmatch(c) for c in chunks[1:]))
+            #    assert(not any(VERSION_REGEX.fullmatch(c) for c in chunks[2:]))
         else:
             self.module = DocModule.DOCUMENTATION
-            self.section = DocSection.from_str(chunks[1])
+            self.section = DocSection.from_str(chunks[2])
