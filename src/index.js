@@ -5,7 +5,7 @@
 
 // Additional files in docs
 import './docs/index.md';
-//import './learning/index.mdx';
+import './learning/index.mdx';
 
 // JavaScript stuff
 import renderTopNavigation from './top_navigation.js';

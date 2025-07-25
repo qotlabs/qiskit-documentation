@@ -38,7 +38,7 @@ export const menuStruct = [
       {title: 'Qiskit ecosystem', url: 'https://www.ibm.com/quantum/ecosystem', toc: false},
       {title: 'Support', url: '/docs/support', toc: true},
     ]},
-    //{title: 'Learning', url: '/learning', toc: false}
+    {title: 'Learning', url: '/learning', toc: false}
   ];
 
 /**
