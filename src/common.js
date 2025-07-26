@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// SPDX-FileCopyrightText: Copyright (c) 2024 Quantum Optical Technologies Laboratories
+// SPDX-FileCopyrightText: Copyright (c) 2024-2025 Quantum Optical Technologies Laboratories
 // SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
 // SPDX-FileContributor: Fedor Medvedev <fedor_medvedev42@rambler.ru>
 
@@ -15,11 +15,11 @@
  */
 // prettier-ignore
 export const menuStruct = [
-    {title: 'Home', url: '/', toc: false},
     {title: 'Guides', url: '/docs/guides', toc: true},
     {title: 'Tutorials', url: '/docs/tutorials', toc: true},
     {title: 'API reference', children: [
       {title: 'Qiskit SDK', url: '/docs/api/qiskit', toc: true},
+      {title: 'Qiskit SDK C API', url: '/docs/api/qiskit-c', toc: true},
       {title: 'Qiskit Runtime client', url: '/docs/api/qiskit-ibm-runtime', toc: true},
       {title: 'Qiskit Transpiler Service client', url: '/docs/api/qiskit-ibm-transpiler', toc: true},
     ]},

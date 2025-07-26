@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-# SPDX-FileCopyrightText: Copyright (c) 2024 Quantum Optical Technologies Laboratories
+# SPDX-FileCopyrightText: Copyright (c) 2024-2025 Quantum Optical Technologies Laboratories
 # SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
 
 import re
