@@ -9,13 +9,13 @@ Source code is largely based on the documentation-preview Docker image by IBM. S
 # Directories
 
 - `app` – main application for serving documentation. It is based on the Docker image `icr.io/qc-open-source-docs-public/preview:latest` by IBM.
-- `content` – submodule with documentation content. It points to the official Qiskit GitHub repository [Qiskit/documentation](https://github.com/Qiskit/documentation).
+- `docs` – submodule with documentation content. It points to the official Qiskit GitHub repository [Qiskit/documentation](https://github.com/Qiskit/documentation).
 - `search` – backend that implements searching. Search index is realized via [Xapian](https://xapian.org/).
 - `src` – additional modifications for the main application that are absent in the Docker image.
 
 # Prerequisites
 
-1. Clone and update the subrepositoty `content`:
+1. Clone and update the subrepositoty `docs`:
 ```bash
 git submodule update --init
 ```
@@ -47,5 +47,5 @@ cd search && uvicorn server:app
 
 Different parts of the project are subject to different copyrights and license agreements.
 - `app` – copyright IBM.
-- `content` – copyright IBM, dual license: the Apache License Version 2.0 for code including scripts, source files, and code snippets in documentation examples; Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) for guides, tutorials, courses, media, and other non-code assets.
+- `docs` – copyright IBM, dual license: the Apache License Version 2.0 for code including scripts, source files, and code snippets in documentation examples; Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0) for guides, tutorials, courses, media, and other non-code assets.
 - `search` and `src` – copyright Quantum Optical Technologies Laboratories, GNU General Public License v3.0 or later.

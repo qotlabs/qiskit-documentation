@@ -30,11 +30,12 @@ profile @{QISKIT_REPO}/app.sh {
     owner @{QISKIT_REPO}/app/packages/preview/.next/cache/ w,
     owner @{QISKIT_REPO}/app/packages/preview/.next/cache/** w,
     owner @{QISKIT_REPO}/app/packages/preview/.next/server/app/** w,
-    owner @{QISKIT_REPO}/content/docs/ r,
-    owner @{QISKIT_REPO}/content/docs/** r,
-    owner @{QISKIT_REPO}/content/learning/ r,
-    owner @{QISKIT_REPO}/content/learning/** r,
-    owner @{QISKIT_REPO}/content/public/** r,
+    owner @{QISKIT_REPO}/app/content/ r,
+    owner @{QISKIT_REPO}/docs/docs/ r,
+    owner @{QISKIT_REPO}/docs/docs/** r,
+    owner @{QISKIT_REPO}/docs/learning/ r,
+    owner @{QISKIT_REPO}/docs/learning/** r,
+    owner @{QISKIT_REPO}/docs/public/** r,
 
   }
 }

@@ -92,10 +92,15 @@ class Visitor:
         self.stats = Statistics()
 
         # Index new and modified files
-        for toc_path in self.source_dir.rglob("_toc.json"):
-            logging.debug("Process table of contents %s", toc_path)
-            with open(toc_path, "r") as toc:
-                self.visit_toc(json.load(toc))
+        for root, dirs, files in self.source_dir.walk(follow_symlinks=True):
+            for name in files:
+                if name != "_toc.json":
+                    continue
+                toc_path = root / name
+                logging.debug("Process table of contents %s", toc_path)
+                with open(toc_path, "r") as toc:
+                    self.visit_toc(json.load(toc))
+                break # There can be only one TOC file in the directory
 
         # Delete expired documents from the database
         expired_docids = {post.docid for post in self.database
@@ -211,7 +216,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("-s, --source", dest="source",
                         metavar="DIR",
-                        default=path_relative_to_script("../content"),
+                        default=path_relative_to_script("../app/content"),
                         help="set source directory with documentation for indexing")
     parser.add_argument("-d, --destination", dest="destination",
                         metavar="DIR",

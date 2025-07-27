@@ -3,7 +3,7 @@ const fs = require('fs');
 const xml = require('xmlbuilder2');
 
 const URL_ORIGIN = process.env.QISKIT_HOST ?? 'https://example.com';
-const CONTENT_DIR = '../content';
+const CONTENT_DIR = '../app/content';
 const SITEMAP_PATH = '../app/packages/preview/public/sitemap.xml';
 
 function visitToc(toc, urls) {
