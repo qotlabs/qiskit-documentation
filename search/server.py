@@ -9,17 +9,9 @@ import config
 from fastapi import FastAPI, Response, Header, Query, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from enum import Enum
 from pathlib import Path
 from database import Database
-from document import DocModule, VERSION_LATEST, VERSION_REGEX
-
-class DocModuleStr(Enum):
-    """Documentation module with string values."""
-
-    DOCUMENTATION = "documentation"
-    API = "api"
-
+from document import DocModule, DocModuleStr, VERSION_LATEST, VERSION_REGEX
 
 class Result(BaseModel):
     """Result object that is returned by the server."""
@@ -85,11 +77,11 @@ def search(
     for doc in docs:
         reply.append(Result(
             text=doc.text,
-            id=f"docs_{doc.docid}",
+            id=doc.docid,
             url=config.DOCUMENTATION_HOST + doc.url,
             pageTitle=doc.page_title,
             module=module,
-            section=str(doc.section),
+            section=doc.section.name,
             title=doc.title,
             level=doc.level.value,
         ))

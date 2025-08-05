@@ -18,8 +18,10 @@ VERSION_REGEX = re.compile(r"^$|dev|[0-9]\.[0-9]+")
 
 class DocModule(Enum):
     """Documentation module."""
+    API = 0
     DOCUMENTATION = 1
-    API = 2
+    TUTORIALS = 2
+    LEARNING = 3
 
     @staticmethod
     def from_str(s: str):
@@ -29,31 +31,119 @@ class DocModule(Enum):
         return self.name.lower()
 
 
-class DocSection(Enum):
-    """Documentation section."""
-    QISKIT = 1
-    QISKIT_IBM_RUNTIME = 2
-    QISKIT_IBM_TRANSPILER = 3
-    QISKIT_ADDON_AQC_TENSOR = 4
-    QISKIT_ADDON_CUTTING = 5
-    QISKIT_ADDON_MPF = 6
-    QISKIT_ADDON_OBP = 7
-    QISKIT_ADDON_SQD = 8
-    QISKIT_ADDON_UTILS = 9
-    QISKIT_C = 10
-    GUIDES = 20
-    MIGRATION_GUIDES = 30
-    OPEN_SOURCE = 40
-    SECURITY = 50
-    SUPPORT = 60
-    TUTORIALS = 70
+# Documentation module enum with string values.
+DocModuleStr = Enum("DocModuleStr", [(m.name, m.name.lower()) for m in DocModule])
 
-    @staticmethod
-    def from_str(s: str):
-        return DocSection[s.replace("-", "_").upper()]
 
-    def __str__(self):
-        return self.name.replace("_", "-").lower()
+class DocSection:
+    """Documentation section.
+
+    The dictionary `SECTIONS` describes all possible sections. Its format is
+    ```
+    {index: (url, name), ...}
+    ```
+    where:
+    - `index` is the integer section index that is stored in the Xapian
+      database,
+    - `url` is the section URL that is equal to the directory path
+      in the filesystem,
+    - `name` is the human-readable name of the section that is returned
+      to the frontend.
+
+    Important:
+    - Trailing "/" in the `url` is mandatory for proper operation of
+    `from_url()` method.
+    - `index` follows the convention that hundreds determine `DocModule` value.
+    """
+    SECTIONS = {
+    # API
+    1: ("/docs/api/qiskit/", "Qiskit SDK"),
+    2: ("/docs/api/qiskit-ibm-runtime/", "Qiskit Runtime client"),
+    3: ("/docs/api/qiskit-ibm-transpiler/", "Qiskit Transpiler Service client"),
+    4: ("/docs/api/qiskit-addon-aqc-tensor/", "Approximate quantum compilation (AQC-Tensor)"),
+    5: ("/docs/api/qiskit-addon-cutting/", "Circuit cutting"),
+    6: ("/docs/api/qiskit-addon-mpf/", "Multi-product formulas (MPF)"),
+    7: ("/docs/api/qiskit-addon-obp/", "Operator backpropagation (OBP)"),
+    8: ("/docs/api/qiskit-addon-sqd/", "Sample-based quantum diagonalization (SQD)"),
+    9: ("/docs/api/qiskit-addon-utils/", "Addon utilities"),
+    10: ("/docs/api/qiskit-c/", "Qiskit SDK C API"),
+
+    # Documentation
+    100: ("/docs/guides/", "Guides"),
+    101: ("/docs/migration-guides/", "Migration guides"),
+    102: ("/docs/open-source/", "Open-source resources"),
+    103: ("/docs/security/", "Security"),
+    104: ("/docs/support/", "Support"),
+
+    # Tutorials
+    200: ("/docs/tutorials/", "Tutorials"),
+
+    # Learning
+    300: ("/learning/courses/basics-of-quantum-information/", "Courses / Basics of quantum information"),
+    301: ("/learning/courses/foundations-of-quantum-error-correction/", "Courses / Foundations of quantum error correction"),
+    302: ("/learning/courses/fundamentals-of-quantum-algorithms/", "Courses / Fundamentals of quantum algorithms"),
+    303: ("/learning/courses/general-formulation-of-quantum-information/", "Courses / General formulation of quantum information"),
+    304: ("/learning/courses/quantum-business-foundations/", "Courses / Quantum business foundations"),
+    305: ("/learning/courses/quantum-chem-with-vqe/", "Courses / Quantum chemistry with VQE"),
+    306: ("/learning/courses/quantum-computing-in-practice/", "Courses / Quantum computing in practice"),
+    307: ("/learning/courses/quantum-diagonalization-algorithms/", "Courses / Quantum diagonalization algorithms"),
+    308: ("/learning/courses/quantum-machine-learning/", "Courses / Quantum machine learning"),
+    309: ("/learning/courses/quantum-safe-cryptography/", "Courses / Practical introduction to quantum-safe cryptography"),
+    310: ("/learning/courses/utility-scale-quantum-computing/", "Courses / Utility-scale quantum computing"),
+    311: ("/learning/courses/variational-algorithm-design/", "Courses / Variational algorithm design"),
+    312: ("/learning/modules/computer-science/", "Modules / Computer science"),
+    313: ("/learning/modules/quantum-mechanics/", "Modules / Quantum mechanics"),
+    }
+
+    _url_regex = None
+    _indeces = None
+
+    @classmethod
+    def from_url(cls, url: str):
+        """Construct section corresponding to the given URL."""
+        if cls._url_regex is None:
+            urls = (f"({re.escape(sec[0])})" for sec in DocSection.SECTIONS.values())
+            cls._url_regex = re.compile("|".join(urls))
+            cls._indeces = tuple(cls.SECTIONS.keys())
+        if not url.endswith("/"):
+            url += "/"
+        match = cls._url_regex.match(url)
+        if match is None:
+            raise ValueError(f"URL {url} does not correspond to any DocSection")
+        index = cls._indeces[match.lastindex - 1]
+        return DocSection(index)
+
+    def __init__(self, index: int):
+        """Construct section from the given index."""
+        if index not in self.SECTIONS:
+            raise ValueError(f"{index} is not a valid DocSection")
+        self._index = index
+
+    def __repr__(self) -> str:
+        return f"<DocSection.{self.url}: {self.index}>"
+
+    def __eq__(self, value) -> bool:
+        return isinstance(value, DocSection) and self._index == value._index
+
+    @property
+    def index(self) -> int:
+        """Get section index."""
+        return self._index
+
+    @property
+    def url(self) -> str:
+        """Get section URL."""
+        return self.SECTIONS[self._index][0]
+
+    @property
+    def name(self) -> str:
+        """Get section name (description)."""
+        return self.SECTIONS[self._index][1]
+
+    @property
+    def module(self) -> DocModule:
+        """Determine documentation module that corresponds to the section."""
+        return DocModule(self._index // 100) # Use indexing convention
 
 
 class DocLevel(Enum):
@@ -131,10 +221,11 @@ class Document:
         Pre-condition: `page_url` must be valid.
         Post-condition: `module`, `section`, and `version` are modified.
         """
-        chunks = self.page_url.split("/")
-        if chunks[2] == "api":
-            self.module = DocModule.API
-            self.section = DocSection.from_str(chunks[3])
+        self.section = DocSection.from_url(self.page_url)
+        self.module = self.section.module
+        # Determine version:
+        if self.module == DocModule.API:
+            chunks = self.page_url.split("/")
             try:
                 if chunks[4] == "release-notes":
                     version = chunks[5]
@@ -146,6 +237,3 @@ class Document:
                 self.version = version
             #else:
             #    assert(not any(VERSION_REGEX.fullmatch(c) for c in chunks[2:]))
-        else:
-            self.module = DocModule.DOCUMENTATION
-            self.section = DocSection.from_str(chunks[2])

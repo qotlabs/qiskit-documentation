@@ -180,7 +180,7 @@ class Database:
             xdoc.add_boolean_term(id_term)
             xdoc.add_boolean_term(f"P{doc.path_hash}")
             xdoc.add_boolean_term(f"XM{doc.module.value}")
-            xdoc.add_boolean_term(f"XS{doc.section.value}")
+            xdoc.add_boolean_term(f"XS{doc.section.index}")
             xdoc.add_boolean_term(f"XV{doc.version}")
 
             xdoc.set_data(json.dumps({
@@ -190,7 +190,7 @@ class Database:
                 "DL": doc.level.value,
                 "S": doc.title,
                 "XM": doc.module.value,
-                "XS": doc.section.value,
+                "XS": doc.section.index,
             }).encode())
 
             xdoc.add_value(MTIME_SLOT, MTIME_STRUCT.pack(doc.mtime))
