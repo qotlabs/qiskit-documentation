@@ -1,6 +1,6 @@
 {
   "name": "@quantum/iqp-channel-docs-preview",
-  "version": "0.1.1534",
+  "version": "0.1.1564",
   "private": true,
   "scripts": {
     "dev": "next dev",
