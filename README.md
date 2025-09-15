@@ -15,7 +15,7 @@ Source code is largely based on the documentation-preview Docker image by IBM. S
 
 # Prerequisites
 
-1. Clone and update the subrepositoty `docs`:
+1. Clone and update the subrepository `docs`:
 ```bash
 git submodule update --init
 ```
