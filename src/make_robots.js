@@ -11,6 +11,7 @@ Sitemap: ${HOST}/sitemap.xml
 
 Disallow: /docs/api/qiskit/0.*
 Disallow: /docs/api/qiskit/1.*
+Disallow: /docs/api/qiskit/2.*
 Disallow: /docs/api/qiskit/dev
 
 Disallow: /docs/api/qiskit-addon-cutting/0.*
