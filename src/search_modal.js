@@ -67,71 +67,90 @@ const modalElement = `
           />
         </div>
         <div
-          class="flex p-16 min-h-[48px] items-center justify-between border-0 border-b border-solid border-border-subtle-01 theme-variant"
-        >
-          <div
-            role="radiogroup"
-            aria-required="false"
-            dir="ltr"
-            aria-label="Search filter"
-            tabindex="0"
-            style="outline: none"
+          class="p-16 min-h-[48px] border-0 border-b border-solid border-border-subtle-00 theme-variant"
           >
-            <button
-              type="button"
-              role="radio"
-              aria-checked="true"
-              data-state="checked"
-              value="documentation"
-              id="search-radio-documentation"
-              class="appearance-none border-0 inline-flex items-center justify-center align-middle cursor-pointer text-label-01 m-4 px-8 py-2 rounded data-[state=unchecked]:bg-background data-[state=unchecked]:text-text-secondary data-[state=unchecked]:shadow-[0_0_0_1px_var(--cds-layer-active)] data-[state=checked]:bg-background-inverse data-[state=checked]:text-icon-inverse"
-              aria-label="Documentation"
+          <div class="flex items-center justify-between">
+            <div
+              role="radiogroup"
+              aria-required="false"
+              dir="ltr"
+              aria-label="Search filter"
               tabindex="0"
-              data-radix-collection-item=""
+              style="outline: none"
             >
-              Documentation
-            </button>
-            <button
-              type="button"
-              role="radio"
-              aria-checked="false"
-              data-state="unchecked"
-              value="api"
-              id="search-radio-api"
-              class="appearance-none border-0 inline-flex items-center justify-center align-middle cursor-pointer text-label-01 m-4 px-8 py-2 rounded data-[state=unchecked]:bg-background data-[state=unchecked]:text-text-secondary data-[state=unchecked]:shadow-[0_0_0_1px_var(--cds-layer-active)] data-[state=checked]:bg-background-inverse data-[state=checked]:text-icon-inverse"
-              aria-label="API Reference"
-              tabindex="0"
-              data-radix-collection-item=""
-            >
-              API Reference
-            </button>
-          </div>
-          <div class="max-md:hidden">
-            <span
-              class="cds--popover-container cds--popover--caret cds--popover--high-contrast cds--popover--top-right cds--tooltip"
-            >
-              <div class="cds--tooltip-trigger__wrapper">
-                <button
-                  type="button"
-                  class="inline-flex justify-center items-center w-24 h-24 bg-background text-text-secondary appearance-none rounded border-0 border-solid search-query-button"
-                  style="box-shadow: 0px 0px 5px 0px var(--cds-layer-active)"
-                  aria-labelledby="tooltip-:r4:"
-                >
-                  /
-                </button>
-              </div>
-              <span
-                aria-hidden="true"
-                id="tooltip-:r4:"
-                role="tooltip"
-                class="cds--popover"
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-state="unchecked"
+                value="all"
+                id="search-radio-all"
+                class="appearance-none border-0 inline-flex items-center justify-center align-middle cursor-pointer text-label-01 m-4 px-8 py-2 rounded data-[state=unchecked]:bg-background data-[state=unchecked]:text-text-secondary data-[state=unchecked]:shadow-[0_0_0_1px_var(--cds-layer-active)] data-[state=checked]:bg-background-inverse data-[state=checked]:text-icon-inverse"
+                aria-label="All"
+                tabindex="0"
+                data-radix-collection-item=""
               >
-                <span class="cds--popover-content cds--tooltip-content">
-                  Press "/" to open search
-                </span>
-                <span class="cds--popover-caret"></span>
-              </span>
-            </span>
+                All
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked="true"
+                data-state="checked"
+                value="documentation"
+                id="search-radio-documentation"
+                class="appearance-none border-0 inline-flex items-center justify-center align-middle cursor-pointer text-label-01 m-4 px-8 py-2 rounded data-[state=unchecked]:bg-background data-[state=unchecked]:text-text-secondary data-[state=unchecked]:shadow-[0_0_0_1px_var(--cds-layer-active)] data-[state=checked]:bg-background-inverse data-[state=checked]:text-icon-inverse"
+                aria-label="Documentation"
+                tabindex="0"
+                data-paragraph="Searching documentation and additional resources."
+                data-radix-collection-item=""
+              >
+                Documentation
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-state="unchecked"
+                value="tutorials"
+                id="search-radio-tutorials"
+                class="appearance-none border-0 inline-flex items-center justify-center align-middle cursor-pointer text-label-01 m-4 px-8 py-2 rounded data-[state=unchecked]:bg-background data-[state=unchecked]:text-text-secondary data-[state=unchecked]:shadow-[0_0_0_1px_var(--cds-layer-active)] data-[state=checked]:bg-background-inverse data-[state=checked]:text-icon-inverse"
+                aria-label="API Reference"
+                tabindex="0"
+                data-radix-collection-item=""
+              >
+                Tutorials
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-state="unchecked"
+                value="api"
+                id="search-radio-api"
+                class="appearance-none border-0 inline-flex items-center justify-center align-middle cursor-pointer text-label-01 m-4 px-8 py-2 rounded data-[state=unchecked]:bg-background data-[state=unchecked]:text-text-secondary data-[state=unchecked]:shadow-[0_0_0_1px_var(--cds-layer-active)] data-[state=checked]:bg-background-inverse data-[state=checked]:text-icon-inverse"
+                aria-label="API Reference"
+                tabindex="0"
+                data-radix-collection-item=""
+                data-paragraph="Searching latest API versions."
+              >
+                API Reference
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked="false"
+                data-state="unchecked"
+                value="learning"
+                id="search-radio-learning"
+                class="appearance-none border-0 inline-flex items-center justify-center align-middle cursor-pointer text-label-01 m-4 px-8 py-2 rounded data-[state=unchecked]:bg-background data-[state=unchecked]:text-text-secondary data-[state=unchecked]:shadow-[0_0_0_1px_var(--cds-layer-active)] data-[state=checked]:bg-background-inverse data-[state=checked]:text-icon-inverse"
+                aria-label="Learning"
+                tabindex="0"
+                data-radix-collection-item=""
+              >
+                Learning
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -242,7 +261,6 @@ function closeModalWindow() {
   document.body.removeEventListener('click', listenClose);
   document.body.removeEventListener('keydown', listenClose);
   document.body.removeEventListener('keydown', listenEnterKey);
-  document.body.addEventListener('keydown', listenSlashKey);
 }
 
 function removeScrollbar() {
@@ -295,12 +313,7 @@ function listenEnterKey(event) {
   }
 }
 
-function listenSlashKey(event) {
-  if (event.key === '/') {
-    event.preventDefault();
-    openModalWindow();
-  }
-}
+
 
 function toggleEventListener(element, force, type, listener, options) {
   if (force) {
@@ -329,7 +342,6 @@ function toggleLoader(show) {
   Array.from(
     modalWindow.querySelectorAll('.cds--modal button[role="radio"]')
   ).forEach((button) => (button.disabled = show));
-  modalWindow.querySelector('.search-query-button').disabled = show;
   const scrollbar = modalWindow.querySelector('div.scrollbar');
   toggleEventListener(scrollbar, !show, 'scroll', loadMoreResults, {
     passive: true,
@@ -467,6 +479,22 @@ function insertClearSearchButton(event) {
   }
 }
 
+function insertParagraph() {
+  const modalWindow = document.querySelector('.modal-search')
+	const newDivTooltip = '<div class="pt-8 text-label-01 text-text-helper"><p class="m-0"></p></div>';
+	const oldDivTooltip = modalWindow.querySelector('.pt-8.text-label-01.text-text-helper');
+	const checkedElement = modalWindow.querySelector(
+    'button[role="radio"][aria-checked="true"]'
+  );
+	if (oldDivTooltip) {
+		oldDivTooltip.outerHTML = '';
+	}
+	if('paragraph' in checkedElement.dataset) {
+		modalWindow.querySelector('.theme-variant').insertAdjacentHTML('beforeend', newDivTooltip);
+		modalWindow.querySelector('.pt-8.text-label-01.text-text-helper').querySelector('.m-0').textContent = checkedElement.dataset.paragraph;
+	}
+}
+
 function openModalWindow() {
   document.body.className = 'cds--body--with-modal-open';
   document.body.setAttribute('wfd-invisible', true);
@@ -475,7 +503,6 @@ function openModalWindow() {
   document.body.addEventListener('click', listenClose);
   document.body.addEventListener('keydown', listenClose);
   document.body.addEventListener('keydown', listenEnterKey);
-  document.body.removeEventListener('keydown', listenSlashKey);
 
   const modalWindow = document.querySelector('.modal-search');
   const module = localStorage.getItem('module') || 'documentation';
@@ -492,20 +519,20 @@ function openModalWindow() {
   searchInput.focus();
   searchInput.addEventListener('input', insertClearSearchButton);
 
-  const searchDataButton = modalWindow.querySelector('.search-query-button');
-  searchDataButton.addEventListener('click', search);
 
   radioButtons.forEach((button) =>
     button.addEventListener('click', (event) => {
       checkRadioButton(event.target);
+      insertParagraph();
       search();
     })
   );
+
+  insertParagraph();
 }
 
 export default function render() {
   document
     .querySelector('button[aria-label="Search"]')
     .addEventListener('click', openModalWindow);
-  document.body.addEventListener('keydown', listenSlashKey);
 }
