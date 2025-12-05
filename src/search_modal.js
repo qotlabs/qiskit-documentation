@@ -115,7 +115,7 @@ const modalElement = `
                 value="tutorials"
                 id="search-radio-tutorials"
                 class="appearance-none border-0 inline-flex items-center justify-center align-middle cursor-pointer text-label-01 m-4 px-8 py-2 rounded data-[state=unchecked]:bg-background data-[state=unchecked]:text-text-secondary data-[state=unchecked]:shadow-[0_0_0_1px_var(--cds-layer-active)] data-[state=checked]:bg-background-inverse data-[state=checked]:text-icon-inverse"
-                aria-label="API Reference"
+                aria-label="Tutorials"
                 tabindex="0"
                 data-radix-collection-item=""
               >
@@ -362,7 +362,7 @@ function getListElement(searchResult) {
         class="block text-text-primary hover:text-text-primary cursor-pointer no-underline px-16 py-8 my-8"
         href="${searchResult.url}"
       >
-        <div class="text-label-01 text-text-helper mb-4">${searchResult.pageTitle}</div>
+        <div class="text-label-01 text-text-helper mb-4">${searchResult.section} / ${searchResult.pageTitle}</div>
         <div
           class="[&amp;>em]:font-600 [&amp;>em]:not-italic text-body-compact-01 truncate mb-4"
         >
