@@ -174,6 +174,16 @@ class Menu {
     if (open) {
       this.parent.appendChild(this.overlay);
       this.parent.appendChild(this.panel);
+      if (location.pathname.match('/learning/')) {
+        const subNavigationLearning = document.querySelector('nav[aria-label="Side navigation (docs)"]');
+        this.panel.innerHTML = subNavigationLearning.innerHTML;
+        for (const button of this.panel.querySelectorAll('button')) {
+          button.addEventListener('click', function(){
+            const ariaExpanded = this.getAttribute('aria-expanded') === 'false' ? false : true;
+            this.setAttribute('aria-expanded', !ariaExpanded);
+          })
+        }
+      }
     } else {
       this.overlay.remove();
       this.panel.remove();
