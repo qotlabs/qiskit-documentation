@@ -533,6 +533,6 @@ function openModalWindow() {
 
 export default function render() {
   document
-    .querySelector('button.h-full[aria-label="Open search dialog"]')
+    .querySelector('button[aria-label="Search"]')
     .addEventListener('click', openModalWindow);
 }

@@ -14,28 +14,43 @@ import {
 const headerGlobalHtml = `
   <div class="lg:hidden" id="lg-hidden"></div>
   <div class="cds--header__global">
-	  <span class="cds--popover-container cds--popover--caret cds--popover--high-contrast cds--popover--bottom cds--tooltip cds--icon-tooltip">
-	  	<div class="cds--tooltip-trigger__wrapper">
-	  		<button aria-label="Open search dialog" aria-labelledby="tooltip-:Raloqkvfa:" class="lg:hidden cds--header__action cds--btn cds--btn--lg cds--layout--size-lg cds--btn--ghost cds--btn--icon-only" type="button">
-	  			<svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="20" height="20" viewBox="0 0 32 32" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-	  				<path d="M29,27.5859l-7.5521-7.5521a11.0177,11.0177,0,1,0-1.4141,1.4141L27.5859,29ZM4,13a9,9,0,1,1,9,9A9.01,9.01,0,0,1,4,13Z"></path>
-	  			</svg>
-	  		</button>
-	  	</div>
-	  	<span aria-hidden="true" id="tooltip-:Raloqkvfa:" role="tooltip" class="cds--popover">
-	  		<span class="cds--popover-content cds--tooltip-content">Open search dialog</span>
-	  		<span class="cds--popover-caret"></span>
-	  	</span>
-	  </span>
-	  <div class="hidden lg:block border-solid border-y-0 border-x border-border-subtle ml-[-1px]">
-	  	<button aria-label="Open search dialog" class="h-full items-center text-text-secondary hover:text-text-primary max:w-[180px] cds--btn cds--btn--lg cds--layout--size-lg cds--btn--ghost" type="button">
-	  		<svg focusable="false" preserveAspectRatio="xMidYMid meet" fill="currentColor" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" class="!fill-icon-secondary group-hover:!fill-icon-primary" xmlns="http://www.w3.org/2000/svg">
-	  			<path d="M15,14.3L10.7,10c1.9-2.3,1.6-5.8-0.7-7.7S4.2,0.7,2.3,3S0.7,8.8,3,10.7c2,1.7,5,1.7,7,0l4.3,4.3L15,14.3z M2,6.5 C2,4,4,2,6.5,2S11,4,11,6.5S9,11,6.5,11S2,9,2,6.5z"></path>
-	  		</svg>
-	  		<span class="flex-1 mx-[16px]">Search</span>
-	  	</button>
-	  </div>
-</div>`;
+    <span
+      class="cds--popover-container cds--popover--caret cds--popover--high-contrast cds--popover--bottom cds--tooltip cds--icon-tooltip"
+    >
+      <div class="cds--tooltip-trigger__wrapper">
+        <button
+          aria-label="Search"
+          class="cds--btn--icon-only cds--header__action cds--btn cds--btn--primary cds--btn--icon-only cds--btn cds--btn--primary"
+          type="button"
+        >
+          <svg
+            focusable="false"
+            preserveAspectRatio="xMidYMid meet"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            aria-hidden="true"
+          >
+            <path
+              d="M15,14.3L10.7,10c1.9-2.3,1.6-5.8-0.7-7.7S4.2,0.7,2.3,3S0.7,8.8,3,10.7c2,1.7,
+            5,1.7,7,0l4.3,4.3L15,14.3z M2,6.5 C2,4,4,2,6.5,2S11,4,11,6.5S9,11,6.5,11S2,9,2,6.5z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+      <span
+        aria-hidden="true"
+        id="tooltip-:Rae6ta:"
+        role="tooltip"
+        class="cds--popover"
+      >
+        <span class="cds--popover-content cds--tooltip-content">Search</span>
+        <span class="cds--popover-caret"></span>
+      </span>
+    </span>
+  </div>`;
 
 class Menu {
   static rootHtml() {
