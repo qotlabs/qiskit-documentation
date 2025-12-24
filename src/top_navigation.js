@@ -20,33 +20,33 @@ const headerGlobalHtml = `
       <div class="cds--tooltip-trigger__wrapper">
         <button
           aria-label="Search"
-          class="cds--btn--icon-only cds--header__action cds--btn cds--btn--primary cds--btn--icon-only cds--btn cds--btn--primary"
+          aria-labelledby="tooltip-_R_lbhl9fivb_"
+          class="cds--btn--icon-only cds--header__action cds--btn cds--btn--lg cds--layout--size-lg cds--btn--ghost cds--btn--icon-only"
           type="button"
         >
           <svg
             focusable="false"
             preserveAspectRatio="xMidYMid meet"
-            xmlns="http://www.w3.org/2000/svg"
             fill="currentColor"
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
+            width="20"
+            height="20"
+            viewBox="0 0 32 32"
             aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M15,14.3L10.7,10c1.9-2.3,1.6-5.8-0.7-7.7S4.2,0.7,2.3,3S0.7,8.8,3,10.7c2,1.7,
-            5,1.7,7,0l4.3,4.3L15,14.3z M2,6.5 C2,4,4,2,6.5,2S11,4,11,6.5S9,11,6.5,11S2,9,2,6.5z"
+              d="M29,27.5859l-7.5521-7.5521a11.0177,11.0177,0,1,0-1.4141,1.4141L27.5859,29ZM4,13a9,9,0,1,1,9,9A9.01,9.01,0,0,1,4,13Z"
             ></path>
           </svg>
         </button>
       </div>
       <span
         aria-hidden="true"
-        id="tooltip-:Rae6ta:"
+        id="tooltip-_R_lbhl9fivb_"
         role="tooltip"
         class="cds--popover"
       >
-        <span class="cds--popover-content cds--tooltip-content">Search</span>
+        <span class="cds--popover-content cds--tooltip-content">Open search dialog</span>
         <span class="cds--popover-caret"></span>
       </span>
     </span>
@@ -71,7 +71,7 @@ class Menu {
     this.menu = this.root.querySelector('ul');
     this.items = [];
     for (const dict of menuStruct) {
-      const ItemType = dict.hasOwnProperty('children') ? Submenu : MenuItem;
+      const ItemType = Object.hasOwn(dict, 'children') ? Submenu : MenuItem;
       this.items.push(new ItemType(dict, this.menu));
     }
     this.parent.appendChild(this.root);
@@ -186,17 +186,23 @@ class Submenu {
     this.highlighted = false;
     this.parent = parent;
     this.root = createElement(Submenu.rootHtml(dict.title, id));
-    this.button = this.root.querySelector('button');
+    this.button = this.root.querySelector(`button[aria-label="${dict.title}"]`);
     this.menu = createElement(Submenu.menuHtml(id));
     for (const child of dict.children) {
-      const item = createElement(Submenu.itemHtml(child.title, child.url));
-      this.menu.appendChild(item);
+      if (Object.hasOwn(child, 'children')) {
+        const childMenu = new ChildrenMenu(child, this.menu, this.root);
+        childMenu.highlight();
+      } else {
+        const item = createElement(Submenu.itemHtml(child.title, child.url));
+        this.menu.appendChild(item);
+      }
     }
+
     this.parent.appendChild(this.root);
 
     this.button.addEventListener('click', () => this.toggle());
     document.body.addEventListener('click', (event) => {
-      if (event.target !== this.button) {
+      if (event.target !== this.button && !event.target.classList.contains('submenu')) {
         this.toggle(false);
       }
     });
@@ -226,19 +232,32 @@ class Submenu {
     const url = location.pathname;
     let someOn = false;
     for (const item of this.menu.children) {
-      const anchor = item.querySelector('a');
-      const on = matchSection(anchor.getAttribute('href'), url);
-      if (on) {
-        item.className = `relative after:absolute after:w-[3px] after:left-0
+      if (!!item.querySelector('a')) {
+        const anchor = item.querySelector('a');
+        const on = matchSection(anchor.getAttribute('href'), url);
+        if (on) {
+          item.className = `relative after:absolute after:w-[3px] after:left-0
         after:top-0 after:bg-border-interactive after:h-full`;
-      } else {
-        item.className = '';
+        } else {
+          item.className = '';
+        }
+        anchor.classList.toggle('bg-layer-selected', on);
+        anchor.classList.toggle('text-text-primary', on);
+        anchor.classList.toggle('bg-layer', !on);
+        anchor.classList.toggle('text-text-secondary', !on);
+        someOn |= on;
       }
-      anchor.classList.toggle('bg-layer-selected', on);
-      anchor.classList.toggle('text-text-primary', on);
-      anchor.classList.toggle('bg-layer', !on);
-      anchor.classList.toggle('text-text-secondary', !on);
-      someOn |= on;
+      else {
+        const anchor = item.querySelector('button');
+        let on = anchor.dataset.children.match(url) !== null && url !== '/';
+        if (on) {
+          item.className = `relative after:absolute after:w-[3px] after:left-0
+        after:top-0 after:bg-border-interactive after:h-full`;
+        } else {
+          item.className = '';
+        }
+        someOn |= on;
+      }
     }
     this.highlightButton(someOn & !this.isOpened);
     this.highlighted = someOn;
@@ -252,6 +271,155 @@ class Submenu {
         after:w-full after:bg-border-interactive after:h-[3px]`;
     } else {
       this.root.className = 'cds--header__submenu';
+    }
+  }
+}
+
+class ChildrenMenu {
+  static rootHtml(title, ariaControls) {
+    return `<li class="cds--header__submenu" role="none">
+          <button
+            role="menuitem"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-controls="${ariaControls}"
+            class="h-48 min-w-full relative text-body-compact-01 flex justify-between items-center whitespace-nowrap px-16 border-2  transition-colors hover:bg-background-hover hover:text-text-primary border-transparent focus-outline text-text-secondary bg-layer submenu"
+            type="button"
+            tabindex="0"
+            data-radix-collection-item=""
+            aria-label="${title}"
+            data-children=""
+          >
+              ${title}
+              <svg
+                focusable="false"
+                preserveAspectRatio="xMidYMid meet"
+                fill="currentColor"
+                width="16" height="16"
+                viewBox="0 0 16 16"
+                aria-hidden="true"
+                class="cds--header__menu-arrow"
+                xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11 8L6 13 5.3 12.3 9.6 8 5.3 3.7 6 3z"></path>
+              </svg>
+          </button>
+        </li>`;
+  }
+  static menuHtml(id) {
+    return `
+    <ul
+      id="${id}"
+      role="menu"
+      class="flex cds--header__menu m-0 p-0 flex-col bg-layer min-w-[200px] shadow-[0_0_6px_-1px_var(--cds-shadow)] absolute left-[100%] top-0"
+      tabindex="0"
+      style="outline: none"
+    >
+    </ul>`;
+  }
+  static itemHtml(title, url) {
+    const externalUrl = !url.startsWith('/');
+    // prettier-ignore
+    return `
+        <li class="" role="none">
+          <a
+            role="menuitem"
+            tabindex="0"
+            data-radix-collection-item=""
+            class="text-link-primary no-underline hover:underline inline text-body-compact-01 flex items-center h-48 px-16 border-2 transition-colors hover:bg-background-hover hover:text-text-primary border-transparent focus-outline bg-layer text-text-secondary hover:no-underline justify-between"
+            href="${url}"
+            ${externalUrl ? 'target="_blank" rel="noopener noreferrer nofollow"' : ''}
+          >
+              <span class="truncate">${title}</span>
+              ${externalUrl ? arrowIconHtml('inline ml-2 mt-[1%]') : ''}
+          </a>
+        </li>`;
+  }
+
+  constructor(dict, parent, rootMenu) {
+    const id = uid();
+    this.highlighted = false;
+    this.parent = parent;
+    this.root = createElement(ChildrenMenu.rootHtml(dict.title, id));
+    this.button = this.root.querySelector('button.submenu');
+    this.menu = createElement(ChildrenMenu.menuHtml(id));
+    this.children = dict.children;
+    this.rootMenu = rootMenu;
+    this.parent.appendChild(this.root);
+    for (const child of this.children) {
+      this.button.dataset.children += `${child.url};`
+    }
+    this.button.dataset.children = this.button.dataset.children.slice(0, -1);
+    this.button.addEventListener('click', () => this.toggle());
+    this.submenuToggle = function (event) {
+      if (event.target !== this.button) {
+        this.toggle(false);
+      }
+    };
+    document.body.addEventListener('click', (event) =>
+      this.submenuToggle(event)
+    );
+  }
+
+  get isOpened() {
+    return this.button.getAttribute('aria-expanded') === 'true';
+  }
+
+  toggle(open) {
+    const wasOpened = this.isOpened;
+    if (open === undefined) open = !wasOpened;
+    if (open === wasOpened) return;
+
+    this.button.setAttribute('aria-expanded', open);
+    this.button.classList.toggle('bg-background-hover', open);
+    this.button.classList.toggle('bg-layer', !open);
+    this.highlightButton(this.highlighted & !open);
+    if (open) {
+      this.root.appendChild(this.menu);
+      if (this.menu.children.length === 0) {
+        for (const child of this.children) {
+          this.menu.appendChild(createElement(ChildrenMenu.itemHtml(child.title, child.url)));
+          this.highlight();
+        }
+      }
+    } else {
+      this.menu.remove();
+    }
+  }
+
+  highlight() {
+    const url = location.pathname;
+    let someOn = false;
+    if (this.menu.children.length > 0) {
+      for (const item of this.menu.children) {
+        const anchor = item.querySelector('a');
+        const on = matchSection(anchor.getAttribute('href'), url);
+        if (on) {
+          item.className = `cds--header__submenu after:absolute after:left-0
+          after:top-0 after:h-full after:bg-border-interactive after:w-[3px]`;
+        } else {
+          item.className = 'cds--header__submenu';
+        }
+        anchor.classList.toggle('bg-layer-selected', on);
+        anchor.classList.toggle('text-text-primary', on);
+        anchor.classList.toggle('bg-layer', !on);
+        anchor.classList.toggle('text-text-secondary', !on);
+        someOn |= on;
+      }
+
+      this.highlightButton(someOn & !this.isOpened);
+      this.highlighted = someOn;
+    }
+  }
+
+  highlightButton(on) {
+    this.button.classList.toggle('text-text-primary', on);
+    this.button.classList.toggle('text-text-secondary', !on);
+    this.rootMenu.removeAttribute('class');
+    if (on) {
+      this.rootMenu.className = `cds--header__submenu after:absolute after:bottom-0
+        after:w-full after:bg-border-interactive after:h-[3px]`;
+    } else {
+      this.rootMenu.className = 'cds--header__submenu';
     }
   }
 }

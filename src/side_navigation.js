@@ -118,7 +118,7 @@ class Menu {
           ></path>
         </svg>
       </div>
-      <h2 class="text-heading-03 text-text-primary px-16 my-16">Documentation</h2>
+      <h2 class="text-heading-03 text-text-primary px-16 my-16">All documentation</h2>
       <ul class="cds--side-nav__header-navigation static p-0"></ul>
     </div>`;
   }
@@ -139,20 +139,23 @@ class Menu {
     this.menu = this.panel.querySelector('ul');
 
     this.items = [];
-    for (const toc of menuStruct) {
-      if (toc.hasOwnProperty('children')) {
+    this.scan(menuStruct);
+    this.button.onclick(() => this.toggle());
+    this.overlay.addEventListener('click', () => this.toggle(false));
+    this.highlight();
+  }
+
+  scan(menu) {
+    for (const toc of menu) {
+      if (toc.hasOwnProperty('divider')) {
         this.appendDivider();
-        for (const child of toc.children) {
-          this.appendItem(child);
-        }
+      }
+      if (toc.hasOwnProperty('children')) {
+        this.scan(toc.children);
       } else {
         this.appendItem(toc);
       }
     }
-
-    this.button.onclick(() => this.toggle());
-    this.overlay.addEventListener('click', () => this.toggle(false));
-    this.highlight();
   }
 
   appendDivider() {
@@ -174,16 +177,6 @@ class Menu {
     if (open) {
       this.parent.appendChild(this.overlay);
       this.parent.appendChild(this.panel);
-      if (location.pathname.match('/learning/')) {
-        const subNavigationLearning = document.querySelector('nav[aria-label="Side navigation (docs)"]');
-        this.panel.innerHTML = subNavigationLearning.innerHTML;
-        for (const button of this.panel.querySelectorAll('button')) {
-          button.addEventListener('click', function(){
-            const ariaExpanded = this.getAttribute('aria-expanded') === 'false' ? false : true;
-            this.setAttribute('aria-expanded', !ariaExpanded);
-          })
-        }
-      }
     } else {
       this.overlay.remove();
       this.panel.remove();

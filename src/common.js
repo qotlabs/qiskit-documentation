@@ -17,19 +17,21 @@
 export const menuStruct = [
     {title: 'Documentation', url: '/docs/guides', toc: true},
     {title: 'Tutorials', url: '/docs/tutorials', toc: true},
-    {title: 'API reference', children: [
-      {title: 'Qiskit SDK', url: '/docs/api/qiskit', toc: true},
-      {title: 'Qiskit SDK C API', url: '/docs/api/qiskit-c', toc: true},
+    {title: 'API references', children: [
+      {title: 'Qiskit SDK', children: [
+        {title: 'Python', url: '/docs/api/qiskit', toc: true},
+        {title: 'C', url: '/docs/api/qiskit-c', toc: true},
+      ]},
       {title: 'Qiskit Runtime client', url: '/docs/api/qiskit-ibm-runtime', toc: true},
       {title: 'Qiskit Transpiler Service', url: '/docs/api/qiskit-ibm-transpiler', toc: true},
-    ]},
-    {title: 'Qiskit addons', children: [
-      {title: 'Approximate quantum compilation (AQC-Tensor)', url: '/docs/api/qiskit-addon-aqc-tensor', toc: true},
-      {title: 'Circuit cutting', url: '/docs/api/qiskit-addon-cutting', toc: true},
-      {title: 'Operator backpropagation (OBP)', url: '/docs/api/qiskit-addon-obp', toc: true},
-      {title: 'Multi-product formulas (MPF)', url: '/docs/api/qiskit-addon-mpf', toc: true},
-      {title: 'Sample-based quantum diagonalization (SQD)', url: '/docs/api/qiskit-addon-sqd', toc: true},
-      {title: 'Addon utilities', url: '/docs/api/qiskit-addon-utils', toc: true}
+      {title: 'Qiskit addons', children: [
+        {title: 'Approximate quantum compilation (AQC-Tensor)', url: '/docs/api/qiskit-addon-aqc-tensor', toc: true},
+        {title: 'Circuit cutting', url: '/docs/api/qiskit-addon-cutting', toc: true},
+        {title: 'Operator backpropagation (OBP)', url: '/docs/api/qiskit-addon-obp', toc: true},
+        {title: 'Multi-product formulas (MPF)', url: '/docs/api/qiskit-addon-mpf', toc: true},
+        {title: 'Sample-based quantum diagonalization (SQD)', url: '/docs/api/qiskit-addon-sqd', toc: true},
+        {title: 'Addon utilities', url: '/docs/api/qiskit-addon-utils', toc: true}
+      ]},
     ]},
     {title: 'Learning', url: '/learning', toc: false}
   ];
