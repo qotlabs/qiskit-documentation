@@ -70,10 +70,6 @@ class DocSection:
 
     # Documentation
     100: ("/docs/guides/", "Guides"),
-    101: ("/docs/migration-guides/", "Migration guides"),
-    102: ("/docs/open-source/", "Open-source resources"),
-    103: ("/docs/security/", "Security"),
-    104: ("/docs/support/", "Support"),
 
     # Tutorials
     200: ("/docs/tutorials/", "Tutorials"),

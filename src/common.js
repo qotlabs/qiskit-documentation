@@ -15,7 +15,7 @@
  */
 // prettier-ignore
 export const menuStruct = [
-    {title: 'Guides', url: '/docs/guides', toc: true},
+    {title: 'Documentation', url: '/docs/guides', toc: true},
     {title: 'Tutorials', url: '/docs/tutorials', toc: true},
     {title: 'API reference', children: [
       {title: 'Qiskit SDK', url: '/docs/api/qiskit', toc: true},
@@ -30,13 +30,6 @@ export const menuStruct = [
       {title: 'Multi-product formulas (MPF)', url: '/docs/api/qiskit-addon-mpf', toc: true},
       {title: 'Sample-based quantum diagonalization (SQD)', url: '/docs/api/qiskit-addon-sqd', toc: true},
       {title: 'Addon utilities', url: '/docs/api/qiskit-addon-utils', toc: true}
-    ]},
-    {title: 'Additional resources', children: [
-      {title: 'Migration guides', url: '/docs/migration-guides', toc: true},
-      {title: 'Open-source resources', url: '/docs/open-source', toc: true},
-      {title: 'Responsible quantum computing', url: '/docs/responsible-quantum-computing', toc: false},
-      {title: 'Qiskit ecosystem', url: 'https://www.ibm.com/quantum/ecosystem', toc: false},
-      {title: 'Support', url: '/docs/support', toc: true},
     ]},
     {title: 'Learning', url: '/learning', toc: false}
   ];
