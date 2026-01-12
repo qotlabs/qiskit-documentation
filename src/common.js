@@ -21,7 +21,7 @@ export const menuStruct = [
       {title: 'Qiskit SDK', url: '/docs/api/qiskit', toc: true},
       {title: 'Qiskit SDK C API', url: '/docs/api/qiskit-c', toc: true},
       {title: 'Qiskit Runtime client', url: '/docs/api/qiskit-ibm-runtime', toc: true},
-      {title: 'Qiskit Transpiler Service client', url: '/docs/api/qiskit-ibm-transpiler', toc: true},
+      {title: 'Qiskit Transpiler Service', url: '/docs/api/qiskit-ibm-transpiler', toc: true},
     ]},
     {title: 'Qiskit addons', children: [
       {title: 'Approximate quantum compilation (AQC-Tensor)', url: '/docs/api/qiskit-addon-aqc-tensor', toc: true},
