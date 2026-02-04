@@ -1,1 +1,9 @@
-{"/_not-found/page":"/_not-found","/favicon.ico/route":"/favicon.ico","/icon.svg/route":"/icon.svg","/api/toc/[[...tocPath]]/route":"/api/toc/[[...tocPath]]","/(home)/page":"/","/(content)/learning/[...slug]/page":"/learning/[...slug]","/(content)/docs/[...slug]/page":"/docs/[...slug]"}
+{
+  "/_not-found/page": "/_not-found",
+  "/icon.svg/route": "/icon.svg",
+  "/favicon.ico/route": "/favicon.ico",
+  "/api/toc/[[...tocPath]]/route": "/api/toc/[[...tocPath]]",
+  "/(home)/page": "/",
+  "/(content)/learning/[...slug]/page": "/learning/[...slug]",
+  "/(content)/docs/[...slug]/page": "/docs/[...slug]"
+}
