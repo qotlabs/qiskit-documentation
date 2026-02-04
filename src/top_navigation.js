@@ -259,12 +259,8 @@ class Submenu {
       if (!!item.querySelector('a')) {
         const anchor = item.querySelector('a');
         const on = matchSection(anchor.getAttribute('href'), url);
-        if (on) {
-          item.className = `relative after:absolute after:w-[3px] after:left-0
-        after:top-0 after:bg-border-interactive after:h-full`;
-        } else {
-          item.className = '';
-        }
+        item.className = on ? `relative after:absolute after:w-[3px] after:left-0
+        after:top-0 after:bg-border-interactive after:h-full` : '';
         anchor.classList.toggle('bg-layer-selected', on);
         anchor.classList.toggle('text-text-primary', on);
         anchor.classList.toggle('bg-layer', !on);
@@ -273,14 +269,15 @@ class Submenu {
       }
       else {
         const anchor = item.querySelector('button');
-        let on = anchor.dataset.children.match(url) !== null && url !== '/';
-        if (on) {
-          item.className = `relative after:absolute after:w-[3px] after:left-0
-        after:top-0 after:bg-border-interactive after:h-full`;
-        } else {
-          item.className = '';
+        const childrenLinks = anchor.dataset.children.split(';');
+        let on = childrenLinks.find(element => element === url);
+        if (!on) {
+          const urlToSearch = '/'+url.split('/').slice(1, 4).join('/');
+          on = childrenLinks.find(element => element === urlToSearch);
         }
-        someOn |= on;
+        item.className = on ? `relative after:absolute after:w-[3px] after:left-0
+        after:top-0 after:bg-border-interactive after:h-full` : '';
+        someOn |= !on;
       }
     }
     this.highlightButton(someOn & !this.isOpened);
