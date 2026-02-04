@@ -8,15 +8,15 @@ description: Welcome page
 
 Welcome to the community-hosted documentation mirror for Qiskit – a popular open-source SDK for quantum computing. You can find recent Qiskit documentation similar to the [original IBM site](https://quantum.cloud.ibm.com/) but without geo-blocking restrictions.
 
-**Get started with [Hello World](/docs/tutorials/hello-world)**
+**Get started with [Hello World](/docs/guides/hello-world)**
 
 ## Development workflow
 A framework for breaking down domain-specific problems and software capabilities in stages:
 
-1. [Map the problem to quantum circuits and operators](/docs/guides/map-problem-to-circuits)
-2. [Optimize for target hardware](/docs/guides/optimize-for-hardware)
-3. [Execute on target hardware](/docs/guides/execute-on-hardware)
-4. [Post-process results](/docs/guides/post-process-results)
+1. [Map the problem to quantum circuits and operators](/docs/guides/intro-to-patterns#map-the-problem-to-quantum-circuits-and-operators)
+2. [Optimize for target hardware](/docs/guides/intro-to-patterns#optimize-for-target-hardware)
+3. [Execute on target hardware](/docs/guides/intro-to-patterns#execute-on-target-hardware)
+4. [Post-process results](/docs/guides/intro-to-patterns#post-process-results)
 
 ## API reference
 Guidance on how to use key APIs:
