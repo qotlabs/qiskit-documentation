@@ -87,8 +87,9 @@ class DocSection:
     309: ("/learning/courses/quantum-safe-cryptography/", "Courses / Practical introduction to quantum-safe cryptography"),
     310: ("/learning/courses/utility-scale-quantum-computing/", "Courses / Utility-scale quantum computing"),
     311: ("/learning/courses/variational-algorithm-design/", "Courses / Variational algorithm design"),
-    312: ("/learning/modules/computer-science/", "Modules / Computer science"),
-    313: ("/learning/modules/quantum-mechanics/", "Modules / Quantum mechanics"),
+    312: ("/learning/courses/integrating-quantum-and-high-performance-computing", "Cources / Integrating quantum and high-performance computing"),
+    320: ("/learning/modules/computer-science/", "Modules / Computer science"),
+    321: ("/learning/modules/quantum-mechanics/", "Modules / Quantum mechanics"),
     }
 
     _url_regex = None
