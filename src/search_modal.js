@@ -526,9 +526,12 @@ class ModalSearchElement {
         }
       }
     } catch (error) {
-      if (error.name !== 'AbortError') throw error;
+      if (error.name !== 'AbortError') {
+        throw error;
+      };
+    } finally {
+      this.toggleLoader(false);
     }
-    this.toggleLoader(false);
   }
 
   loadMoreResults(event) {
