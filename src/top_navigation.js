@@ -277,7 +277,7 @@ class Submenu {
         }
         item.className = on ? `relative after:absolute after:w-[3px] after:left-0
         after:top-0 after:bg-border-interactive after:h-full` : '';
-        someOn |= !on;
+        someOn |= on;
       }
     }
     this.highlightButton(someOn & !this.isOpened);
@@ -298,7 +298,9 @@ class Submenu {
 
 class ChildrenMenu {
   static rootHtml(title, ariaControls) {
-    return `<li class="cds--header__submenu" role="none">
+    const liClass = 'cds--header__submenu';
+    return `<li class="${location.pathname.match('/api/') ? `${liClass} after:absolute after:bottom-0
+        after:w-full after:bg-border-interactive after:h-[3px]` : liClass}" role="none">
           <button
             role="menuitem"
             aria-haspopup="menu"
