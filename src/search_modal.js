@@ -238,7 +238,6 @@ class ModalSearchElement {
       query: '',
       module: 'documentation',
     };
-    this.controller = new AbortController();
     localStorage.setItem('search_value', '');
   }
 
@@ -360,14 +359,22 @@ class ModalSearchElement {
       url += parseUrl(location.pathname).version ? `&version=${parseUrl(location.pathname).version}` : ''
     }
     this.controller = new AbortController();
-    const response = await fetch(url, { signal: this.controller.signal });
-    if (!response.ok) {
-      throw new Error(`An error occurred: ${response.status}`);
+    try {
+      const response = await fetch(url, { signal: this.controller.signal });
+      if (!response.ok) {
+        throw new Error(`An error occurred: ${response.status}`);
+      }
+      this.listbox.setAttribute('aria-hidden', false);
+      this.listbox.classList.remove('hidden');
+      return await response.json();
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        this.controller.abort();
+      } else {
+        throw new Error(`An error occurred: ${error}`);
+      }
     }
-    this.listbox.setAttribute('aria-hidden', false);
-    this.listbox.classList.remove('hidden');
-    return await response.json();
-  }
+}
 
   listenClose(event) {
     const clickedOutside =
@@ -380,7 +387,9 @@ class ModalSearchElement {
 
   listenEnterKey(event) {
     if (event.key === 'Enter') {
-      this.search();
+      if (!this.inputSearch.getAttribute('disabled')) {
+        this.search();
+      }
     }
   }
 
@@ -512,6 +521,7 @@ class ModalSearchElement {
 
   async loadSearchResults() {
     this.toggleLoader(true);
+    this.inputSearch.setAttribute('disabled', true);
     try {
       const response = await this.fetchSearchResults();
       if (response.length > 0) {
@@ -531,6 +541,7 @@ class ModalSearchElement {
       };
     } finally {
       this.toggleLoader(false);
+      this.inputSearch.removeAttribute('disabled');
     }
   }
 
