@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// SPDX-FileCopyrightText: Copyright (c) 2024-2025 Quantum Optical Technologies Laboratories
+// SPDX-FileCopyrightText: Copyright (c) 2024-2026 Quantum Optical Technologies Laboratories
 // SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
 // SPDX-FileContributor: Fedor Medvedev <fedor_medvedev42@rambler.ru>
 
@@ -120,11 +120,14 @@ export function versionCompare(v1, v2) {
  * to a package.
  * @param {string} url - URL for parsing.
  * @returns Object with fields `{package, version}`.
- * `package` is `true` is the URL is versioned.
+ * `package` is `true` if the URL is versioned.
  * `version` is the parsed version or `undefined` if version is not found.
  */
 export function parseUrl(url) {
-  const [_1, _2, section, _3, version] = url.split('/');
+  let chunks = url.split('/');
+  if (chunks[0] !== '')
+    chunks = chunks.splice(2); // Remove schema://
+  const [_1, _2, section, _3, version] = chunks;
   if (section !== 'api') {
     return {package: false, version: undefined};
   }

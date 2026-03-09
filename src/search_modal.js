@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-// SPDX-FileCopyrightText: Copyright (c) 2024 Quantum Optical Technologies Laboratories
+// SPDX-FileCopyrightText: Copyright (c) 2024-2026 Quantum Optical Technologies Laboratories
 // SPDX-FileContributor: Fedor Medvedev <fedor_medvedev42@rambler.ru>
 // SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
 
@@ -8,10 +8,6 @@ import { parseUrl, createElement } from "./common";
 class ModalSearchElement {
   static divSectionButtonsElement() {
     const buttons = [
-      {
-        label: 'All',
-        value: 'all',
-      },
       {
         label: 'Documentation',
         value: 'documentation',
@@ -274,7 +270,8 @@ class ModalSearchElement {
   }
 
   closeModalWindow() {
-    this.controller.abort();
+    if (this.controller)
+      this.controller.abort();
     this.blockFocusOnElements(false);
     document.body.removeAttribute('class');
     document.body.removeAttribute('wfd-invisible');
@@ -355,9 +352,9 @@ class ModalSearchElement {
     url += `?query=${encodeURIComponent(this.searchData.query)}`;
     url += `&module=${this.searchData.module}`;
     url += `&offset=${this.listbox.children.length}`;
-    if (this.searchData.module === 'api') {
-      url += parseUrl(location.pathname).version ? `&version=${parseUrl(location.pathname).version}` : ''
-    }
+    const version = parseUrl(location.pathname).version;
+    if(version)
+      url += `&version=${version}`
     this.controller = new AbortController();
     try {
       const response = await fetch(url, { signal: this.controller.signal });
@@ -469,7 +466,10 @@ class ModalSearchElement {
   toggleLoader(show) {
     const loadingIndicator = this.modalWindowElement.querySelector('#loading-indicator');
     this.clearSearchButton.classList.toggle('hidden', show);
-    show ? this.divSearchElement.appendChild(this.loadingIndicatorElement) : loadingIndicator.outerHTML = '';
+    if (show)
+      this.divSearchElement.appendChild(this.loadingIndicatorElement);
+    else if (loadingIndicator)
+      loadingIndicator.outerHTML = ''
     this.inputSearch.disabled = show;
     this.radioButtons.forEach((button) => (button.disabled = show));
     this.toggleEventListener(this.divScrollbar, !show, 'scroll', this.loadMoreResults, {
@@ -481,15 +481,11 @@ class ModalSearchElement {
   getListElement(searchResult) {
     let pageTitle = searchResult.pageTitle;
     if (this.searchData.module === 'api') {
-      let url = `/${searchResult.url.split('/').slice(3).join('/')}`;
-      const version = parseUrl(url).version;
-      if (version) {
-        pageTitle =
-          version === 'dev'
-            ? `${pageTitle} (dev version)`
-            : `${pageTitle} (v${version})`;
-      } else {
-        pageTitle = `${pageTitle} (latest version)`;
+      const version = parseUrl(searchResult.url).version;
+      switch (version) {
+        case 'dev': pageTitle += ' (dev version)'; break;
+        case undefined: pageTitle += ' (latest version)'; break;
+        default: pageTitle += ` (v${version})`; break;
       }
     }
     return createElement(`
@@ -530,11 +526,8 @@ class ModalSearchElement {
         });
         this.listbox.setAttribute('aria-hidden', false);
         this.listbox.classList.remove('hidden');
-      } else {
-        if (this.listbox.children.length === 0) {
-          this.noSearchResultsElement.classList.remove('hidden');
-        }
       }
+      this.noSearchResultsElement.classList.toggle('hidden', this.listbox.children.length);
     } catch (error) {
       if (error.name !== 'AbortError') {
         throw error;
