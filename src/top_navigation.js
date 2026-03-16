@@ -270,10 +270,10 @@ class Submenu {
       else {
         const anchor = item.querySelector('button');
         const childrenLinks = anchor.dataset.children.split(';');
-        let on = childrenLinks.find(element => element === url);
+        let on = Boolean(childrenLinks.find(element => element === url));
         if (!on) {
           const urlToSearch = '/'+url.split('/').slice(1, 4).join('/');
-          on = childrenLinks.find(element => element === urlToSearch);
+          on = Boolean(childrenLinks.find(element => element === urlToSearch));
         }
         item.className = on ? `relative after:absolute after:w-[3px] after:left-0
         after:top-0 after:bg-border-interactive after:h-full` : '';
