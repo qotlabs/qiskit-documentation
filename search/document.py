@@ -87,7 +87,8 @@ class DocSection:
     309: ("/learning/courses/quantum-safe-cryptography/", "Courses / Practical introduction to quantum-safe cryptography"),
     310: ("/learning/courses/utility-scale-quantum-computing/", "Courses / Utility-scale quantum computing"),
     311: ("/learning/courses/variational-algorithm-design/", "Courses / Variational algorithm design"),
-    312: ("/learning/courses/integrating-quantum-and-high-performance-computing", "Cources / Integrating quantum and high-performance computing"),
+    312: ("/learning/courses/integrating-quantum-and-high-performance-computing/", "Cources / Integrating quantum and high-performance computing"),
+    313: ("/learning/courses/designing-and-leading-quantum-projects/", "Courses / Designing and leading quantum projects"),
     320: ("/learning/modules/computer-science/", "Modules / Computer science"),
     321: ("/learning/modules/quantum-mechanics/", "Modules / Quantum mechanics"),
     }
