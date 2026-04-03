@@ -32,6 +32,7 @@ export const menuStruct = [
         {title: 'Sample-based quantum diagonalization (SQD)', url: '/docs/api/qiskit-addon-sqd', toc: true},
         {title: 'Addon utilities', url: '/docs/api/qiskit-addon-utils', toc: true}
       ]},
+      {title: 'Qiskit Functions', url: '/docs/api/functions', toc: true}
     ]},
     {title: 'Learning', url: '/learning', toc: false}
   ];
