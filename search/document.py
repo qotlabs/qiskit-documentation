@@ -67,6 +67,7 @@ class DocSection:
     8: ("/docs/api/qiskit-addon-sqd/", "Sample-based quantum diagonalization (SQD)"),
     9: ("/docs/api/qiskit-addon-utils/", "Addon utilities"),
     10: ("/docs/api/qiskit-c/", "Qiskit SDK C API"),
+    11: ("/docs/api/functions", "Qiskit Functions"),
 
     # Documentation
     100: ("/docs/guides/", "Guides"),
