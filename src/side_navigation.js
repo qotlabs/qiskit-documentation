@@ -344,7 +344,10 @@ class Submenu {
     if (url === this.createdTocForUrl) return;
 
     const toc = await fetchToc(url);
-    this.dropdown?.setPackage(toc.package);
+    if (toc.type === 'package') {
+      this.dropdown = new VersionDropdown(this.menu);
+      this.dropdown.setPackage(toc.package);
+    }
     this.menu.innerHTML = '';
     this.items.clear();
     itemFactory(this, toc.toc.children, this.items);
