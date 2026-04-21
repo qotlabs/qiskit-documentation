@@ -3,7 +3,7 @@
 // SPDX-FileContributor: Fedor Medvedev <fedor_medvedev42@rambler.ru>
 // SPDX-FileContributor: Gleb Struchalin <struchalin.gleb@physics.msu.ru>
 
-import { parseUrl, createElement } from "./common";
+import { urlVersion, createElement } from "./common";
 
 class ModalSearchElement {
   static divSectionButtonsElement() {
@@ -352,7 +352,7 @@ class ModalSearchElement {
     url += `?query=${encodeURIComponent(this.searchData.query)}`;
     url += `&module=${this.searchData.module}`;
     url += `&offset=${this.listbox.children.length}`;
-    const version = parseUrl(location.pathname).version;
+    const version = urlVersion(location.pathname);
     if(version)
       url += `&version=${version}`
     this.controller = new AbortController();
@@ -403,7 +403,7 @@ class ModalSearchElement {
       const paragraphTooltip = this.divTooltip.querySelector('.m-0');
       paragraphTooltip.textContent = this.checkedButton.dataset.paragraph;
       if (this.searchData.module === 'api') {
-        const version = parseUrl(location.pathname).version;
+        const version = urlVersion(location.pathname);
         if (version) {
           const apiSectionTitle = document.querySelector(
             'nav[aria-label="Side navigation (docs)"] .text-heading-03.px-16.text-text-primary'
@@ -481,7 +481,7 @@ class ModalSearchElement {
   getListElement(searchResult) {
     let pageTitle = searchResult.pageTitle;
     if (this.searchData.module === 'api') {
-      const version = parseUrl(searchResult.url).version;
+      const version = urlVersion(searchResult.url);
       switch (version) {
         case 'dev': pageTitle += ' (dev version)'; break;
         case undefined: pageTitle += ' (latest version)'; break;

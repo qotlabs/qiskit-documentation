@@ -117,24 +117,19 @@ export function versionCompare(v1, v2) {
 }
 
 /**
- * Parse the given URL to determine version and whether the URL corresponds
- * to a package.
+ * Determine API version for the given URL.
  * @param {string} url - URL for parsing.
- * @returns Object with fields `{version}`.
- * `version` is the parsed version or `undefined` if version is not found.
+ * @returns Parsed version or `undefined` if version is not found.
  */
-export function parseUrl(url) {
+export function urlVersion(url) {
   let chunks = url.split('/');
   if (chunks[0] !== '')
     chunks = chunks.splice(2); // Remove schema://
   const [_1, _2, section, _3, version] = chunks;
-  if (section !== 'api') {
-    return {version: undefined};
-  }
-  if (version && version.match(/^(dev|[0-9]\.[0-9]+)$/)) {
-      return {version};
-  }
-  return {version: undefined};
+  if (section === 'api' && version && version.match(/^(dev|[0-9]\.[0-9]+)$/))
+    return version;
+  else
+    return undefined;
 }
 
 /**

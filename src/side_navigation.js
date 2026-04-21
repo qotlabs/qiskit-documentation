@@ -10,7 +10,7 @@ import {
   uid,
   matchSection,
   versionCompare,
-  parseUrl,
+  urlVersion,
   arrowIconHtml,
 } from './common';
 
@@ -313,9 +313,6 @@ class Submenu {
     this.panel = createElement(Submenu.panelHtml(toc.title));
     const backButton = this.panel.querySelector('button');
     this.menu = this.panel.querySelector('ul');
-    if (parseUrl(this.url).package) {
-      this.dropdown = new VersionDropdown(this.menu);
-    }
 
     this.parent.appendChild(this.root);
     this.button.addEventListener('click', () => this.toggle());
@@ -333,7 +330,7 @@ class Submenu {
   getVersionedUrl() {
     let url = this.url;
     if (matchSection(url, location.pathname)) {
-      const version = parseUrl(location.pathname).version;
+      const version = urlVersion(location.pathname);
       if (version) url += '/' + version;
     }
     return url;
