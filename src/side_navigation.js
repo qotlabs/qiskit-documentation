@@ -177,6 +177,25 @@ class Menu {
     if (open) {
       this.parent.appendChild(this.overlay);
       this.parent.appendChild(this.panel);
+      if(location.pathname.match('learning/courses/') || location.pathname.match('learning/modules/')) {
+        const panel = this.panel;
+        document.querySelector('.cds--side-nav__link--current').addEventListener('click', function(event) {
+          event.preventDefault();
+          const nav = document.querySelector('nav[aria-label="Side navigation (docs)"]').cloneNode(true);
+          for (let element of Array.from(panel.children)) {
+            element.style.display = 'none';
+          }
+          for (let button of Array.from(nav.querySelectorAll('button.cds--side-nav__submenu'))) {
+            button.addEventListener('click', function(event){
+              const status = button.getAttribute('aria-expanded') === 'true';
+              button.setAttribute('aria-expanded', !status);
+            })
+          }
+          for (let element of Array.from(nav.children)) {
+            panel.appendChild(element);
+          }
+        })
+      }
     } else {
       this.overlay.remove();
       this.panel.remove();
