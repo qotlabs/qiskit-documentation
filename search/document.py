@@ -58,19 +58,21 @@ class DocSection:
     SECTIONS = {
     # API
     1: ("/docs/api/qiskit/", "Qiskit SDK"),
-    2: ("/docs/api/qiskit-ibm-runtime/", "Qiskit Runtime client"),
-    3: ("/docs/api/qiskit-ibm-transpiler/", "Qiskit Transpiler Service client"),
-    4: ("/docs/api/qiskit-addon-aqc-tensor/", "Approximate quantum compilation (AQC-Tensor)"),
-    5: ("/docs/api/qiskit-addon-cutting/", "Circuit cutting"),
-    6: ("/docs/api/qiskit-addon-mpf/", "Multi-product formulas (MPF)"),
-    7: ("/docs/api/qiskit-addon-obp/", "Operator backpropagation (OBP)"),
-    8: ("/docs/api/qiskit-addon-sqd/", "Sample-based quantum diagonalization (SQD)"),
-    9: ("/docs/api/qiskit-addon-utils/", "Addon utilities"),
-    10: ("/docs/api/qiskit-c/", "Qiskit SDK C API"),
-    11: ("/docs/api/functions", "Qiskit Functions"),
+    2: ("/docs/api/qiskit-c/", "Qiskit SDK C API"),
+    3: ("/docs/api/functions", "Qiskit Functions"),
+    4: ("/docs/api/qiskit-ibm-runtime/", "Qiskit Runtime client"),
+    5: ("/docs/api/qiskit-ibm-transpiler/", "Qiskit Transpiler Service client"),
+    6: ("/docs/api/qiskit-addon-aqc-tensor/", "Approximate quantum compilation (AQC-Tensor)"),
+    7: ("/docs/api/qiskit-addon-cutting/", "Circuit cutting"),
+    8: ("/docs/api/qiskit-addon-mpf/", "Multi-product formulas (MPF)"),
+    9: ("/docs/api/qiskit-addon-obp/", "Operator backpropagation (OBP)"),
+    10: ("/docs/api/qiskit-addon-paulice/", "Qiskit Paulice API documentation"),
+    11: ("/docs/api/qiskit-addon-sqd/", "Sample-based quantum diagonalization (SQD)"),
+    12: ("/docs/api/qiskit-addon-utils/", "Addon utilities"),
 
     # Documentation
     100: ("/docs/guides/", "Guides"),
+    101: ("/docs/addons/qiskit-addon-paulice", "Qiskit Paulice"),
 
     # Tutorials
     200: ("/docs/tutorials/", "Tutorials"),

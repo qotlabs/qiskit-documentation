@@ -22,17 +22,21 @@ Disallow: /docs/api/qiskit-ibm-runtime/dev
 Disallow: /docs/api/qiskit-c/2.*
 Disallow: /docs/api/qiskit-c/dev
 
-Disallow: /docs/api/qiskit-addon-sqd/0.*
+Disallow: /docs/api/qiskit-addon-aqc/0.*
 
-Disallow: /docs/api/qiskit-ibm-transpiler/0.*
+Disallow: /docs/api/qiskit-addon-cutting/0.*
 
 Disallow: /docs/api/qiskit-addon-mpf/0.*
 
 Disallow: /docs/api/qiskit-addon-obp/0.*
 
-Disallow: /docs/api/qiskit-addon-aqc/0.*
+Disallow: /docs/api/qiskit-addon-paulice/0.*
+
+Disallow: /docs/api/qiskit-addon-sqd/0.*
 
 Disallow: /docs/api/qiskit-addon-utils/0.*
+
+Disallow: /docs/api/qiskit-ibm-transpiler/0.*
 `;
 
 fs.writeFileSync(ROBOTS_PATH, robots)

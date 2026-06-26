@@ -27,8 +27,9 @@ export const menuStruct = [
       {title: 'Qiskit addons', children: [
         {title: 'Approximate quantum compilation (AQC-Tensor)', url: '/docs/api/qiskit-addon-aqc-tensor', toc: true},
         {title: 'Circuit cutting', url: '/docs/api/qiskit-addon-cutting', toc: true},
-        {title: 'Operator backpropagation (OBP)', url: '/docs/api/qiskit-addon-obp', toc: true},
         {title: 'Multi-product formulas (MPF)', url: '/docs/api/qiskit-addon-mpf', toc: true},
+        {title: 'Operator backpropagation (OBP)', url: '/docs/api/qiskit-addon-obp', toc: true},
+        {title: 'Paulice', url: '/docs/api/qiskit-addon-paulice', toc: true},
         {title: 'Sample-based quantum diagonalization (SQD)', url: '/docs/api/qiskit-addon-sqd', toc: true},
         {title: 'Addon utilities', url: '/docs/api/qiskit-addon-utils', toc: true}
       ]},
